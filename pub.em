@@ -246,6 +246,22 @@ macro ___tst_UniNum()
 	return Nil
 }
 
+macro _IsSpace(ch)
+{
+	var code
+
+	code = AsciiFromChar(ch)
+	return (code == 32 || code == 9)
+}
+
+macro ___tst_IsSpace()
+{
+	_Test(_IsSpace(" "), True)
+	_Test(_IsSpace("	"), True)
+	_Test(_IsSpace("a"), False)
+	return Nil
+}
+
 //------------------------------------------------------------
 // Find a sub-string in string s, start from ich (ich>=0).
 // fMatchCase==Ture, means case sensitive;
@@ -397,9 +413,44 @@ macro ___tst_StrCmp()
 //------------------------------------------------------------
 macro _StrCls(sz)
 {
-	var recRet
-	recRet = _ReplaceInStr(sz, "^\\w*\\(.*\\)\\w*$", "\\1", False, True, False, False)
-	return recRet.szData
+	//var recRet
+	//recRet = _ReplaceInStr(sz, "^\\w*\\(.*\\)\\w*$", "\\1", False, True, False, False)
+	//return recRet.szData
+
+	var i
+	var iLen
+	var iFirst
+	var iLimit
+
+	i = 0
+	iLen = StrLen(sz)
+	
+	while (i <= iLen)
+	{
+		if (!_IsSpace(sz[i]))
+			break
+
+		i++
+	}
+
+	if (i == iLen)
+		return Nil
+	else
+		iFirst = i
+
+	i = iLen - 1
+	
+	while (i > iFirst)
+	{
+		if (!_IsSpace(sz[i]))
+			break
+
+		i--
+	}
+
+	iLimit = i + 1
+
+	return StrMid(sz, iFirst, iLimit)
 }
 
 macro ___tst_StrCls()
@@ -1611,6 +1662,7 @@ macro _TestCaseCollection()
 macro ___tst_all()
 {
 	___tst_UniNum()
+	___tst_IsSpace()
 	___tst_StrStrEx()
 	___tst_StrStr()
 	___tst_StrCmp()
