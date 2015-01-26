@@ -1,0 +1,6 @@
+//*
+macro MacroTest()
+{
+	return Nil
+}
+//*/
