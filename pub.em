@@ -1585,7 +1585,7 @@ macro _RumCmdWithReturn(sCmdLine, sWorkingDirectory, fWait)
 
 	flname = _SINewTmpFile()
 
-	szCmd = "cmd /c (@sCmdLine@|tee \"@flname@\")"
+	szCmd = "cmd /c (@sCmdLine@>\"@flname@\")"
 	fRet = _Run(szCmd)
 
 	hTmp = OpenBuf(flname)
