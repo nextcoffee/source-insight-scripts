@@ -1,19 +1,19 @@
-#pub.em
+# pub.em
 Some useful functions
 
-##TEST TOOLS
+## TEST TOOLS
 ***
 
-###_Assert(exp)
+### _Assert(exp)
 Assert and stop the macro when enconters unrepairable errors
 
-###_Test(exp, result)
+### _Test(exp, result)
 For test case
 
-##LOGGING TOOL
+## LOGGING TOOL
 ***
 
-###_GenStackInfo(iLevel)
+### _GenStackInfo(iLevel)
 Get function call stack info
 
 PARAMETERS:
@@ -27,7 +27,7 @@ RETURN VALUE:
 	* `iLine`: line number
 	* `szTime`: timestamp
 
-###_Log(sz)
+### _Log(sz)
 Logging messages to temperary buffer
 
 PARAMETERS:
@@ -36,14 +36,14 @@ PARAMETERS:
 
 RETURN VALUE: `Nil`
 
-###_LogShow()
+### _LogShow()
 Show logging messages in temperary buffer
 
 PARAMETERS: N/A
 
 RETURN VALUE: `Nil`
 
-##MISC
+## MISC
 ***
 
 ###_UniNum()
@@ -55,7 +55,7 @@ RETURN VALUE:
 
 * String
 
-###_GetLocalTime()
+### _GetLocalTime()
 Cut off the blank chars at the both sides of the string
 
 PARAMETERS: N/A
@@ -74,10 +74,10 @@ RETURN VALUE:
 	* `szSecond`: current second
 	* `szMilliseconds`: current milliseconds
 
-##CHARS & STRING
+## CHARS & STRING
 ***
 
-###_IsSpace(ch)
+### _IsSpace(ch)
 Generate rondom number like: "201005062239000"
 
 PARAMETERS:
@@ -88,7 +88,7 @@ RETURN VALUE:
 
 * Boolean
 
-###_StrStrEx(s, substr, ich, fMatchCase, fReverse)
+### _StrStrEx(s, substr, ich, fMatchCase, fReverse)
 Find a sub-string in string s, start from ich (ich>=0)
 
 PARAMETERS:
@@ -104,7 +104,7 @@ RETURN VALUE:
 * `invalid`: no matching substr has been found
 * Integer: location of matching substr
 
-###_StrStr(s, substr)
+### _StrStr(s, substr)
 Find a sub-string in string s
 
 PARAMETERS:
@@ -117,7 +117,7 @@ RETURN VALUE:
 * `invalid`: no matching substr has been found
 * Integer: location of matching substr
 
-###_StrCmp(sz1, sz2)
+### _StrCmp(sz1, sz2)
 String comparation
 
 PARAMETERS:
@@ -131,7 +131,7 @@ RETURN VALUE:
 * `1`: sz1 > sz2
 * `-1`: sz1 < sz2
 
-###_StrCls(sz)
+### _StrCls(sz)
 Cut off the blank chars at the both sides of the string
 
 PARAMETERS:
@@ -142,7 +142,7 @@ RETURN VALUE:
 
 * String: trimmed string
 
-###_SearchInStr (sz, pattern, fMatchCase, fRegExp, fWholeWordsOnly)
+### _SearchInStr (sz, pattern, fMatchCase, fRegExp, fWholeWordsOnly)
 Searches for pattern in the string
 
 PARAMETERS:
@@ -161,7 +161,7 @@ RETURN VALUE:
 	* `ichLim`: the limit index (one past the last) of the last character of  matching text
 	* `szData`: the matching text
 
-###_ReplaceInStr (sz, oldPattern, newPattern, fMatchCase, fRegExp, fWholeWordsOnly, fConfirm)
+### _ReplaceInStr (sz, oldPattern, newPattern, fMatchCase, fRegExp, fWholeWordsOnly, fConfirm)
 Replace for pattern in the string
 
 PARAMETERS:
@@ -180,7 +180,7 @@ RETURN VALUE:
 	* `szData`: new string after replacement
 	* `fSuccess`: if true, then szData returns new string. Otherwise, old string is returned
 
-###_GetFileNameExtension(path)
+### _GetFileNameExtension(path)
  Get filename extension
 
 PARAMETERS:

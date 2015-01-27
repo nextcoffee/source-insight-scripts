@@ -10,19 +10,19 @@
 // sed -n "/^\/\*'/,/'\*\/$/{/^\/\*'/n; /'\*\/$/b; p}" pub.em
 
 /*''*************************************************
-#pub.em
+# pub.em
 Some useful functions
 
 **************************************************''*/
 
 /*''*************************************************
-##TEST TOOLS
+## TEST TOOLS
 ***
 
 **************************************************''*/
 
 /*''*************************************************
-###_Assert(exp)
+### _Assert(exp)
 Assert and stop the macro when enconters unrepairable errors
 
 **************************************************''*/
@@ -51,7 +51,7 @@ macro _Assert(exp)
 }
 
 /*''*************************************************
-###_Test(exp, result)
+### _Test(exp, result)
 For test case
 
 **************************************************''*/
@@ -69,13 +69,13 @@ macro _Test(exp, result)
 }
 
 /*''*************************************************
-##LOGGING TOOL
+## LOGGING TOOL
 ***
 
 **************************************************''*/
 
 /*''*************************************************
-###_GenStackInfo(iLevel)
+### _GenStackInfo(iLevel)
 Get function call stack info
 
 PARAMETERS:
@@ -142,7 +142,7 @@ macro ___tst_GenStackInfo()
 }
 
 /*''*************************************************
-###_Log(sz)
+### _Log(sz)
 Logging messages to temperary buffer
 
 PARAMETERS:
@@ -189,7 +189,7 @@ macro _Log(sz)
 }
 
 /*''*************************************************
-###_LogShow()
+### _LogShow()
 Show logging messages in temperary buffer
 
 PARAMETERS: N/A
@@ -220,7 +220,7 @@ macro ___tst_Log()
 }
 
 /*''*************************************************
-##MISC
+## MISC
 ***
 
 **************************************************''*/
@@ -335,7 +335,7 @@ macro __AlignNum(szNum, iCount, chr)
 }
 
 /*''*************************************************
-###_GetLocalTime()
+### _GetLocalTime()
 Cut off the blank chars at the both sides of the string
 
 PARAMETERS: N/A
@@ -393,13 +393,13 @@ macro ___tst_GetLocalTime()
 }
 
 /*''*************************************************
-##CHARS & STRING
+## CHARS & STRING
 ***
 
 **************************************************''*/
 
 /*''*************************************************
-###_IsSpace(ch)
+### _IsSpace(ch)
 Generate rondom number like: "201005062239000"
 
 PARAMETERS:
@@ -428,7 +428,7 @@ macro ___tst_IsSpace()
 }
 
 /*''*************************************************
-###_StrStrEx(s, substr, ich, fMatchCase, fReverse)
+### _StrStrEx(s, substr, ich, fMatchCase, fReverse)
 Find a sub-string in string s, start from ich (ich>=0)
 
 PARAMETERS:
@@ -517,7 +517,7 @@ macro ___tst_StrStrEx()
 }
 
 /*''*************************************************
-###_StrStr(s, substr)
+### _StrStr(s, substr)
 Find a sub-string in string s
 
 PARAMETERS:
@@ -545,7 +545,7 @@ macro ___tst_StrStr()
 }
 
 /*''*************************************************
-###_StrCmp(sz1, sz2)
+### _StrCmp(sz1, sz2)
 String comparation
 
 PARAMETERS:
@@ -609,7 +609,7 @@ macro ___tst_StrCmp()
 }
 
 /*''*************************************************
-###_StrCls(sz)
+### _StrCls(sz)
 Cut off the blank chars at the both sides of the string
 
 PARAMETERS:
@@ -670,7 +670,7 @@ macro ___tst_StrCls()
 }
 
 /*''*************************************************
-###_SearchInStr (sz, pattern, fMatchCase, fRegExp, fWholeWordsOnly)
+### _SearchInStr (sz, pattern, fMatchCase, fRegExp, fWholeWordsOnly)
 Searches for pattern in the string
 
 PARAMETERS:
@@ -734,7 +734,7 @@ macro ___tst_SearchInStr()
 }
 
 /*''*************************************************
-###_ReplaceInStr (sz, oldPattern, newPattern, fMatchCase, fRegExp, fWholeWordsOnly, fConfirm)
+### _ReplaceInStr (sz, oldPattern, newPattern, fMatchCase, fRegExp, fWholeWordsOnly, fConfirm)
 Replace for pattern in the string
 
 PARAMETERS:
@@ -801,7 +801,7 @@ macro ___tst_ReplaceInStr()
 
 
 /*''*************************************************
-###_GetFileNameExtension(path)
+### _GetFileNameExtension(path)
  Get filename extension
 
 PARAMETERS:
