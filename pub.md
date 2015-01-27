@@ -2,7 +2,6 @@
 Some useful functions
 
 ## TEST TOOLS
-***
 
 ### _Assert(exp)
 Assert and stop the macro when enconters unrepairable errors
@@ -11,7 +10,6 @@ Assert and stop the macro when enconters unrepairable errors
 For test case
 
 ## LOGGING TOOL
-***
 
 ### _GenStackInfo(iLevel)
 Get function call stack info
@@ -44,9 +42,8 @@ PARAMETERS: N/A
 RETURN VALUE: `Nil`
 
 ## MISC
-***
 
-###_UniNum()
+### _UniNum()
 Generate rondom number like: "201005062239000"
 
 PARAMETERS: N/A
@@ -75,7 +72,6 @@ RETURN VALUE:
 	* `szMilliseconds`: current milliseconds
 
 ## CHARS & STRING
-***
 
 ### _IsSpace(ch)
 Generate rondom number like: "201005062239000"
