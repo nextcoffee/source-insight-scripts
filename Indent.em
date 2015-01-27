@@ -16,7 +16,7 @@ macro __BlockIndent()
 	var sz
 	var cmd
 	var lnCnt
-	
+
     hwnd = GetCurrentWnd()
 	sel = GetWndSel (hwnd)
 	hbuf = GetWndBuf (hwnd)
@@ -89,6 +89,6 @@ macro BlockIndent()
 	_CheckIfPubEmExistsAndSWVersionRequirement()
 	__BlockIndent()
 	_LogShow()
-	
+
 	return Nil
 }

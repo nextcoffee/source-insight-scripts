@@ -7,9 +7,9 @@ macro __GetCurProjShrtName()
 {
     var szProj
     var rec
-    
+
 	szProj = GetProjName(GetCurrentProj())
-	
+
 	rec = _ReplaceInStr(szProj, "^.*\\([^\\\\]+\\)$", "\\1", False, True, False, False)
 	if (!rec.fSuccess)
 	{
@@ -23,7 +23,7 @@ macro __GetCurProjShrtName()
 macro __ConstructCommentKey()
 {
     var sz
-    
+
 	//sz = GetCurProjShrtName()
 	if (Nil == sz)
 	    return "comment"
@@ -39,7 +39,7 @@ macro __GenCommentElement()
     var recTime
     var szDate
     var szFirm
-    
+
 	szUser = ToUpper(GetReg(user_name))
 	if (Nil == szUser)
 	{
@@ -48,17 +48,17 @@ macro __GenCommentElement()
 	}
 
 	szCmtPara = GetReg(__ConstructCommentKey())
-	
+
 	recTime = _GetLocalTime()
 	szDate = recTime.szYear # recTime.szMonth # recTime.szDay
-	
+
 	szFirm = "JDM"
-	
+
     rec.szUser = szUser
     rec.szCmtPara = szCmtPara
     rec.szDate = szDate
     rec.szFirm = szFirm
-	
+
 	return rec
 }
 
@@ -77,7 +77,7 @@ macro __ConstructComment(szType)
     {
         sz = "/*" # recCmt.szUser # "*/"
     }
-    else 
+    else
     {
         i = _StrStr(recCmt.szCmtPara, ": ")
         if (i == invalid)
@@ -89,7 +89,7 @@ macro __ConstructComment(szType)
         {
             szBugID = StrTrunc(recCmt.szCmtPara, i)
             szDscr = StrMid(recCmt.szCmtPara, i+2, StrLen(recCmt.szCmtPara))
-            
+
             szPara = "@szBugID@: @szDscr@"
         }
 
@@ -125,11 +125,11 @@ macro __InsertComment_tls(sel)
     var szPrefix
     var szBegin
     var szEnd
-    
+
     hBuf = GetCurrentBuf()
-    
+
     sz = GetBufLine(hBuf, sel.lnFirst)
-    szPrefix = StrTrunc(sz, sel.ichFirst) 
+    szPrefix = StrTrunc(sz, sel.ichFirst)
 
     szBegin = __ConstructComment("BEGIN")
     szEnd = __ConstructComment("END")
@@ -196,7 +196,7 @@ macro __InsertComment()
 macro __InsertCommnet_CreateCmt()
 {
     var sz
-    
+
 	sz = Ask("Input Comment String:")
 	SetReg(__ConstructCommentKey(), sz)
 	return Nil
@@ -208,7 +208,7 @@ macro InsertComment()
 	_CheckIfPubEmExistsAndSWVersionRequirement()
 	__InsertComment()
     _LogShow()
-    
+
     return Nil
 }
 
@@ -218,7 +218,7 @@ macro InsertCommnet_CreateCmt()
 	_CheckIfPubEmExistsAndSWVersionRequirement()
 	__InsertCommnet_CreateCmt()
     _LogShow()
-    
-    return Nil    
+
+    return Nil
 }
 

@@ -84,7 +84,7 @@ macro __Mask_UnMask()
 	zfpath = GetBufName(hbuf)
 	zfex = _GetFileNameExtension(zfpath)
 	zfex = ".@zfex@"
-	
+
 	typeA = ".c;.cpp;.h"
 	typeB = ".txt"
 	typeC = ".pl;.min;.mak;.mk;.env"
@@ -107,7 +107,7 @@ macro __Mask_UnMask()
 	cmtLen = StrLen(cmt)
 	line = sel.lnFirst
 
-	//to decide mask or 
+	//to decide mask or
 	cmtFlg = True
 	sz = GetBufLine(hbuf, line)
 	szLen = StrLen(sz)
@@ -135,7 +135,7 @@ macro __Mask_UnMask()
 	}
 	else
 	{
-		//remove mask chars	
+		//remove mask chars
 		while (line <= sel.lnLast)
 		{
 			__UnDoMask(hbuf, line, cmt)

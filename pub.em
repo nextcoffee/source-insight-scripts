@@ -3,9 +3,29 @@
 //=========================================================================================
 // PUBLIC API'S HERE!!!
 
-//------------------------------------------------------------
-// Assert and stop the macro when enconters unrepairable errors
-//------------------------------------------------------------
+// Markdown comments are contained between [/*''] and [''*/]
+// Use below CMD to gen markdown comments
+// awk '/^\/\*'\'\''/,/'\'\''\*\/$/{if($0 !~ /^\/\*'\'\''/ && $0 !~ /'\'\''\*\/$/) print}' pub.em
+// or
+// sed -n "/^\/\*'/,/'\*\/$/{/^\/\*'/n; /'\*\/$/b; p}" pub.em
+
+/*''*************************************************
+#pub.em
+Some useful functions
+
+**************************************************''*/
+
+/*''*************************************************
+##TEST TOOLS
+***
+
+**************************************************''*/
+
+/*''*************************************************
+###_Assert(exp)
+Assert and stop the macro when enconters unrepairable errors
+
+**************************************************''*/
 macro _Assert(exp)
 {
 	var hBuf
@@ -21,8 +41,8 @@ macro _Assert(exp)
 		Msg "_Debug(): NewBuf error!"
         stop
     }
-    
-	DumpMacroState (hBuf)        
+
+	DumpMacroState (hBuf)
     SetCurrentBuf(hBuf)            // put buffer to appears in the front-most window
     SetBufDirty(hBuf, False)       // suppress save prompt
     //CloseBuf(hBuf)
@@ -30,9 +50,11 @@ macro _Assert(exp)
 	stop
 }
 
-//------------------------------------------------------------
-// For test case
-//------------------------------------------------------------
+/*''*************************************************
+###_Test(exp, result)
+For test case
+
+**************************************************''*/
 macro _Test(exp, result)
 {
 	//_Log(exp)
@@ -46,9 +68,28 @@ macro _Test(exp, result)
 	return Nil
 }
 
-//------------------------------------------------------------
-// Get function call stack info @ 2014-09-30
-//------------------------------------------------------------
+/*''*************************************************
+##LOGGING TOOL
+***
+
+**************************************************''*/
+
+/*''*************************************************
+###_GenStackInfo(iLevel)
+Get function call stack info
+
+PARAMETERS:
+
+* `iLevel`: call stack depth
+
+RETURN VALUE:
+
+* Record Structure
+	* `szFunc`: function name
+	* `iLine`: line number
+	* `szTime`: timestamp
+
+**************************************************''*/
 macro _GenStackInfo(iLevel)
 {
 	var hBuf
@@ -59,11 +100,11 @@ macro _GenStackInfo(iLevel)
 	var szTime
 	var sz
 	var rec
-	
+
 	hBuf = NewBuf(_UniNum())
 	if (hBuf == hNil)
 	    return Nil
-	
+
 	DumpMacroState (hBuf)
 	recSel = SearchInBuf(hBuf, "^@iLevel@: [^\\t\\s]+$", 0, 0, True, True, True)
 	if (recSel != Nil)
@@ -91,18 +132,26 @@ macro _GenStackInfo(iLevel)
 macro ___tst_GenStackInfo()
 {
     var rec
-    
+
 	rec = _GenStackInfo(1)
 	_ASSERT(rec.szFunc == "_GenStackInfo")
 	rec = _GenStackInfo(2)
 	_ASSERT(rec.szFunc == "___tst_GenStackInfo")
-	
+
 	return Nil
 }
 
-//------------------------------------------------------------
-// Log message to file
-//------------------------------------------------------------
+/*''*************************************************
+###_Log(sz)
+Logging messages to temperary buffer
+
+PARAMETERS:
+
+* `sz`: message string
+
+RETURN VALUE: `Nil`
+
+**************************************************''*/
 macro _Log(sz)
 {
 	global szLogFileName
@@ -110,11 +159,11 @@ macro _Log(sz)
 	var rec
 
 	//if (1) return Nil
-	
+
     //use szLogFileName instead of hFileLog in case that the program exit unexpectedly:
-    //Global variables are useful for adding counters, 
-    //and other persistent state. 
-    //They **cannot hold any kind of handle**, 
+    //Global variables are useful for adding counters,
+    //and other persistent state.
+    //They **cannot hold any kind of handle**,
     //because all handles are destroyed when a macro finishes
     hFileLog = GetBufHandle(szLogFileName)
 
@@ -132,16 +181,22 @@ macro _Log(sz)
 	rec = _GenStackInfo(3)
 	if (rec != Nil)
 	    sz = "[" # rec.szTime # "] " # rec.szFunc # ", " # rec.iLine # ": " # sz
-	
+
 	AppendBufLine (hFileLog, sz)
 	SetBufDirty(hFileLog, False)
-	
+
 	return Nil
 }
 
-//------------------------------------------------------------
-// Show file log
-//------------------------------------------------------------
+/*''*************************************************
+###_LogShow()
+Show logging messages in temperary buffer
+
+PARAMETERS: N/A
+
+RETURN VALUE: `Nil`
+
+**************************************************''*/
 macro _LogShow()
 {
 	var hFileLog
@@ -164,9 +219,23 @@ macro ___tst_Log()
 	return Nil
 }
 
-//------------------------------------------------------------
-// Generate rondom number like: "201005062239000"
-//------------------------------------------------------------
+/*''*************************************************
+##MISC
+***
+
+**************************************************''*/
+
+/*''*************************************************
+###_UniNum()
+Generate rondom number like: "201005062239000"
+
+PARAMETERS: N/A
+
+RETURN VALUE:
+
+* String
+
+**************************************************''*/
 macro _UniNum()
 {
 	var szTime
@@ -183,7 +252,7 @@ macro _UniNum()
 	// Version 3.50.0044 - Jan 26, 2006
 	global g_count
 
-	szTime = GetSysTime(1)	
+	szTime = GetSysTime(1)
 	Hour = szTime.Hour
 	Minute = szTime.Minute
 	Second = szTime.Second
@@ -194,7 +263,7 @@ macro _UniNum()
 
 	if (Hour < 10) Hour = "0@Hour@"
 	if (Minute < 10) Minute = "0@Minute@"
-	if (Second < 10) Second = "0@Second@"	
+	if (Second < 10) Second = "0@Second@"
 	if (Milliseconds < 10)
 		Milliseconds = "00@Milliseconds@"
 	else if (Milliseconds < 100)
@@ -203,16 +272,16 @@ macro _UniNum()
 	if (Month < 10) Month = "0@Month@"
 
 	//count string
-	if ((g_count == Nil)) 
+	if ((g_count == Nil))
 		g_count = 0
 
 	if (g_count >= 100) g_count = 0
 	if (g_count < 10)
 		szCount = "0@g_count@"
 	else
-		szCount = "@g_count@"		
+		szCount = "@g_count@"
 	g_count++
-		
+
 	sz = "@Year@@Month@@Day@@Hour@@Minute@@Second@@Milliseconds@@szCount@"
 	return sz
 }
@@ -238,7 +307,7 @@ macro ___tst_UniNum()
 			Msg "Need more interval!"
 			_Assert(False)
 		}
-		
+
 		outLoopCnt = outLoopCnt - 1
 	}
 
@@ -246,6 +315,102 @@ macro ___tst_UniNum()
 	return Nil
 }
 
+//------------------------------------------------------------
+// Get local time in aligned format
+//------------------------------------------------------------
+macro __AlignNum(szNum, iCount, chr)
+{
+    var iLen
+    var sz
+
+    sz = szNum
+    iLen = StrLen(sz)
+    while (iCount > iLen)
+    {
+        sz = chr # sz
+        iLen++
+    }
+
+    return sz
+}
+
+/*''*************************************************
+###_GetLocalTime()
+Cut off the blank chars at the both sides of the string
+
+PARAMETERS: N/A
+
+RETURN VALUE:
+
+* Record Structure:
+	* `szTime`: the time of day in string format
+	* `szDate`: the day of week, day, month, and year as a string
+	* `szYear`: current year
+	* `szMonth`: current month number. January is 1
+	* `szDayOfWeek`: day of week number. Sunday is 0, Monday is 1, etc
+	* `szDay`: day of month
+	* `szHour`: current hour
+	* `szMinute`: current minute
+	* `szSecond`: current second
+	* `szMilliseconds`: current milliseconds
+
+**************************************************''*/
+macro _GetLocalTime()
+{
+    var recTimeAligned
+    var recTimeOrig
+    var chrAlign
+
+	chrAlign = "0"
+    recTimeOrig = GetSysTime(True)
+
+    recTimeAligned.szDate = recTimeOrig.date
+    recTimeAligned.szTime = recTimeOrig.time
+    recTimeAligned.szYear = recTimeOrig.Year
+    recTimeAligned.szDayOfWeek = recTimeOrig.DayOfWeek
+    recTimeAligned.szMonth        = __AlignNum(recTimeOrig.Month, 2, chrAlign)
+    recTimeAligned.szDay          = __AlignNum(recTimeOrig.Day,   2, chrAlign)
+    recTimeAligned.szHour         = __AlignNum(recTimeOrig.Hour,  2, chrAlign)
+    recTimeAligned.szMinute       = __AlignNum(recTimeOrig.Minute, 2, chrAlign)
+    recTimeAligned.szSecond       = __AlignNum(recTimeOrig.Second, 2, chrAlign)
+    recTimeAligned.szMilliseconds = __AlignNum(recTimeOrig.Milliseconds, 3, chrAlign)
+
+	return recTimeAligned
+}
+
+macro ___tst_GetLocalTime()
+{
+    var rec
+	rec = _GetLocalTime()
+
+	_Assert(rec.szYear > 1970)
+	_Assert(rec.szMonth <= 12 && rec.szMonth > 0)
+	_Assert(rec.szDay <= 31 && rec.szDay > 0)
+	_Assert(rec.szHour <= 24 && rec.szHour >= 0)
+	_Assert(rec.szMinute <= 60 && rec.szMinute >= 0)
+
+	return Nil
+}
+
+/*''*************************************************
+##CHARS & STRING
+***
+
+**************************************************''*/
+
+/*''*************************************************
+###_IsSpace(ch)
+Generate rondom number like: "201005062239000"
+
+PARAMETERS:
+
+* `ch`: If ch is a string with more than one character, only the first character is tested
+
+RETURN VALUE:
+
+* Boolean
+
+**************************************************''*/
 macro _IsSpace(ch)
 {
 	var code
@@ -262,12 +427,24 @@ macro ___tst_IsSpace()
 	return Nil
 }
 
-//------------------------------------------------------------
-// Find a sub-string in string s, start from ich (ich>=0).
-// fMatchCase==Ture, means case sensitive;
-// fReverse==True, means reverse searching order.
-// return the location if success, invalid(-1) if failed.
-//------------------------------------------------------------
+/*''*************************************************
+###_StrStrEx(s, substr, ich, fMatchCase, fReverse)
+Find a sub-string in string s, start from ich (ich>=0)
+
+PARAMETERS:
+
+* `s`: string
+* `substr`: sub-string
+* `ich`: index where searching begins from
+* `fMatchCase`: case sensitive
+* `fReverse`: reverse searching order
+
+RETURN VALUE:
+
+* `invalid`: no matching substr has been found
+* Integer: location of matching substr
+
+**************************************************''*/
 macro _StrStrEx(s, substr, ich, fMatchCase, fReverse)
 {
 	var sLen
@@ -281,7 +458,7 @@ macro _StrStrEx(s, substr, ich, fMatchCase, fReverse)
 	if (!fMatchCase)
 	{
 		s = toupper(s)
-		substr = toupper(substr)	
+		substr = toupper(substr)
 	}
 
 	// fReverse
@@ -305,9 +482,9 @@ macro _StrStrEx(s, substr, ich, fMatchCase, fReverse)
 	{
 		if (fReverse)
 		{
-			ichBegin = ich+1 + substrLen*iStep 
+			ichBegin = ich+1 + substrLen*iStep
 			ichEnd = ich+1
-		}			
+		}
 		else
 		{
 			ichBegin = ich
@@ -318,7 +495,7 @@ macro _StrStrEx(s, substr, ich, fMatchCase, fReverse)
 		//_Log(ichEnd)
 		if (strmid(s, ichBegin, ichEnd) == substr)
 			return ichBegin
-		
+
 		ich = ich + iStep
 	}
 
@@ -335,14 +512,25 @@ macro ___tst_StrStrEx()
 	_Test(_StrStrEx("yangming", "Ng", 0, True, False), invalid)
 	// fReverse test
 	_Test(_StrStrEx("yangming", "ng", 7, False, True), 6)
-	
+
 	return Nil
 }
 
-//------------------------------------------------------------
-// Find a sub-string in string s, 
-// return the location if success, invalid(-1) if failed
-//------------------------------------------------------------
+/*''*************************************************
+###_StrStr(s, substr)
+Find a sub-string in string s
+
+PARAMETERS:
+
+* `s`: string
+* `substr`: sub-string
+
+RETURN VALUE:
+
+* `invalid`: no matching substr has been found
+* Integer: location of matching substr
+
+**************************************************''*/
 macro _StrStr(s, substr)
 {
 	return _StrStrEx(s, substr, 0, False, False)
@@ -352,14 +540,26 @@ macro ___tst_StrStr()
 {
 	_Test(_StrStr("yangming", "ng"), 2)
 	_Test(_StrStr("yangming", "mg"), invalid)
-	
+
 	return Nil
 }
 
+/*''*************************************************
+###_StrCmp(sz1, sz2)
+String comparation
 
-//------------------------------------------------------------
-// String comparation
-//------------------------------------------------------------
+PARAMETERS:
+
+* `sz1`: string
+* `sz2`: string
+
+RETURN VALUE:
+
+* `0`: sz1 == sz2
+* `1`: sz1 > sz2
+* `-1`: sz1 < sz2
+
+**************************************************''*/
 macro _StrCmp(sz1, sz2)
 {
 	var szLen1
@@ -372,7 +572,7 @@ macro _StrCmp(sz1, sz2)
 	//_Log(sz2)
 	if (sz1 == sz2)
 		return 0
-		
+
 	szLen1 = StrLen(sz1)
 	szLen2 = StrLen(sz2)
 	szLenMin = _MIN(szLen1, szLen2)
@@ -408,9 +608,19 @@ macro ___tst_StrCmp()
 	return Nil
 }
 
-//------------------------------------------------------------
-// Cut off the blank chars at the both sides of the string
-//------------------------------------------------------------
+/*''*************************************************
+###_StrCls(sz)
+Cut off the blank chars at the both sides of the string
+
+PARAMETERS:
+
+* `sz`: string
+
+RETURN VALUE:
+
+* String: trimmed string
+
+**************************************************''*/
 macro _StrCls(sz)
 {
 	//var recRet
@@ -424,7 +634,7 @@ macro _StrCls(sz)
 
 	i = 0
 	iLen = StrLen(sz)
-	
+
 	while (i <= iLen)
 	{
 		if (!_IsSpace(sz[i]))
@@ -439,7 +649,7 @@ macro _StrCls(sz)
 		iFirst = i
 
 	i = iLen - 1
-	
+
 	while (i > iFirst)
 	{
 		if (!_IsSpace(sz[i]))
@@ -459,81 +669,43 @@ macro ___tst_StrCls()
 	return Nil
 }
 
-//------------------------------------------------------------
-// Get local time in aligned format
-//------------------------------------------------------------
-macro __AlignNum(szNum, iCount, chr)
-{
-    var iLen
-    var sz
+/*''*************************************************
+###_SearchInStr (sz, pattern, fMatchCase, fRegExp, fWholeWordsOnly)
+Searches for pattern in the string
 
-    sz = szNum
-    iLen = StrLen(sz)
-    while (iCount > iLen)
-    {
-        sz = chr # sz
-        iLen++
-    }
-    
-    return sz
-}
+PARAMETERS:
 
-macro _GetLocalTime()
-{
-    var recTimeAligned
-    var recTimeOrig
-    var chrAlign
+* `sz`: string
+* `pattern`: pattern string
+* `fMatchCase`: if true, then the search is case sensitive
+* `fRegExp`: if true, then the pattern contains a regular expression. Otherwise, the pattern is a simple string
+* `fWholeWordsOnly`: if true, then only whole words will cause a match
 
-	chrAlign = "0"
-    recTimeOrig = GetSysTime(True)
-    
-    recTimeAligned.szDate = recTimeOrig.date
-    recTimeAligned.szTime = recTimeOrig.time
-    recTimeAligned.szYear = recTimeOrig.Year
-    recTimeAligned.szDayOfWeek = recTimeOrig.DayOfWeek
-    recTimeAligned.szMonth        = __AlignNum(recTimeOrig.Month, 2, chrAlign)
-    recTimeAligned.szDay          = __AlignNum(recTimeOrig.Day,   2, chrAlign)
-    recTimeAligned.szHour         = __AlignNum(recTimeOrig.Hour,  2, chrAlign)
-    recTimeAligned.szMinute       = __AlignNum(recTimeOrig.Minute, 2, chrAlign)
-    recTimeAligned.szSecond       = __AlignNum(recTimeOrig.Second, 2, chrAlign)
-    recTimeAligned.szMilliseconds = __AlignNum(recTimeOrig.Milliseconds, 3, chrAlign)
+RETURN VALUE:
 
-	return recTimeAligned
-}
+* `Nil`: nothing matches the pattern
+* Record Structure:
+	* `ichFirst`: the index of the first character of  matching text
+	* `ichLim`: the limit index (one past the last) of the last character of  matching text
+	* `szData`: the matching text
 
-macro ___tst_GetLocalTime()
-{
-    var rec
-	rec = _GetLocalTime()
-	
-	_Assert(rec.szYear > 1970)
-	_Assert(rec.szMonth <= 12 && rec.szMonth > 0)
-	_Assert(rec.szDay <= 31 && rec.szDay > 0)
-	_Assert(rec.szHour <= 24 && rec.szHour >= 0)
-	_Assert(rec.szMinute <= 60 && rec.szMinute >= 0)
-	
-	return Nil
-}
-
-//------------------------------------------------------------
-// Search string with regular expression
-//------------------------------------------------------------
+**************************************************''*/
 macro _SearchInStr (sz, pattern, fMatchCase, fRegExp, fWholeWordsOnly)
 {
 	var recSearchResult
 	var hbuf
 	var recSel
 	var szRet
-	
+
 	recSearchResult = Nil    // init a record to store the return string and it's offset
-	
+
 	hbuf = NewBuf(_UniNum())  // create output buffer
 	if (hbuf == 0)
 	{
 		Msg "Create DirtyBuffer Error!"
 	    stop
 	}
-	
+
 	AppendBufLine(hbuf, sz)
 	recSel = SearchInBuf(hbuf, pattern, 0, 0, fMatchCase, fRegExp, fWholeWordsOnly)
 	//_Assert(False)
@@ -561,9 +733,27 @@ macro ___tst_SearchInStr()
 	return Nil
 }
 
-//------------------------------------------------------------
-// Replace string with regular expression
-//------------------------------------------------------------
+/*''*************************************************
+###_ReplaceInStr (sz, oldPattern, newPattern, fMatchCase, fRegExp, fWholeWordsOnly, fConfirm)
+Replace for pattern in the string
+
+PARAMETERS:
+
+* `sz`: string
+* `oldPattern`: searching pattern
+* `newPattern`: replacement pattern
+* `fMatchCase`: if true, then the search is case sensitive
+* `fRegExp`: if true, then the pattern contains a regular expression. Otherwise, the pattern is a simple string
+* `fWholeWordsOnly`: if true, then only whole words will cause a match
+* `fConfirm`: if true, then the user will be prompted before each replacement
+
+RETURN VALUE:
+
+* Record Structure:
+	* `szData`: new string after replacement
+	* `fSuccess`: if true, then szData returns new string. Otherwise, old string is returned
+
+**************************************************''*/
 macro _ReplaceInStr (sz, oldPattern, newPattern, fMatchCase, fRegExp, fWholeWordsOnly, fConfirm)
 {
 	var recReplaceResult
@@ -579,7 +769,7 @@ macro _ReplaceInStr (sz, oldPattern, newPattern, fMatchCase, fRegExp, fWholeWord
 		Msg "Create DirtyBuffer Error!"
 	    stop
 	}
-	
+
 	AppendBufLine(hbuf, sz)
 	ret = ReplaceInBuf(hbuf, oldPattern, newPattern, 0, 1, fMatchCase, fRegExp, fWholeWordsOnly, fConfirm)
 	if (ret == False)
@@ -596,7 +786,7 @@ macro _ReplaceInStr (sz, oldPattern, newPattern, fMatchCase, fRegExp, fWholeWord
 	CloseBuf(hbuf)
 	recReplaceResult.szData = szRet
 	recReplaceResult.fSuccess = True  // replace success
-	
+
 	//_Assert(False)
 	return recReplaceResult
 }
@@ -610,15 +800,27 @@ macro ___tst_ReplaceInStr()
 }
 
 
-//------------------------------------------------------------
-// For comment some lines
-//------------------------------------------------------------
+/*''*************************************************
+###_GetFileNameExtension(path)
+ Get filename extension
+
+PARAMETERS:
+
+* `path`: filename path
+
+RETURN VALUE:
+
+* Record Structure:
+	* `Nil`: no extension
+	* String: extension text
+
+**************************************************''*/
 macro _GetFileNameExtension(path)
 {
 	var namelen
 	var i
-	
-    namelen = strlen(path)    
+
+    namelen = strlen(path)
 	i = namelen
 	while (i--)
 	{
@@ -627,12 +829,12 @@ macro _GetFileNameExtension(path)
 			break;
 		}
     }
-    
+
     if (i <= 0)
 	{
 		return Nil
 	}
-	
+
 	return strmid(path, i + 1, namelen)
 }
 
@@ -650,10 +852,10 @@ macro ___tst_GetFileNameExtension()
 // Given a string isolated by delims to some parts, each part is given a index number...
 // sz      string
 // idx     index
-// delims  delims charactors 
+// delims  delims charactors
 //
 /*
- e.g. 
+ e.g.
  	sz = "a,b ,c,d"
 	szz = _GetStrByIndex(sz, 1, ",")
 	Msg @szz@
@@ -674,12 +876,12 @@ macro _GetStrByIndex(sz, idx, pattern)
 	var ret
 	var cnt
 	var len
-	
+
 	recRet = Nil
 	ret = Nil
 	cnt = 0
 	len = 0
-	
+
 	//special produce
 	//the func strmid makes influence on pattern meta data "^"
 	//*
@@ -722,7 +924,7 @@ macro _GetStrByIndex(sz, idx, pattern)
 		}
 	}
 	//*/
-	
+
 	// find the begin delims...
 	cnt = idx
 	while (cnt--)
@@ -735,7 +937,7 @@ macro _GetStrByIndex(sz, idx, pattern)
 			stop
 			//return Nil
 		}
-		
+
 		sz = StrMid(sz, ret.ichLim, StrLen(sz))
 		len = len + ret.ichLim
 	}
@@ -750,7 +952,7 @@ macro _GetStrByIndex(sz, idx, pattern)
 		recRet.data = sz
 		return recRet
 	}
-	
+
 	recRet.ichFirst = len
 	recRet.ichLim = len + ret.ichFirst
 	recRet.data = StrTrunc(sz, ret.ichFirst)
@@ -775,7 +977,7 @@ macro ___tst_GetStrByIndex()
 // Get parts count.
 //
 /*
- e.g. 
+ e.g.
  	sz = "a,b ,c,d"
 	Msg _GetStrCount(sz, ",")
 result.
@@ -805,11 +1007,11 @@ macro _GetStrCount(sz, pattern)
 		ret = _SearchInStr(sz, pattern, TRUE, TRUE, FALSE)
 		if (ret == Nil)
 			break
-		cnt++		
+		cnt++
 
 		sz = StrMid(sz, ret.ichLim, StrLen(sz))
 	}
-	
+
 	return (cnt + 1)    // strCount = delimsCount + 1
 }
 
@@ -841,7 +1043,7 @@ macro _NewStrSet(sz, pattern, fPatternOnStart)
 		Msg "Pattern ^ is not supported!"
 		stop
 	}
-	
+
 	if (pattern[StrLen(pattern) - 1] == "$")
 	{
 		// '\\*' '\$' '$'
@@ -850,7 +1052,7 @@ macro _NewStrSet(sz, pattern, fPatternOnStart)
 		if (len != (len / 2 * 2))
 		{
 			Msg "Pattern $ is not supported!"
-			stop			
+			stop
 		}
 		//_Assert(False)
 	}
@@ -860,7 +1062,7 @@ macro _NewStrSet(sz, pattern, fPatternOnStart)
 	hStr.ssDataArray = _NewDArray()
 	hStr.ssPatternArray = _NewDArray()
 	hStr.ssfPatternOnStart = fPatternOnStart
-	
+
 	//special produce
 	//the func strmid will effect pattern meta data "^"
 	/*
@@ -882,7 +1084,7 @@ macro _NewStrSet(sz, pattern, fPatternOnStart)
 			rec.patternData = StrMid(sz, recRet.ichFirst, recRet.ichLim)
 			AppendBufLine(hStr.sshBuf, rec)
 			hStr.ssCount = 2
-			return hStr				
+			return hStr
 		}
 	}
 	//*/
@@ -911,7 +1113,7 @@ macro _NewStrSet(sz, pattern, fPatternOnStart)
 
 		_PushDArray(hStr.ssDataArray, StrTrunc(sz, recRet.ichFirst))
 		_PushDArray(hStr.ssPatternArray, StrMid(sz, recRet.ichFirst, recRet.ichLim))
-		
+
 		sz = StrMid(sz, recRet.ichLim, StrLen(sz))
 		len = len + recRet.ichLim
 	}
@@ -932,7 +1134,7 @@ macro _GetStrSet(hStr)
 	var sz
 	var szData
 	var szPattern
-	
+
 	cnt = _CountStr(hStr)
 	index = 0
 	sz = Nil
@@ -942,7 +1144,7 @@ macro _GetStrSet(hStr)
 		szPattern = _GetDArray(hStr.ssPatternArray, index)
 
 		if (hStr.ssfPatternOnStart)
-			sz = sz#szPattern#szData		
+			sz = sz#szPattern#szData
 		else
 			sz = sz#szData#szPattern
 
@@ -1043,7 +1245,7 @@ macro ___tst_StrSet()
 		_Test(_CountStr(hstr), 2)
 
 		_FreeStrSet(hstr)
-	}	
+	}
 
 	return Nil
 }
@@ -1057,7 +1259,7 @@ macro _NewDArray()
 {
 	var hDArray
 	var rec
-		
+
 	hDArray = NewBuf(_UniNum())
 	if (hDArray == hNil)
 	{
@@ -1069,7 +1271,7 @@ macro _NewDArray()
 	rec = Nil
 	rec.daCount = 0
 	AppendBufLine(hDArray, rec)
-	
+
 	return hDArray
 }
 
@@ -1108,9 +1310,9 @@ macro _PopDArray(hDArray)
 
 	sz = GetBufLine(hDArray, recRet.daCount)
 	DelBufLine(hDArray, recRet.daCount)
-	
+
 	recRet.daCount = recRet.daCount - 1
-	PutBufLine(hDArray, 0, recRet)	
+	PutBufLine(hDArray, 0, recRet)
 	return sz
 }
 
@@ -1129,9 +1331,9 @@ macro _PullDArray(hDArray)
 
 	sz = GetBufLine(hDArray, 1)
 	DelBufLine(hDArray, 1)
-	
+
 	recRet.daCount = recRet.daCount - 1
-	PutBufLine(hDArray, 0, recRet)	
+	PutBufLine(hDArray, 0, recRet)
 	return sz
 }
 
@@ -1196,20 +1398,22 @@ macro ___tst_DArray()
 	_PushDArray(hDArray, "ming")
 	_PushDArray(hDArray, "yin")
 	_PushDArray(hDArray, "shu")
-	
+
 	_Test(_CountDArray(hDArray), 4)
-	
+
 	_SetDArray(hDArray, 0, "Yang")
 	_Test(_PullDArray(hDArray), "Yang")
-	
+
 	_InsDArray(hDArray, "yang")
-	
-	_Test(_PopDArray(hDArray), "shu")	
-	_Test(_PopDArray(hDArray), "yin")	
-	_Test(_PopDArray(hDArray), "ming")	
-	_Test(_PopDArray(hDArray), "yang")	
+
+	_Test(_PopDArray(hDArray), "shu")
+	_Test(_PopDArray(hDArray), "yin")
+	_Test(_PopDArray(hDArray), "ming")
+	_Test(_PopDArray(hDArray), "yang")
 	_Test(_CountDArray(hDArray), 0)
-	
+
+	_FreeDArray(hDArray)
+
 	return Nil
 }
 
@@ -1270,7 +1474,7 @@ macro ___tst_GetSIVer()
 	var verMjr
 	var verMnr
 	var verBld
-	
+
 	szVer = _GetSIVer()
 
 	szLen = StrLen(szVer)
@@ -1299,11 +1503,11 @@ macro _GetCurSelEx()
 	var hbuf
 	var sel
 	var recSelInfo
-	
+
     hwnd = GetCurrentWnd()
     hbuf = GetWndBuf (hwnd)
 	sel = GetWndSel (hwnd)
-	recSelInfo.sel = sel	
+	recSelInfo.sel = sel
 
 	//--------------------------------------------------------------------------------
 	//"ELNS" :Empty Line and No Selection
@@ -1314,7 +1518,7 @@ macro _GetCurSelEx()
 
 	//"ALNS" :After Line and No Selection
 	//sel = "lnFirst="1208";ichFirst="36";lnLast="1208";ichLim="36";fExtended="0";fRect="0""
- 
+
 	//"WLNS" :Wherein Line and No Selection
 	//sel = "lnFirst="1214";ichFirst="19";lnLast="1214";ichLim="19";fExtended="0";fRect="0""
 
@@ -1379,7 +1583,7 @@ macro _GetCurSelEx()
 		var szPrefix
 		var szPostfix
 		var iLen
-		
+
 		szFirst = GetBufLine(hbuf, sel.lnFirst)
 		szLast = GetBufLine(hbuf, sel.lnLast)
 
@@ -1391,14 +1595,14 @@ macro _GetCurSelEx()
 			szPostfix = Nil
 		else
 			szPostfix = StrMid(szLast, sel.ichLim, StrLen(szLast))
-		
-		if ((Nil == szPrefix || Nil != _SearchInStr(szPrefix, "^\\w*$", False, True, False)) 
+
+		if ((Nil == szPrefix || Nil != _SearchInStr(szPrefix, "^\\w*$", False, True, False))
 		&& (Nil == szPostfix || Nil != _SearchInStr(szPostfix, "^\\w*$", False, True, False)))
 		{
 			recSelInfo.type = "TLS"
 			return recSelInfo
 		}
-		
+
 		recSelInfo.type = "WLS"
 		return recSelInfo
 	}
@@ -1448,7 +1652,7 @@ macro ___tst_GetSIBaseDir()
 
 	// open test
 	_Assert(_IsFileExist(filePubEm))
-	
+
 	return Nil
 }
 
@@ -1480,12 +1684,12 @@ macro _CopyBuf(hSrc, hDst)
 {
 	var iCnt
 	var sz
-	
+
 	if (hSrc == hDst)
 		return Nil
-	
+
 	ClearBuf(hDst)
-	
+
 	iCnt = GetBufLineCount(hSrc)
 	while(iCnt--)
 	{
@@ -1536,7 +1740,7 @@ macro _SINewTmpFile()
 		stop
 	}
 
-	return szFile	
+	return szFile
 }
 
 macro _SIDelTmpFile(szFile)
@@ -1591,7 +1795,7 @@ macro _RumCmdWithReturn(sCmdLine, sWorkingDirectory, fWait)
 	hTmp = OpenBuf(flname)
 	_Assert(hTmp != hNil)
 	_CopyBuf(hTmp, hbuf)
-	CloseBuf(hTmp)	
+	CloseBuf(hTmp)
 
 	_SIDelTmpFile(flname)
 
@@ -1599,7 +1803,7 @@ macro _RumCmdWithReturn(sCmdLine, sWorkingDirectory, fWait)
 		recRet.fRet = true
 	else
 		recRet.fRet = false
-	recRet.hbuf = hbuf	
+	recRet.hbuf = hbuf
 	SetBufDirty(hbuf, FALSE)
 
 	_Assert(recRet.fRet == true)
@@ -1648,7 +1852,7 @@ macro _TestCaseCollection()
 	var hbuf
 	var szName
 	var cmd
-	
+
 	hbuf = GetCurrentBuf()
 	szName = GetBufName(hbuf)
 
@@ -1683,14 +1887,10 @@ macro ___tst_all()
 	___tst_SITempFile()
 	___tst_RumCmdWithReturn()
 	___tst_RunVBS()
-	return Nil
 
-	// Special test case
+	//keep this at the last line
 	___tst_Log()
 	return Nil
-
-	return Nil
-
 }
 
 
@@ -1707,7 +1907,7 @@ macro _CheckIfPubEmExistsAndSWVersionRequirement()
 		Msg "Please update your software up to @szVersionRequire@ or higher"
 		stop
 	}
-	
+
 	return Nil
 }
 
@@ -1729,7 +1929,7 @@ macro _InvokeMacro(szMacro)
 //     _xxx     : common function
 //     __xxx    : static function
 //     ___xxx   : test case function
-//     
+//
 //////////////////////////////////////////////////
 
 
@@ -1747,5 +1947,5 @@ macro _InvokeMacro(szMacro)
 // 09, operator "++" and "--" sometimes are not effective in singal statement. [fixed since 3.50.0070]
 // 10, When pass parameter like -1, need brace it like (-1), otherwise, wrong parse result.
 // 11, OpenBuf can not open source insight project file like *.PR or *.PRI and so on
-// 12, 
+// 12,
 //////////////////////////////////////////////////

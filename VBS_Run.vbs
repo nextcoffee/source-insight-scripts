@@ -11,7 +11,7 @@ If Args.Count = 0 Then
 	Wscript.Echo "[ERROR][VBS_Run.vbs]参数数目不对"                  & vbcrlf & vbcrlf & _
                  "USAGE："                                           & vbcrlf & _
 	             "Wscript //B VBS_Run.vbs <function> [<para_list>] " & vbcrlf
-	
+
 	Wscript.quit 1
 End If
 
@@ -37,17 +37,17 @@ Select Case szFunc
 			Wscript.quit 1
 		End If
 		fRet = CreateTmpFile(ParamLine)
-	
+
 	Case "DeleteTmpFile"
 		If Args.Count <> 2 Then
 			Wscript.Echo "[DeleteTmpFile] Parameter error"
 			Wscript.quit 1
 		End If
 		fRet = DeleteTmpFile(ParamLine)
-		
+
 	Case "RunCMD"
 		fRet = RunCMD(ParamLine)
-		
+
 	Case "Test"
 	Case Else
 		Wscript.Echo "[VBS_Run.vbs] Unkonwn function"
@@ -76,7 +76,7 @@ End Function
 
 function RunCMD(cmd)
 	Dim ret
-	
+
 	Set ws = CreateObject("wscript.shell")
 	ret = ws.run(cmd, 0, True)
 	Set ws = Nothing

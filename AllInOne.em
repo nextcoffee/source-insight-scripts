@@ -48,7 +48,7 @@ macro InsertIfdef_NewStr()
     sz = Ask("Enter ifdef condition:")
     if (sz == Nil)
 		stop
-	
+
     SetReg(define_sz, sz)
 	InsertIfdef(sz);
 
@@ -69,7 +69,7 @@ macro RegExReplaceInBuf(hbuf, oldPattern, newPattern)
 
 	lnStart = 0
 	lnLim = GetBufLineCount (hbuf)
-	
+
 	return ReplaceInBuf(hbuf, oldPattern, newPattern, lnStart, lnLim, fMatchCase, fRegExp, fWholeWordsOnly, fConfirm)
 }
 
@@ -115,7 +115,7 @@ macro GetFuncSymLoc(ln)
 	var loc
 
 	_ASSERT(IsNumber(ln) == True)
-	
+
 	hbuf = GetCurrentBuf()
 	loc = GetSymbolLocationFromLn(hbuf, ln)
 	if(loc == Nil)
@@ -125,7 +125,7 @@ macro GetFuncSymLoc(ln)
 	}
 	if ("Function" == loc.Type || "Function Prototype" == loc.Type)
 		return loc
-	
+
 	return Nil
 }
 
@@ -153,7 +153,7 @@ macro GetFuncElements(loc)
 			stop
 		}
 	}
-	
+
 	//copy to tmp buffer
 	rondom = _UniNum()
 	hDirtyBuf = NewBuf("@rondom@")
@@ -169,7 +169,7 @@ macro GetFuncElements(loc)
 			AppendBufLine(hDirtyBuf, sz)
 			break
 		}
-		
+
 		AppendBufLine(hDirtyBuf, sz)
 		ln = ln + 1
 	}
@@ -182,7 +182,7 @@ macro GetFuncElements(loc)
 	//----------------------------------------
 	//cut off comment string in parameter list
 	//----------------------------------------
-	//for ("/\\*.*\\*/") 
+	//for ("/\\*.*\\*/")
 	//RegExReplaceInBuf(hDirtyBuf, "\\(/\\*.*\\*/\\)", Nil)
 
 	//for ("//.*$")
@@ -204,14 +204,14 @@ macro GetFuncElements(loc)
 	AppendBufLine(hDirtyBuf, sz)
 
 	//cut off comment block in parameter list
-	//for ("/\\*.*\\*/") 
-	RegExReplaceInBuf(hDirtyBuf, "\\(/\\*.*\\*/\\)", Nil)	
+	//for ("/\\*.*\\*/")
+	RegExReplaceInBuf(hDirtyBuf, "\\(/\\*.*\\*/\\)", Nil)
 
 	//cut off last ';'
-	RegExReplaceInBuf(hDirtyBuf, "\\w*;\\w*$", Nil)	
+	RegExReplaceInBuf(hDirtyBuf, "\\w*;\\w*$", Nil)
 
 	//cut off last '='
-	RegExReplaceInBuf(hDirtyBuf, "\\w*=.*$", Nil)	
+	RegExReplaceInBuf(hDirtyBuf, "\\w*=.*$", Nil)
 
 	// cut off superfluous blank chars in parameter list string
 	RegExReplaceInBuf(hDirtyBuf, "\\w\\w+", " ")
@@ -221,7 +221,7 @@ macro GetFuncElements(loc)
 	//----------------------------------------
 	//cut off symbol
 	RegExReplaceInBuf(hDirtyBuf, "\\w*@symCur@\\w*", Nil)
-	
+
 	//get return type string
 	sz = GetBufLine(hDirtyBuf, 0)
 	sz = _GetStrByIndex(sz, 0, "(")
@@ -241,13 +241,13 @@ macro GetFuncElements(loc)
 	//----------------------------------------
 	//get parameter list
 	//----------------------------------------
-	//get clear parameter string - cut off the string before "(" or after ")" 
+	//get clear parameter string - cut off the string before "(" or after ")"
 	//and the blank string just after "(" or before ")"
 	oldPattern = "^.*(\\w*\\([^\\t\\s].*[^\\t\\s]\\)\\w*)[^)]*$"
 	newPattern = "\\1"
-	RegExReplaceInBuf(hDirtyBuf, oldPattern, newPattern)	
+	RegExReplaceInBuf(hDirtyBuf, oldPattern, newPattern)
 	//_Assert(False)
-	
+
 	//trans the one-line string into multi-line with "," as the delims
 	sz = GetBufLine(hDirtyBuf, 0)
 	_Log(sz)
@@ -274,7 +274,7 @@ macro GetFuncElements(loc)
 	DelBufLine (hDirtyBuf, 0)
 
 	InsBufLine (hDirtyBuf, 0, szRetType)
-	
+
 	////construct parameter structure
 	//oldPattern = "\\w*\\([^\\t\\s].+[^a-zA-Z0-9_]+\\)\\([a-zA-Z0-9_\\[\\]]+\\)\\([^\t\s]*\\)\\w*$"
 	//newPattern = "Type=\"\\1\\3\";Name=\"\\2\""
@@ -294,20 +294,20 @@ macro GetFuncElements(loc)
 	//		ln = ln + 1
 	//	}
 	//}
-	
+
 	return hDirtyBuf
 }
 
 /*****************************************************************************
 * Function:  InsertFuncHeader
-* Purpose:  
+* Purpose:
 * Params:
 *
 *   Name                    Type                In/Out              Description
 *   -----                   ----                ------              ----------
-* 
+*
 * Return:  (0) success; (-1) failure
-* Note:  
+* Note:
 *******************************************************************************/
 macro InsFuncHeader_Normal(ln)
 {
@@ -338,8 +338,8 @@ macro InsFuncHeader_Normal(ln)
 	InsBufLine(hbuf, ln++, "/*****************************************************************************")
 	InsBufLine(hbuf, ln++, "* Function:  @szFunc@")
 	InsBufLine(hbuf, ln++, "* Purpose:   ")
-	InsBufLine(hbuf, ln++, "* Author:    @szMyName@")	
-	
+	InsBufLine(hbuf, ln++, "* Author:    @szMyName@")
+
 	lnCnt = GetBufLineCount(hDirtyBuf)
 	if (lnCnt > 1)
 		InsBufLine(hbuf, ln++, "* Params:")
@@ -372,7 +372,7 @@ macro InsFuncHeader_Normal(ln)
 	}
 
 	InsBufLine(hbuf, ln++, "*******************************************************************************/")
-	
+
 	// put the insertion point inside the header comment
 	//SetBufIns(hbuf, ln, 4)
 
@@ -382,19 +382,19 @@ macro InsFuncHeader_Normal(ln)
 	return Nil
 }
 
-/** 
- *  
+/**
+ *
  *
  *  @param[in]
- *      channel_id    
+ *      channel_id
  *  @param[in]
- *      buffer    
+ *      buffer
  *  @param[in]
- *      length    
+ *      length
  *  @param[in]
- *      stuff    
+ *      stuff
  *  @return
- *      
+ *
  *  @header{"simcom_adapter_at_mode.c"}
  */
 macro InsFuncHeader_Doxy(sel)
@@ -420,9 +420,9 @@ macro InsFuncHeader_Doxy(sel)
 	var bEnaBrief
 
 	bEnaBrief = False
-	
+
     hbuf = GetCurrentBuf()
-	fnCur = GetBufName (hbuf)  	
+	fnCur = GetBufName (hbuf)
 	loc = GetCurSymLoc()
 	szFunc = loc.Symbol
 	ln = sel.lnFirst
@@ -441,13 +441,13 @@ macro InsFuncHeader_Doxy(sel)
 	}
 	InsBufLine(hbuf, ln++, " *  ")
 	InsBufLine(hbuf, ln++, " *")
-	
+
 	lnCnt = GetBufLineCount(hDirtyBuf)
 	i = 1
 	while (i < lnCnt)
 	{
 		InsBufLine(hbuf, ln++, " *  @@param[in]")
-	
+
 		para = GetBufLine(hDirtyBuf, i)
 		szParaName = para.Name
 		sz = " *      @szParaName@    "
@@ -468,16 +468,16 @@ macro InsFuncHeader_Doxy(sel)
 		else
 		{
 			InsBufLine(hbuf, ln++, " *  @@return")
-			InsBufLine(hbuf, ln++, " *      ") 
+			InsBufLine(hbuf, ln++, " *      ")
 		}
 	}
 
-	pattern = "\\\\" 
+	pattern = "\\\\"
 	recRet = _GetStrByIndex(fnCur, _GetStrCount(fnCur, pattern)-1, pattern)
 	szFileShortName = recRet.data
 	InsBufLine(hbuf, ln++, " *  @@header{\"@szFileShortName@\"}")
 	InsBufLine(hbuf, ln++, " */")
-	
+
 	// put the insertion point inside the header comment
 	//SetBufIns(hbuf, ln, 4)
 
@@ -498,12 +498,12 @@ macro InsGroup_Doxy(sel)
 	var lnFirst var lnLast
 	var ret
 
-	hbuf = GetCurrentBuf()	
+	hbuf = GetCurrentBuf()
 	lnFirst = sel.lnFirst
 	lnLast = sel.lnLast
-	
+
 	ret = Ask("Input group name:")
-	
+
 	InsBufLine(hbuf, lnLast+1, "/** @@} end of @ret@ */")
 
 	InsBufLine(hbuf, lnFirst, " */")
@@ -517,9 +517,9 @@ macro InsCommentBlk_Doxy(sel)
 	var hbuf
 	var lnFirst
 
-	hbuf = GetCurrentBuf()	
+	hbuf = GetCurrentBuf()
 	lnFirst = sel.lnFirst
-	
+
 	PutBufLine(hbuf, lnFirst, " */")
 	InsBufLine(hbuf, lnFirst, " *  ")
 	InsBufLine(hbuf, lnFirst, "/** ")
@@ -531,9 +531,9 @@ macro InsCommentLn_Doxy(sel)
 	var hbuf
 	var lnFirst
 
-	hbuf = GetCurrentBuf()	
+	hbuf = GetCurrentBuf()
 	lnFirst = sel.lnFirst
-	
+
 	InsBufLine(hbuf, lnFirst, "/**  */")
 	SetBufIns(hbuf, lnFirst, 4)
 }
@@ -544,10 +544,10 @@ macro AppendCommentLn_Doxy(sel)
 	var lnFirst
 	var ichFirst
 
-	hbuf = GetCurrentBuf()	
+	hbuf = GetCurrentBuf()
 	lnFirst = sel.lnFirst
 	ichFirst = sel.ichFirst
-	
+
 	SetBufSelText (hbuf, "/**<  */")
 	SetBufIns(hbuf, lnFirst, ichFirst+5)
 }
@@ -558,14 +558,14 @@ macro ReplaceRegularCmt_Doxy(sel)
 	var ln
 	var ret
 
-	hbuf = GetCurrentBuf()	
+	hbuf = GetCurrentBuf()
 
 	if (sel.lnFirst != sel.lnLast)
 	{
 		Msg "Not support multiline yet!"
 		stop
 	}
-	
+
 	ln = sel.lnFirst
 	ret = GetBufSelText(hbuf)
 
@@ -576,7 +576,7 @@ macro ReplaceRegularCmt_Doxy(sel)
 	//cut off "//"
 	ret = _ReplaceInStr(ret, "^\\w*//\\w*\\(.*\\)\\w*$", "\\1", False, True, False, False)
 	ret = ret.szData
-	
+
 	SetBufSelText (hbuf, "/**< @ret@ */")
 }
 
@@ -640,21 +640,21 @@ macro IfdefCpp()
     hwnd = GetCurrentWnd()
 	sel = GetWndSel(hwnd)
 	hbuf = GetWndBuf(hwnd)
-	
+
 	lnFirst = sel.lnFirst
 	lnLast = sel.lnLast
-	
+
 	InsBufLine(hbuf, lnLast+1, "#endif")
 	InsBufLine(hbuf, lnLast+1, "}")
 	InsBufLine(hbuf, lnLast+1, "#ifdef	__cplusplus")
 	InsBufLine(hbuf, lnLast+1, "")
-	
+
 	InsBufLine(hbuf, lnFirst, "")
 	InsBufLine(hbuf, lnFirst, "#endif")
 	InsBufLine(hbuf, lnFirst, "extern \"C\" {")
 	InsBufLine(hbuf, lnFirst, "#ifdef	__cplusplus")
 
-	return Nil		
+	return Nil
 }
 
 //
@@ -680,11 +680,11 @@ macro Git_GetRootDir()
 
 	recRet = _RumCmdWithReturn("reg query HKCU\\Software\\Git-Cheetah /v PathToMsys | findstr \"PathToMsys\"", Nil, True)
 	_Assert(recRet.fRet == true)
-	
+
 	sz = GetBufLine(recRet.hbuf, 0)
 	sz = StrMid(sz, StrLen("    PathToMsys	REG_SZ	"), StrLen(sz))
 	_Log(sz)
-	
+
 	CloseBuf(recRet.hbuf)
 	return sz
 }
@@ -697,8 +697,8 @@ macro Git_Shell()
 	var szShBin
 
 	hProj = GetCurrentProj()
-	szProjDir = GetProjDir(hProj)	
-	
+	szProjDir = GetProjDir(hProj)
+
 	szRootDir = GetReg(git_root_dir)
 	if(szRootDir == Nil)
 	{
@@ -850,7 +850,7 @@ macro Mask_UnMask()
 	zfpath = GetBufName(hbuf)
 	zfex = _GetFileNameExtension(zfpath)
 	zfex = ".@zfex@"
-	
+
 	typeA = ".c;.cpp;.h"
 	typeB = ".txt"
 	typeC = ".pl;.min;.mak;.mk;.env"
@@ -873,7 +873,7 @@ macro Mask_UnMask()
 	cmtLen = StrLen(cmt)
 	line = sel.lnFirst
 
-	//to decide mask or 
+	//to decide mask or
 	cmtFlg = True
 	sz = GetBufLine(hbuf, line)
 	szLen = StrLen(sz)
@@ -901,7 +901,7 @@ macro Mask_UnMask()
 	}
 	else
 	{
-		//remove mask chars	
+		//remove mask chars
 		while (line <= sel.lnLast)
 		{
 			UnDoMask(hbuf, line, cmt)
@@ -917,8 +917,8 @@ macro Mask_UnMask()
 
 /*======================================================
 eg:
-	void function_name(T para1, 
-					T para2, 
+	void function_name(T para1,
+					T para2,
 					T para3)
 	--------------------------------------------------->
 	void function_name(T para1,\nT para2, \nT para3);
@@ -966,7 +966,7 @@ macro prototype_gen()
 	ln = GetBufLnCur(hbuf)
 	isym = GetBufSymCount (hbuf)
 	delims = "YMYS"
-	
+
 	while (isym)
     {
     	isym = isym - 1
@@ -1021,7 +1021,7 @@ macro Quick_Modify()
 			i = i + 1
 			continue
 		}
-		
+
 		sz = GetBufLine(hbuf, i)
 		ich = _StrStr(sz, ":")
 		if (invalid == ich)
@@ -1041,7 +1041,7 @@ macro Quick_Modify()
 				SaveBuf(fbuf)
 				//CloseBuf(fbuf)
 			}
-			
+
 			fbuf = OpenBuf(lnk.File)
 			if (hNil == fbuf)
 				AppendBufLine(hbuf, Cat("Can not open file: ", lnk.File))
@@ -1051,7 +1051,7 @@ macro Quick_Modify()
 			PutBufLine(fbuf, lnk.ln, sz)
 		i = i + 1
 	}
-	
+
 	if (hNil != fbuf)
 	{
 		SaveBuf(fbuf)
@@ -1123,7 +1123,7 @@ macro TableFormatInner(pattern, lnFirst, lnLast)
 				_PushDArray(hdaRefLen, iLen)
 				iIndx = iIndx + 1
 			}
-			iRefCntMax = iRefCnt	
+			iRefCntMax = iRefCnt
 		}
 
 		_FreeStrSet(hStrSet)
@@ -1154,7 +1154,7 @@ macro TableFormatInner(pattern, lnFirst, lnLast)
 				iLen = iLen + 1
 			}
 			_SetStr(hStrSet, iIndx, sz)
-			
+
 			iIndx = iIndx + 1
 		}
 
@@ -1164,7 +1164,7 @@ macro TableFormatInner(pattern, lnFirst, lnLast)
 		_FreeStrSet(hStrSet)
 
 		lnIndx = lnIndx + 1
-	}	
+	}
 
 	_FreeDArray(hdaRefLen)
 	return Nil
@@ -1174,15 +1174,15 @@ macro TableFormat()
 {
 	var hwnd
 	var sel
-	var pattern	
-	
-    hwnd = GetCurrentWnd()	
+	var pattern
+
+    hwnd = GetCurrentWnd()
 	sel = GetWndSel (hwnd)
 
 	//get pattern
 	pattern = Ask("Enter delims pattern:")
 	if (pattern == Nil)
-		stop	
+		stop
 	TableFormatInner(pattern, sel.lnFirst, sel.lnLast)
 }
 
@@ -1195,7 +1195,7 @@ macro __GetRefStr(szOld)
 {
 	var szNew
 	var chr
-	
+
 	if (szOld != Nil)
 	{
 		StartMsg("[@szOld@] --Press Key N/n For Reset")
@@ -1207,7 +1207,7 @@ macro __GetRefStr(szOld)
 			return szOld
 		}
 	}
-	
+
 	szNew = Ask("New Reference String: ")
 	return szNew
 }
@@ -1217,7 +1217,7 @@ macro __GetRefStr(szOld)
 // 2009-10-01
 //
 macro TreeCopy()
-{	
+{
 	hbuf = GetCurrentBuf()
 
 	// check the file extension name
@@ -1238,7 +1238,7 @@ macro TreeCopy()
 		msg("ERROR!")
 		stop
 	}
-	
+
 	szPurpose = __GetRefStr(ret.szData)
 	//_Assert(False)
 
@@ -1254,7 +1254,7 @@ macro TreeCopy()
 	ReplaceInBuf(hbuf, oldPattern, newPattern, lnStart, lnLim, fMatchCase, fRegExp, fWholeWordsOnly, fConfirm)
 
 	// delete the first line
-	DelBufLine(hbuf, 0)	
+	DelBufLine(hbuf, 0)
 
 	// delete the duplicated file
 	lnIdx = 1
@@ -1282,7 +1282,7 @@ macro TreeCopy()
 	SaveBuf(fbuf)
 
 	//_Assert(False)
-	
+
 	hprj = GetCurrentProj()
 	szPrjDir = GetProjDir(hprj)
 	//MSG szPrjDir
@@ -1293,7 +1293,7 @@ macro TreeCopy()
 		ich = _StrStr(dirName, "\\")
 		if (ich == invalid)
 			break
-			
+
 		dirName = StrMid(dirName, ich+1, StrLen(dirName))
 	}
 
@@ -1322,13 +1322,13 @@ macro GenATCmd()
 	}
 
 	//EXTEND_CMD("csclk", 7302775, 0, "+CSCLK: (0,1,2)", RMMI_CMD_ATCSCLK, rmmi_csclk_hdlr)
-	//CMD_ENUM(RMMI_CMD_ATCSCLK)	
+	//CMD_ENUM(RMMI_CMD_ATCSCLK)
 	hash = GenATHash(sz)
 	extend_cmd = "EXTEND_CMD(\""#tolower(sz)#"\", "#hash.iHashVal1#", "#hash.iHashVal2#", "#"\"\""#", RMMI_CMD_AT"#toupper(sz)#", rmmi_"#tolower(sz)#"_hdlr)"
 	cmd_enum = "CMD_ENUM(RMMI_CMD_AT"#toupper(sz)#")"
 	InsBufLine(hbuf, ln, cmd_enum)
 	InsBufLine(hbuf, ln, extend_cmd)
-	
+
 	return Nil
 }
 
