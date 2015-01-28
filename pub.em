@@ -222,96 +222,6 @@ macro ___tst_Log()
 
 **************************************************''*/
 
-/*''*************************************************
-### _UniNum()
-Generate rondom number like: "201005062239000"
-
-PARAMETERS: N/A
-
-RETURN VALUE:
-
-* String
-
-**************************************************''*/
-macro _UniNum()
-{
-	var szTime
-	var Hour
-	var Minute
-	var Second
-	var Milliseconds
-	var Day
-	var Month
-	var Year
-	var sz
-	var szCount
-
-	// Version 3.50.0044 - Jan 26, 2006
-	global g_count
-
-	szTime = GetSysTime(1)
-	Hour = szTime.Hour
-	Minute = szTime.Minute
-	Second = szTime.Second
-	Milliseconds = szTime.Milliseconds
-	Day = szTime.Day
-	Month = szTime.Month
-	Year = szTime.Year
-
-	if (Hour < 10) Hour = "0@Hour@"
-	if (Minute < 10) Minute = "0@Minute@"
-	if (Second < 10) Second = "0@Second@"
-	if (Milliseconds < 10)
-		Milliseconds = "00@Milliseconds@"
-	else if (Milliseconds < 100)
-		Milliseconds = "0@Milliseconds@"
-	if (Day < 10) Day = "0@Day@"
-	if (Month < 10) Month = "0@Month@"
-
-	//count string
-	if ((g_count == Nil))
-		g_count = 0
-
-	if (g_count >= 100) g_count = 0
-	if (g_count < 10)
-		szCount = "0@g_count@"
-	else
-		szCount = "@g_count@"
-	g_count++
-
-	sz = "@Year@@Month@@Day@@Hour@@Minute@@Second@@Milliseconds@@szCount@"
-	return sz
-}
-
-macro ___tst_UniNum()
-{
-	//------------------------------
-	// to ensure the uninum string is unique
-	//------------------------------
-	//*
-	var outLoopCnt
-	var sz
-	var szz
-
-	outLoopCnt = 1000
-	while (outLoopCnt)
-	{
-		sz = _UniNum()
-		szz = _UniNum()
-
-		if (sz == szz)
-		{
-			Msg "Need more interval!"
-			_Assert(False)
-		}
-
-		outLoopCnt = outLoopCnt - 1
-	}
-
-	_Log(_UniNum())
-	return Nil
-}
-
 //------------------------------------------------------------
 // Get local time in aligned format
 //------------------------------------------------------------
@@ -386,6 +296,72 @@ macro ___tst_GetLocalTime()
 	_Assert(rec.szHour <= 24 && rec.szHour >= 0)
 	_Assert(rec.szMinute <= 60 && rec.szMinute >= 0)
 
+	return Nil
+}
+
+/*''*************************************************
+### _UniNum()
+Generate rondom number like: "201005062239000"
+
+PARAMETERS: N/A
+
+RETURN VALUE:
+
+* String
+
+**************************************************''*/
+macro _UniNum()
+{
+	var recTime
+	var szCount
+	var sz
+
+	// Version 3.50.0044 - Jan 26, 2006
+	global g_count
+
+	recTime = _GetLocalTime()
+
+	//count
+	if (g_count == Nil)
+		g_count = 0
+	else if (g_count >= 100)
+		g_count = 0
+	else
+		g_count++
+
+	szCount = __AlignNum(g_count, 2, "0")
+
+	sz = recTime.szYear # recTime.szMonth # recTime.szDay # recTime.szHour
+		# recTime.szMinute # recTime.szSecond # recTime.szMilliseconds # szCount
+	return sz
+}
+
+macro ___tst_UniNum()
+{
+	//------------------------------
+	// to ensure the uninum string is unique
+	//------------------------------
+	//*
+	var outLoopCnt
+	var sz
+	var szz
+
+	outLoopCnt = 1000
+	while (outLoopCnt)
+	{
+		sz = _UniNum()
+		szz = _UniNum()
+
+		if (sz == szz)
+		{
+			Msg "Need more interval!"
+			_Assert(False)
+		}
+
+		outLoopCnt = outLoopCnt - 1
+	}
+
+	_Log(_UniNum())
 	return Nil
 }
 
