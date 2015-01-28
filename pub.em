@@ -694,6 +694,11 @@ macro ___tst_SearchInStr()
 {
 	// TODO: need more...
 	_Test(_SearchInStr("hello, world", "\\w+.+$", False, True, False), "ichFirst=\"6\";ichLim=\"12\";szData=\" world\"")
+
+	//weird issue
+	_Test(_SearchInStr("", "$", False, True, False), Nil)
+	_Test(_SearchInStr("", "^", False, True, False), "ichFirst=\"0\";ichLim=\"0\";szData=\"\"")
+
 	return Nil
 }
 
@@ -832,9 +837,11 @@ macro _GetStrByIndex(sz, idx, pattern)
 	cnt = 0
 	len = 0
 
+	// find the begin delims...
 	cnt = idx
 	while (cnt--)
 	{
+		_Log("sz=@sz@, pattern=@pattern@")
 		ret = _SearchInStr(sz, pattern, TRUE, TRUE, FALSE)
 		if (ret == Nil)
 		{
@@ -845,10 +852,10 @@ macro _GetStrByIndex(sz, idx, pattern)
 		sz = StrMid(sz, ret.ichLim, StrLen(sz))
 		len = len + ret.ichLim
 
-		// found match, but get nothing when pattern contains "^" or "$"
-		if (ret.szData == Nil)
+		// if the pattern contains "^"
+		if (pattern[0] == "^")
 		{
-			if (cnt)
+			if (idx > 1)
 			{
 				_Log("out of range")
 				return Nil
@@ -861,6 +868,8 @@ macro _GetStrByIndex(sz, idx, pattern)
 		}
 	}
 
+	// find the end delims...
+	_Log("sz=@sz@, pattern=@pattern@")
 	ret = _SearchInStr(sz, pattern, TRUE, TRUE, FALSE)
 	if (ret == Nil)
 	{
@@ -911,17 +920,20 @@ macro _GetStrCount(sz, pattern)
 	cch = StrLen(sz)    // string length.
 	cnt = 0             // delims count.
 
+	if (pattern[0] == "^")
+	{
+		ret = _SearchInStr(sz, pattern, TRUE, TRUE, FALSE)
+		if (ret == Nil) /* null string */
+			return (1)
+		else
+			return (2)
+	}
+
 	while(True)
 	{
 		ret = _SearchInStr(sz, pattern, TRUE, TRUE, FALSE)
 		if (ret == Nil)
 			break
-
-		// found match, but get nothing when pattern contains "^" or "$"
-		if (ret.szData == Nil)
-		{
-			return 2
-		}
 
 		cnt++
 
@@ -937,6 +949,7 @@ macro ___tst_GetStrCount()
 	_Test(_GetStrCount("file ext", "\\w+"), 2)
 	_Test(_GetStrCount("file ext", "^"), 2)
 	_Test(_GetStrCount("file ext more", "\\w+"), 3)
+	_Test(_GetStrCount("aaaabbbb", "^a"), 2)
 
 	return Nil
 }
