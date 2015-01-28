@@ -954,6 +954,309 @@ macro ___tst_GetStrCount()
 	return Nil
 }
 
+/*''*************************************************
+## DYNAMIC ARRAY
+
+**************************************************''*/
+
+/*''*************************************************
+The structure of dynamic array buffer:
+
+	line0: size of array
+	line1: first item, index of 0
+	line2: second item, index of 1
+	...
+	lineX: the (X)th item, index of (X-1)
+
+**************************************************''*/
+
+/*''*************************************************
+### _NewDArray()
+New a dynamic array buffer
+
+PARAMETERS: N/A
+
+RETURN VALUE:
+
+* Handle
+
+**************************************************''*/
+macro _NewDArray()
+{
+	var hDArray
+	var rec
+
+	hDArray = NewBuf(_UniNum())
+	if (hDArray == hNil)
+	{
+		Msg "Create dynamic array failed"
+		stop
+	}
+
+	//first line to store array size
+	rec = Nil
+	rec.iSize = 0
+	AppendBufLine(hDArray, rec)
+
+	return hDArray
+}
+
+/*''*************************************************
+### _FreeDArray(hDArray)
+Free the dynamic array buffer by handle
+
+PARAMETERS:
+
+* `hDArray`: handle of the dynamic array buffer
+
+RETURN VALUE:
+
+* `Nil`
+
+**************************************************''*/
+macro _FreeDArray(hDArray)
+{
+	SetBufDirty(hDArray, FALSE)
+	CloseBuf(hDArray)
+
+	return Nil
+}
+
+/*''*************************************************
+### _PushDArray(hDArray, sz)
+Append one new item
+
+PARAMETERS:
+
+* `hDArray`: handle of the dynamic array buffer
+* `sz`: content of the new item
+
+RETURN VALUE:
+
+* `Nil`
+
+**************************************************''*/
+macro _PushDArray(hDArray, sz)
+{
+	var recRet
+
+	recRet = GetBufLine(hDArray, 0)
+	recRet.iSize = recRet.iSize + 1
+	PutBufLine(hDArray, 0, recRet)
+	AppendBufLine(hDArray, sz)
+
+	return Nil
+}
+
+/*''*************************************************
+### _PopDArray(hDArray)
+Pop out the last item
+
+PARAMETERS:
+
+* `hDArray`: handle of the dynamic array buffer
+
+RETURN VALUE:
+
+* String: content of the item
+
+**************************************************''*/
+macro _PopDArray(hDArray)
+{
+	var sz
+	var recRet
+
+	recRet = GetBufLine(hDArray, 0)
+	if (recRet.iSize == 0)
+	{
+		Msg "[_PopDArray] Out of range"
+		_Assert(False)
+		stop
+	}
+
+	sz = GetBufLine(hDArray, recRet.iSize)
+	DelBufLine(hDArray, recRet.iSize)
+
+	recRet.iSize = recRet.iSize - 1
+	PutBufLine(hDArray, 0, recRet)
+	return sz
+}
+
+/*''*************************************************
+### _PullDArray(hDArray)
+Pull out the first item
+
+PARAMETERS:
+
+* `hDArray`: handle of the dynamic array buffer
+
+RETURN VALUE:
+
+* String: content of the item
+
+**************************************************''*/
+macro _PullDArray(hDArray)
+{
+	var sz
+	var recRet
+
+	recRet = GetBufLine(hDArray, 0)
+	if (recRet.iSize == 0)
+	{
+		Msg "[_PopDArray] Out of range"
+		_Assert(False)
+		stop
+	}
+
+	sz = GetBufLine(hDArray, 1)
+	DelBufLine(hDArray, 1)
+
+	recRet.iSize = recRet.iSize - 1
+	PutBufLine(hDArray, 0, recRet)
+	return sz
+}
+
+/*''*************************************************
+### _InsDArray(hDArray, sz)
+Insert a new item as the first item
+
+PARAMETERS:
+
+* `hDArray`: handle of the dynamic array buffer
+* `sz`: content of the new item
+
+RETURN VALUE:
+
+* `Nil`
+
+**************************************************''*/
+macro _InsDArray(hDArray, sz)
+{
+	var recRet
+
+	recRet = GetBufLine(hDArray, 0)
+	recRet.iSize = recRet.iSize + 1
+	PutBufLine(hDArray, 0, recRet)
+
+	InsBufLine(hDArray, 1, sz)
+	return Nil
+}
+
+/*''*************************************************
+### _GetDArray(hDArray, index)
+Read out the content of required item
+
+PARAMETERS:
+
+* `hDArray`: handle of the dynamic array buffer
+* `index`: index number of required item
+
+RETURN VALUE:
+
+* String: content of the item
+
+**************************************************''*/
+macro _GetDArray(hDArray, index)
+{
+	var recRet
+
+	recRet = GetBufLine(hDArray, 0)
+	if (recRet.iSize <= index)
+	{
+		Msg "[_GetDArray] Out of range"
+		_Assert(False)
+		stop
+	}
+
+	return GetBufLine(hDArray, index + 1)
+}
+
+/*''*************************************************
+### _SetDArray(hDArray, index, sz)
+Replace the content of required item with new string
+
+PARAMETERS:
+
+* `hDArray`: handle of the dynamic array buffer
+* `index`: index number of required item
+* `sz`: content of the new item
+
+RETURN VALUE:
+
+* `Nil`
+
+**************************************************''*/
+macro _SetDArray(hDArray, index, sz)
+{
+	var recRet
+
+	recRet = GetBufLine(hDArray, 0)
+	if (recRet.iSize <= index)
+	{
+		Msg "[_SetDArray] Out of range"
+		_Assert(False)
+		stop
+	}
+
+	PutBufLine(hDArray, index + 1, sz)
+	return Nil
+}
+
+/*''*************************************************
+### _CountDArray(hDArray)
+Replace the content of required item with new string
+
+PARAMETERS:
+
+* `hDArray`: handle of the dynamic array buffer
+
+RETURN VALUE:
+
+* Integer: array size
+
+**************************************************''*/
+macro _CountDArray(hDArray)
+{
+	var recRet
+
+	recRet = GetBufLine(hDArray, 0)
+	return recRet.iSize
+}
+
+macro ___tst_DArray()
+{
+	var hDArray
+
+	hDArray = _NewDArray()
+
+	_PushDArray(hDArray, "yang")
+	_PushDArray(hDArray, "ming")
+	_PushDArray(hDArray, "yin")
+	_PushDArray(hDArray, "shu")
+
+	_Test(_CountDArray(hDArray), 4)
+
+	_SetDArray(hDArray, 0, "Yang")
+	_Test(_PullDArray(hDArray), "Yang")
+
+	_InsDArray(hDArray, "yang")
+
+	_Test(_PopDArray(hDArray), "shu")
+	_Test(_PopDArray(hDArray), "yin")
+	_Test(_PopDArray(hDArray), "ming")
+	_Test(_PopDArray(hDArray), "yang")
+	_Test(_CountDArray(hDArray), 0)
+
+	_FreeDArray(hDArray)
+
+	return Nil
+}
+
+/*''*************************************************
+## STRING SET
+
+**************************************************''*/
+
 //------------------------------------------------------------
 // string parse
 //------------------------------------------------------------
@@ -1175,173 +1478,6 @@ macro ___tst_StrSet()
 
 		_FreeStrSet(hstr)
 	}
-
-	return Nil
-}
-
-
-
-//------------------------------------------------------------
-// dynamic array
-//------------------------------------------------------------
-macro _NewDArray()
-{
-	var hDArray
-	var rec
-
-	hDArray = NewBuf(_UniNum())
-	if (hDArray == hNil)
-	{
-		Msg "Create dynamic array failed"
-		stop
-	}
-
-	//first line to store array count
-	rec = Nil
-	rec.daCount = 0
-	AppendBufLine(hDArray, rec)
-
-	return hDArray
-}
-
-macro _FreeDArray(hDArray)
-{
-	SetBufDirty(hDArray, FALSE)
-	CloseBuf(hDArray)
-
-	return Nil
-}
-
-macro _PushDArray(hDArray, sz)
-{
-	var recRet
-
-	recRet = GetBufLine(hDArray, 0)
-	recRet.daCount = recRet.daCount + 1
-	PutBufLine(hDArray, 0, recRet)
-	AppendBufLine(hDArray, sz)
-
-	return Nil
-}
-
-macro _PopDArray(hDArray)
-{
-	var sz
-	var recRet
-
-	recRet = GetBufLine(hDArray, 0)
-	if (recRet.daCount == 0)
-	{
-		Msg "[_PopDArray] Out of range"
-		_Assert(False)
-		stop
-	}
-
-	sz = GetBufLine(hDArray, recRet.daCount)
-	DelBufLine(hDArray, recRet.daCount)
-
-	recRet.daCount = recRet.daCount - 1
-	PutBufLine(hDArray, 0, recRet)
-	return sz
-}
-
-macro _PullDArray(hDArray)
-{
-	var sz
-	var recRet
-
-	recRet = GetBufLine(hDArray, 0)
-	if (recRet.daCount == 0)
-	{
-		Msg "[_PopDArray] Out of range"
-		_Assert(False)
-		stop
-	}
-
-	sz = GetBufLine(hDArray, 1)
-	DelBufLine(hDArray, 1)
-
-	recRet.daCount = recRet.daCount - 1
-	PutBufLine(hDArray, 0, recRet)
-	return sz
-}
-
-macro _InsDArray(hDArray, sz)
-{
-	var recRet
-
-	recRet = GetBufLine(hDArray, 0)
-	recRet.daCount = recRet.daCount + 1
-	PutBufLine(hDArray, 0, recRet)
-
-	InsBufLine(hDArray, 1, sz)
-	return Nil
-}
-
-macro _GetDArray(hDArray, index)
-{
-	var recRet
-
-	recRet = GetBufLine(hDArray, 0)
-	if (recRet.daCount <= index)
-	{
-		Msg "[_GetDArray] Out of range"
-		_Assert(False)
-		stop
-	}
-
-	return GetBufLine(hDArray, index + 1)
-}
-
-macro _SetDArray(hDArray, index, sz)
-{
-	var recRet
-
-	recRet = GetBufLine(hDArray, 0)
-	if (recRet.daCount <= index)
-	{
-		Msg "[_SetDArray] Out of range"
-		_Assert(False)
-		stop
-	}
-
-	PutBufLine(hDArray, index + 1, sz)
-	return Nil
-}
-
-macro _CountDArray(hDArray)
-{
-	var recRet
-
-	recRet = GetBufLine(hDArray, 0)
-	return recRet.daCount
-}
-
-macro ___tst_DArray()
-{
-	var hDArray
-
-	hDArray = _NewDArray()
-
-	_PushDArray(hDArray, "yang")
-	_PushDArray(hDArray, "ming")
-	_PushDArray(hDArray, "yin")
-	_PushDArray(hDArray, "shu")
-
-	_Test(_CountDArray(hDArray), 4)
-
-	_SetDArray(hDArray, 0, "Yang")
-	_Test(_PullDArray(hDArray), "Yang")
-
-	_InsDArray(hDArray, "yang")
-
-	_Test(_PopDArray(hDArray), "shu")
-	_Test(_PopDArray(hDArray), "yin")
-	_Test(_PopDArray(hDArray), "ming")
-	_Test(_PopDArray(hDArray), "yang")
-	_Test(_CountDArray(hDArray), 0)
-
-	_FreeDArray(hDArray)
 
 	return Nil
 }
