@@ -763,10 +763,9 @@ macro ___tst_ReplaceInStr()
 	return Nil
 }
 
-
 /*''*************************************************
 ### _GetFileNameExtension(path)
- Get filename extension
+Get filename extension
 
 PARAMETERS:
 
@@ -802,31 +801,27 @@ macro ___tst_GetFileNameExtension()
 	return Nil
 }
 
-//------------------------------------------------------------
-//
-// Given a string isolated by delims to some parts, each part is given a index number...
-// sz      string
-// idx     index
-// delims  delims charactors
-//
-/*
- e.g.
- 	sz = "a,b ,c,d"
-	szz = _GetStrByIndex(sz, 1, ",")
-	Msg @szz@
-result.
-	"ichFirst="2";ichLim="4";data="b ""
+/*''*************************************************
+### _GetStrByIndex(sz, idx, pattern)
+Given a string isolated by delims to some parts, each part is given a index number
 
- [NOTE]
- 	"\\n" represent two char '\','n' in string,
- 	but one char '\n' in search pattern, so as "\\t", "\\s" and "\\w"
-*/
-//------------------------------------------------------------
+PARAMETERS:
+
+* `sz`: text
+* `idx`: index number of which part is required
+* `pattern`: delims pattern text
+
+RETURN VALUE:
+
+* `Nil`: no valid text found
+* Record Structure:
+	* `ichFirst`: the index of the first character of  matching text
+	* `ichLim`: the limit index (one past the last) of the last character of  matching text
+	* `szData`: the matching text
+
+**************************************************''*/
 macro _GetStrByIndex(sz, idx, pattern)
 {
-	//--------------------------------------------------------------------------------
-	// each part is combined with begin pattern delims(or line begin), pure string and end delims(or line ends)
-	//--------------------------------------------------------------------------------
 	var recRet
 	var ret
 	var cnt
@@ -837,91 +832,58 @@ macro _GetStrByIndex(sz, idx, pattern)
 	cnt = 0
 	len = 0
 
-	//special produce
-	//the func strmid makes influence on pattern meta data "^"
-	//*
-	if (pattern[0] == "^")
-	{
-		ret = _SearchInStr(sz, pattern, TRUE, TRUE, FALSE)
-		if (ret == Nil)
-		{
-			if (idx > 0)
-			{
-				_Assert(False)
-				stop
-				//return Nil
-			}
-
-			recRet.ichFirst = 0
-			recRet.ichLim = StrLen(sz)
-			recRet.data = sz
-			return recRet
-		}
-		else
-		{
-			if (idx > 1)
-			{
-				_Assert(False)
-				stop
-				//return Nil
-			}
-			else if (idx == 0)
-			{
-				return Nil
-			}
-			else if (idx == 1)
-			{
-				recRet.ichFirst = ret.ichLim
-				recRet.ichLim = StrLen(sz)
-				recRet.data = StrMid(sz, recRet.ichFirst, recRet.ichLim)
-				return recRet
-			}
-		}
-	}
-	//*/
-
-	// find the begin delims...
 	cnt = idx
 	while (cnt--)
 	{
 		ret = _SearchInStr(sz, pattern, TRUE, TRUE, FALSE)
-		_Log(ret)
 		if (ret == Nil)
 		{
-			_Assert(False)
-			stop
-			//return Nil
+			_Log("out of range")
+			return Nil
 		}
 
 		sz = StrMid(sz, ret.ichLim, StrLen(sz))
 		len = len + ret.ichLim
+
+		// found match, but get nothing when pattern contains "^" or "$"
+		if (ret.szData == Nil)
+		{
+			if (cnt)
+			{
+				_Log("out of range")
+				return Nil
+			}
+
+			recRet.ichFirst = len
+			recRet.ichLim = len + StrLen(sz)
+			recRet.szData = sz
+			return recRet
+		}
 	}
 
-	// find the end delims...
 	ret = _SearchInStr(sz, pattern, TRUE, TRUE, FALSE)
-	_Log(ret)
 	if (ret == Nil)
 	{
 		recRet.ichFirst = len
 		recRet.ichLim = len + StrLen(sz)
-		recRet.data = sz
+		recRet.szData = sz
 		return recRet
 	}
 
 	recRet.ichFirst = len
 	recRet.ichLim = len + ret.ichFirst
-	recRet.data = StrTrunc(sz, ret.ichFirst)
+	recRet.szData = StrTrunc(sz, ret.ichFirst)
 	return recRet
 }
 
 macro ___tst_GetStrByIndex()
 {
-	_Test(_GetStrByIndex("file ext", 0, " "), "ichFirst=\"0\";ichLim=\"4\";data=\"file\"")
-	_Test(_GetStrByIndex("file ext", 0, "\\w+"), "ichFirst=\"0\";ichLim=\"4\";data=\"file\"")
-	_Test(_GetStrByIndex("file ext", 1, "\\w+"), "ichFirst=\"5\";ichLim=\"8\";data=\"ext\"")
-	_Test(_GetStrByIndex("file ext", 0, "^"), Nil)
-	_Test(_GetStrByIndex("file ext", 1, "^"), "ichFirst=\"0\";ichLim=\"8\";data=\"file ext\"")
-	_Test(_GetStrByIndex("file ext", 1, "^.+\\w+"), "ichFirst=\"5\";ichLim=\"8\";data=\"ext\"")
+	_Test(_GetStrByIndex("file ext", 0, " "), "ichFirst=\"0\";ichLim=\"4\";szData=\"file\"")
+	_Test(_GetStrByIndex("file ext", 0, "\\w+"), "ichFirst=\"0\";ichLim=\"4\";szData=\"file\"")
+	_Test(_GetStrByIndex("file ext", 1, "\\w+"), "ichFirst=\"5\";ichLim=\"8\";szData=\"ext\"")
+	_Test(_GetStrByIndex("file ext", 0, "^"), "ichFirst=\"0\";ichLim=\"0\";szData=\"\"")
+	_Test(_GetStrByIndex("file ext", 1, "^"), "ichFirst=\"0\";ichLim=\"8\";szData=\"file ext\"")
+	_Test(_GetStrByIndex("file ext", 1, "^.+\\w+"), "ichFirst=\"5\";ichLim=\"8\";szData=\"ext\"")
 
 	return Nil
 }

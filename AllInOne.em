@@ -226,7 +226,7 @@ macro GetFuncElements(loc)
 	sz = GetBufLine(hDirtyBuf, 0)
 	sz = _GetStrByIndex(sz, 0, "(")
 	if (sz != Nil)
-		szRetType = sz.data
+		szRetType = sz.szData
 	else
 		szRetType = Nil
 
@@ -474,7 +474,7 @@ macro InsFuncHeader_Doxy(sel)
 
 	pattern = "\\\\"
 	recRet = _GetStrByIndex(fnCur, _GetStrCount(fnCur, pattern)-1, pattern)
-	szFileShortName = recRet.data
+	szFileShortName = recRet.szData
 	InsBufLine(hbuf, ln++, " *  @@header{\"@szFileShortName@\"}")
 	InsBufLine(hbuf, ln++, " */")
 
@@ -982,7 +982,7 @@ macro prototype_gen()
 		{
 			cnt = cnt - 1
 			recRet = _GetStrByIndex(sz, cnt, delims)
-			InsBufLine(hbuf, ln, recRet.data)
+			InsBufLine(hbuf, ln, recRet.szData)
 		}
     }
 
