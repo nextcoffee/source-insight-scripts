@@ -433,42 +433,32 @@ macro _StrStrEx(s, substr, ich, fMatchCase, fReverse)
 		substr = toupper(substr)
 	}
 
-	// fReverse
-	if (fReverse)
-		iStep = -1
-	else
-		iStep = 1
-
-	// ich => [0,sLen)
 	sLen = strlen(s)
 	substrLen = strlen(substr)
-	if (ich < 0 || ich >= sLen)
-		return invalid
 
+	// fReverse
 	if (fReverse)
-		iCnt = ich+1 + substrLen*iStep + 1
-	else
-		iCnt = sLen - (substrLen+ich) + 1
-
-	while(iCnt--)
 	{
-		if (fReverse)
-		{
-			ichBegin = ich+1 + substrLen*iStep
-			ichEnd = ich+1
-		}
-		else
-		{
-			ichBegin = ich
-			ichEnd = ich + substrLen*iStep
-		}
+		iStep = -1
+		iCnt = ich - substrLen + 1
+		ichBegin = ich - substrLen
+		ichEnd = ich
+	}
+	else
+	{
+		iStep = 1
+		iCnt = sLen - (substrLen + ich) + 1
+		ichBegin = ich
+		ichEnd = ich + substrLen
+	}
 
-		//_Log(ichBegin)
-		//_Log(ichEnd)
+	while(iCnt-- > 0)
+	{
 		if (strmid(s, ichBegin, ichEnd) == substr)
 			return ichBegin
 
-		ich = ich + iStep
+		ichBegin = ichBegin + iStep
+		ichEnd = ichEnd + iStep
 	}
 
 	return invalid
@@ -483,7 +473,9 @@ macro ___tst_StrStrEx()
 	// fMatchCase test
 	_Test(_StrStrEx("yangming", "Ng", 0, True, False), invalid)
 	// fReverse test
-	_Test(_StrStrEx("yangming", "ng", 7, False, True), 6)
+	_Test(_StrStrEx("yangming", "ng", 8, False, True), 6)
+	_Test(_StrStrEx("yangming", "yangming", 0, False, False), 0)
+	_Test(_StrStrEx("yangming", "yangming", 8, False, True), 0)
 
 	return Nil
 }
