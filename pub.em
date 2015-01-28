@@ -888,19 +888,20 @@ macro ___tst_GetStrByIndex()
 	return Nil
 }
 
+/*''*************************************************
+### _GetStrCount(sz, pattern)
+Calculate the number of parts of a string which is delimited by a regexp pattern
 
-//------------------------------------------------------------
-//
-// Get parts count.
-//
-/*
- e.g.
- 	sz = "a,b ,c,d"
-	Msg _GetStrCount(sz, ",")
-result.
-	"4"
-*/
-//------------------------------------------------------------
+PARAMETERS:
+
+* `sz`: text
+* `pattern`: delims pattern text
+
+RETURN VALUE:
+
+* Integer
+
+**************************************************''*/
 macro _GetStrCount(sz, pattern)
 {
 	var cch
@@ -910,20 +911,18 @@ macro _GetStrCount(sz, pattern)
 	cch = StrLen(sz)    // string length.
 	cnt = 0             // delims count.
 
-	if (pattern[0] == "^")
-	{
-		ret = _SearchInStr(sz, pattern, TRUE, TRUE, FALSE)
-		if (ret == Nil) /* null string */
-			return (1)
-		else
-			return (2)
-	}
-
 	while(True)
 	{
 		ret = _SearchInStr(sz, pattern, TRUE, TRUE, FALSE)
 		if (ret == Nil)
 			break
+
+		// found match, but get nothing when pattern contains "^" or "$"
+		if (ret.szData == Nil)
+		{
+			return 2
+		}
+
 		cnt++
 
 		sz = StrMid(sz, ret.ichLim, StrLen(sz))
