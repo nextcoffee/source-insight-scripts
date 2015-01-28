@@ -781,25 +781,16 @@ RETURN VALUE:
 **************************************************''*/
 macro _GetFileNameExtension(path)
 {
-	var namelen
-	var i
+	var ich
+	var len
 
-    namelen = strlen(path)
-	i = namelen
-	while (i--)
-	{
-		if ("." == path[i])
-		{
-			break;
-		}
-    }
+	len = StrLen(path)
 
-    if (i <= 0)
-	{
+	ich = _StrStrEx(path, ".", len, False, True)
+	if (ich == invalid)
 		return Nil
-	}
 
-	return strmid(path, i + 1, namelen)
+	return strmid(path, ich + 1, len)
 }
 
 macro ___tst_GetFileNameExtension()
