@@ -1068,105 +1068,134 @@ macro Quick_Modify()
 macro TableFormatInner(pattern, lnFirst, lnLast)
 {
 	var hbuf
-	var lnCount
-	var fPatternOnStart
-	var hdaSS
-	var hdaRefLen
-	var iRefLen
-	var iLen
-	var iRefCnt
-	var iRefCntMax
-	var iRefCntMin
-	var lnIndx
-	var recRet
+	var lnIndex
+	var iColIndex
+	var fAlignEnd
+	var daLines
+	var daLine
+	var daInfo
 	var sz
-	var hStrSet
-	var iIndx
+	var size
+	var iSizeDaInfo
 
-	fPatternOnStart = TRUE
+	if (pattern[0] == "-")
+	{
+		fAlignEnd = False // align to the begining of matched text
+		pattern = StrMid(pattern, 1, StrLen(pattern))
+	}
+	else
+	{
+		fAlignEnd = True // align to the end of matched text
+	}
 
 	hbuf = GetCurrentBuf ()
 
-	lnCount = lnLast - lnFirst + 1
-	//_Assert(False)
+	// save medium string for each line
+	daLines = _NewDArray()
 
-	//create array to store string set handle for each line
-	hdaRefLen = _NewDArray()
+	// save string set infomations
+	daInfo = _NewDArray()
 
-	//walk around all lines
-	lnIndx = 0
-	iLen = 0
-	iRefCnt = 0
-	iRefCntMax = 0
-	iRefCntMin = 0
-	while (lnIndx < lnCount)
+	// string parsing and update length info
+	lnIndex = lnFirst
+	while (lnIndex <= lnLast)
 	{
-		sz = GetBufLine(hbuf, lnFirst+lnIndx)
-		hStrSet = _NewStrSet(sz, pattern, fPatternOnStart)
-		iRefCnt = _CountStr(hStrSet)
+		var ss
 
-		iIndx = 0
-		iRefCntMin = _MIN(iRefCntMax, iRefCnt)
-		while (iIndx < iRefCntMin)
+		sz = GetBufLine(hbuf, lnIndex)
+		ss = _NewStrSet(sz, pattern)
+
+		// medium string
+		daLine = _NewDArray()
+		_PushDArray(daLines, daLine)
+
+		// update max length of every column
+		size = _CountStr(ss)
+		iSizeDaInfo = _CountDArray(daInfo)
+
+		// add info about new column
+		while (size > iSizeDaInfo)
 		{
-			iLen = StrLen(_GetStr(hStrSet, iIndx)) + StrLen(_GetPStr(hStrSet, iIndx))
-			if (iLen > _GetDArray(hdaRefLen, iIndx))
-				_SetDArray(hdaRefLen, iIndx, iLen)
-			iIndx = iIndx + 1
+			_PushDArray(daInfo, 0)
+			iSizeDaInfo++
 		}
 
-		if (iRefCntMax < iRefCnt)
+		// update length info about each column
+		iColIndex = 0
+		while (iColIndex < size)
 		{
-			while (iIndx < iRefCnt)
+			var old
+			var new
+			var psz
+			var ssz
+
+			if (fAlignEnd)
 			{
-				iLen = StrLen(_GetStr(hStrSet, iIndx)) + StrLen(_GetPStr(hStrSet, iIndx))
-				_PushDArray(hdaRefLen, iLen)
-				iIndx = iIndx + 1
+				if (iColIndex == (size - 1))
+					psz = Nil
+				else
+					psz = _GetPStr(ss, iColIndex)
+
+				ssz = _GetStr(ss, iColIndex) # psz
 			}
-			iRefCntMax = iRefCnt
+			else
+			{
+				if (iColIndex == 0)
+					psz = Nil
+				else
+					psz = _GetPStr(ss, iColIndex-1)
+
+				ssz = psz # _GetStr(ss, iColIndex)
+			}
+
+			//Msg ssz
+			_PushDArray(daLine, ssz)
+
+			old = _GetDArray(daInfo, iColIndex)
+			new = StrLen(ssz)
+
+			if (new > old)
+				_SetDArray(daInfo, iColIndex, new)
+
+			iColIndex++
 		}
 
-		_FreeStrSet(hStrSet)
-
-		lnIndx = lnIndx + 1
+		_FreeStrSet(ss)
+		lnIndex++
 	}
 
-	//walk around all lines
-	lnIndx = 0
-	iRefLen = 0
-	iLen = 0
-	iRefCnt = 0
-	while (lnIndx < lnCount)
+	// align lines and release string set
+	lnIndex = lnFirst
+	while (lnIndex <= lnLast)
 	{
-		sz = GetBufLine(hbuf, lnFirst+lnIndx)
-		hStrSet = _NewStrSet(sz, pattern, fPatternOnStart)
-		iRefCnt = _CountStr(hStrSet)
+		daLine = _PullDArray(daLines)
+		size = _CountDArray(daLine)
 
-		iIndx = 0
-		while (iIndx < iRefCnt)
+		iColIndex = 0
+		sz = Nil
+		while (iColIndex < (size - 1)) // no need to align the last item
 		{
-			iRefLen = _GetDArray(hdaRefLen, iIndx)
-			iLen = StrLen(_GetStr(hStrSet, iIndx)) + StrLen(_GetPStr(hStrSet, iIndx))
-			sz = _GetStr(hStrSet, iIndx)
-			while (iLen < iRefLen)
-			{
-				sz = sz#" "
-				iLen = iLen + 1
-			}
-			_SetStr(hStrSet, iIndx, sz)
+			var len
+			var iLenMax
+			var ssz
 
-			iIndx = iIndx + 1
+			ssz = _PullDArray(daLine)
+			iLenMax = _GetDArray(daInfo, iColIndex)
+			ssz = _AlignStr(ssz, iLenMax, " ", True)
+			sz = sz # ssz
+
+			iColIndex++
 		}
 
-		//Msg _GetStrSet(hStrSet)
-		PutBufLine(hbuf, (lnIndx + lnFirst), _GetStrSet(hStrSet))
+		sz = sz # _PullDArray(daLine)
+		PutBufLine(hbuf, lnIndex, sz)
 
-		_FreeStrSet(hStrSet)
-
-		lnIndx = lnIndx + 1
+		_FreeDArray(daLine)
+		lnIndex++
 	}
 
-	_FreeDArray(hdaRefLen)
+	_FreeDArray(daInfo)
+	_FreeDArray(daLines)
 	return Nil
 }
 

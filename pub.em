@@ -222,25 +222,6 @@ macro ___tst_Log()
 
 **************************************************''*/
 
-//------------------------------------------------------------
-// Get local time in aligned format
-//------------------------------------------------------------
-macro __AlignNum(szNum, iCount, chr)
-{
-    var iLen
-    var sz
-
-    sz = szNum
-    iLen = StrLen(sz)
-    while (iCount > iLen)
-    {
-        sz = chr # sz
-        iLen++
-    }
-
-    return sz
-}
-
 /*''*************************************************
 ### _GetLocalTime()
 Cut off the blank chars at the both sides of the string
@@ -275,12 +256,12 @@ macro _GetLocalTime()
     recTimeAligned.szTime = recTimeOrig.time
     recTimeAligned.szYear = recTimeOrig.Year
     recTimeAligned.szDayOfWeek = recTimeOrig.DayOfWeek
-    recTimeAligned.szMonth        = __AlignNum(recTimeOrig.Month, 2, chrAlign)
-    recTimeAligned.szDay          = __AlignNum(recTimeOrig.Day,   2, chrAlign)
-    recTimeAligned.szHour         = __AlignNum(recTimeOrig.Hour,  2, chrAlign)
-    recTimeAligned.szMinute       = __AlignNum(recTimeOrig.Minute, 2, chrAlign)
-    recTimeAligned.szSecond       = __AlignNum(recTimeOrig.Second, 2, chrAlign)
-    recTimeAligned.szMilliseconds = __AlignNum(recTimeOrig.Milliseconds, 3, chrAlign)
+    recTimeAligned.szMonth        = _AlignStr(recTimeOrig.Month, 2, chrAlign, False)
+    recTimeAligned.szDay          = _AlignStr(recTimeOrig.Day,   2, chrAlign, False)
+    recTimeAligned.szHour         = _AlignStr(recTimeOrig.Hour,  2, chrAlign, False)
+    recTimeAligned.szMinute       = _AlignStr(recTimeOrig.Minute, 2, chrAlign, False)
+    recTimeAligned.szSecond       = _AlignStr(recTimeOrig.Second, 2, chrAlign, False)
+    recTimeAligned.szMilliseconds = _AlignStr(recTimeOrig.Milliseconds, 3, chrAlign, False)
 
 	return recTimeAligned
 }
@@ -324,12 +305,13 @@ macro _UniNum()
 	//count
 	if (g_count == Nil)
 		g_count = 0
-	else if (g_count >= 100)
-		g_count = 0
 	else
 		g_count++
 
-	szCount = __AlignNum(g_count, 2, "0")
+	if (g_count >= 100)
+		g_count = 0
+
+	szCount = _AlignStr(g_count, 2, "0", False)
 
 	sz = recTime.szYear # recTime.szMonth # recTime.szDay # recTime.szHour
 		# recTime.szMinute # recTime.szSecond # recTime.szMilliseconds # szCount
@@ -396,6 +378,56 @@ macro ___tst_IsSpace()
 	_Test(_IsSpace(" "), True)
 	_Test(_IsSpace("	"), True)
 	_Test(_IsSpace("a"), False)
+	return Nil
+}
+
+/*''*************************************************
+### _AlignStr(sz, length, chr, fAppend)
+Expand string length with specific character
+
+PARAMETERS:
+
+* `sz`: source string
+* `length`: required length after expanding
+* `chr`: character used
+* `fAppend`: if true, append character to the end. Otherwise insert it at the begining
+
+RETURN VALUE:
+
+* String
+
+**************************************************''*/
+macro _AlignStr(sz, length, chr, fAppend)
+{
+    var count
+
+	_ASSERT(StrLen(chr) == 1)
+
+    count = length - StrLen(sz)
+    if (count < 0)
+    {
+		Msg "[_AlignStr]: count=" # count
+		return sz
+    }
+
+    if (fAppend)
+    {
+	    while (count--)
+	        sz = sz # chr
+	}
+	else
+	{
+	    while (count--)
+	        sz = chr # sz
+	}
+
+    return sz
+}
+
+macro ___tst_AlignStr()
+{
+	_Test(_AlignStr("1", 3, "0", False), "001")
+	_Test(_AlignStr("1", 3, "0", True), "100")
 	return Nil
 }
 
@@ -1103,7 +1135,7 @@ macro _PullDArray(hDArray)
 	recRet = GetBufLine(hDArray, 0)
 	if (recRet.iSize == 0)
 	{
-		Msg "[_PopDArray] Out of range"
+		Msg "[_PullDArray] Out of range"
 		_Assert(False)
 		stop
 	}
@@ -1257,166 +1289,123 @@ macro ___tst_DArray()
 
 **************************************************''*/
 
-//------------------------------------------------------------
-// string parse
-//------------------------------------------------------------
-macro _NewStrSet(sz, pattern, fPatternOnStart)
+/*''*************************************************
+### _NewStrSet(sz, pattern)
+Split string by delims identified by regular expression pattern
+
+PARAMETERS:
+
+* `sz`: text
+* `pattern`: delims pattern text
+
+RETURN VALUE:
+
+* Record Structure:
+	* `hDataArray`: dynamic array handle of split text
+	* `hPatternArray`: dynamic array handle of matching text by pattern
+
+**************************************************''*/
+macro _NewStrSet(sz, pattern)
 {
 	var hStr
 	var recRet
 	var len
-	var err
-
-	_Log(pattern)
-
-	// pattern string check
-	if (pattern[0] == "^")
-	{
-		Msg "Pattern ^ is not supported!"
-		stop
-	}
-
-	if (pattern[StrLen(pattern) - 1] == "$")
-	{
-		// '\\*' '\$' '$'
-		recRet = _SearchInStr(pattern, "\\\\*\\$$", TRUE, TRUE, FALSE)
-		len = recRet.ichLim - recRet.ichFirst
-		if (len != (len / 2 * 2))
-		{
-			Msg "Pattern $ is not supported!"
-			stop
-		}
-		//_Assert(False)
-	}
-
+	var szErr
 
 	hStr = Nil
-	hStr.ssDataArray = _NewDArray()
-	hStr.ssPatternArray = _NewDArray()
-	hStr.ssfPatternOnStart = fPatternOnStart
+	hStr.hDataArray = _NewDArray()
+	hStr.hPatternArray = _NewDArray()
 
-	//special produce
-	//the func strmid will effect pattern meta data "^"
-	/*
-	if (pattern[0] == "^")
-	{
-		recRet = _SearchInStr(sz, pattern, TRUE, TRUE, FALSE)
-		if (recRet == Nil)
-		{
-			rec.validData = sz
-			rec.patternData = Nil
-			AppendBufLine(hStr.sshBuf, rec)
-			hStr.ssCount = 1
-			return hStr
-		}
-		else
-		{
-			AppendBufLine(hStr.sshBuf, Nil)
-			rec.validData = StrMid(sz, recRet.ichLim, StrLen(sz))
-			rec.patternData = StrMid(sz, recRet.ichFirst, recRet.ichLim)
-			AppendBufLine(hStr.sshBuf, rec)
-			hStr.ssCount = 2
-			return hStr
-		}
-	}
-	//*/
-
-	// find the begin delims...
 	len = 0
 	while(True)
 	{
+		_Log("sz=@sz@, pattern=@pattern@")
 		recRet = _SearchInStr(sz, pattern, TRUE, TRUE, FALSE)
 		if (recRet == Nil)
 		{
-			_PushDArray(hStr.ssDataArray, sz)
-			if (fPatternOnStart)
-				_InsDArray(hStr.ssPatternArray, Nil)
-			else
-				_PushDArray(hStr.ssPatternArray, Nil)
-			//_Assert(False)
+			_PushDArray(hStr.hDataArray, sz)
 			return hStr
 		}
 
-		if (recRet.ichFirst == recRet.ichLim)
-		{
-			err = "Error pattern: Pattern cant represents Nil!"
-			break
-		}
-
-		_PushDArray(hStr.ssDataArray, StrTrunc(sz, recRet.ichFirst))
-		_PushDArray(hStr.ssPatternArray, StrMid(sz, recRet.ichFirst, recRet.ichLim))
+		_PushDArray(hStr.hDataArray, StrTrunc(sz, recRet.ichFirst))
+		_PushDArray(hStr.hPatternArray, StrMid(sz, recRet.ichFirst, recRet.ichLim))
 
 		sz = StrMid(sz, recRet.ichLim, StrLen(sz))
 		len = len + recRet.ichLim
+
+		// if the pattern contains "^"
+		if (pattern[0] == "^")
+		{
+			_PushDArray(hStr.hDataArray, sz)
+			return hStr
+		}
 	}
 
-	//error!
-	_FreeDArray(hStr.ssPatternArray)
-	_FreeDArray(hStr.ssDataArray)
+	// error handle
+	_FreeDArray(hStr.hPatternArray)
+	_FreeDArray(hStr.hDataArray)
 
-	Msg err
-	//return Nil
+	_ASSERT(0)
 	stop
 }
 
 macro _GetStrSet(hStr)
 {
-	var cnt
 	var index
+	var iPatternArraySize
 	var sz
 	var szData
 	var szPattern
 
-	cnt = _CountStr(hStr)
+	iPatternArraySize = _CountStr(hStr) - 1
 	index = 0
 	sz = Nil
-	while (index < cnt)
+	while (index < iPatternArraySize)
 	{
-		szData = _GetDArray(hStr.ssDataArray, index)
-		szPattern = _GetDArray(hStr.ssPatternArray, index)
+		szData = _GetDArray(hStr.hDataArray, index)
+		szPattern = _GetDArray(hStr.hPatternArray, index)
+		sz = sz # szData # szPattern
 
-		if (hStr.ssfPatternOnStart)
-			sz = sz#szPattern#szData
-		else
-			sz = sz#szData#szPattern
-
-		index = index + 1
+		index++
 	}
 
+	// last partion
+	szData = _GetDArray(hStr.hDataArray, index)
+	sz = sz # szData
 	return sz
 }
 
 macro _FreeStrSet(hStr)
 {
-	_FreeDArray(hStr.ssPatternArray)
-	_FreeDArray(hStr.ssDataArray)
+	_FreeDArray(hStr.hPatternArray)
+	_FreeDArray(hStr.hDataArray)
 
 	return Nil
 }
 
 macro _GetStr(hStr, index)
 {
-	return _GetDArray(hStr.ssDataArray, index)
+	return _GetDArray(hStr.hDataArray, index)
 }
 
 macro _SetStr(hStr, index, sz)
 {
-	return _SetDArray(hStr.ssDataArray, index, sz)
+	return _SetDArray(hStr.hDataArray, index, sz)
 }
 
 macro _GetPStr(hStr, index)
 {
-	return _GetDArray(hStr.ssPatternArray, index)
+	return _GetDArray(hStr.hPatternArray, index)
 }
 
 macro _SetPStr(hStr, index, sz)
 {
-	return _SetDArray(hStr.ssPatternArray, index, sz)
+	return _SetDArray(hStr.hPatternArray, index, sz)
 }
 
 macro _CountStr(hStr)
 {
-	return _CountDArray(hStr.ssDataArray)
+	return _CountDArray(hStr.hDataArray)
 }
 
 macro ___tst_StrSet()
@@ -1433,7 +1422,7 @@ macro ___tst_StrSet()
 		szTmp = sz
 		pattern = ";\\w"
 
-		hstr = _NewStrSet(sz, pattern, False)
+		hstr = _NewStrSet(sz, pattern)
 		sz = _GetStrSet(hstr)
 		_Test(sz, szTmp)
 
@@ -1453,7 +1442,7 @@ macro ___tst_StrSet()
 		szTmp = sz
 		pattern = "\\$" //"\$"
 
-		hstr = _NewStrSet(sz, pattern, False)
+		hstr = _NewStrSet(sz, pattern)
 		sz = _GetStrSet(hstr)
 		_Test(sz, szTmp)
 
@@ -1469,7 +1458,7 @@ macro ___tst_StrSet()
 		szTmp = sz
 		pattern = "\\\\\\$" //"\\\$"
 
-		hstr = _NewStrSet(sz, pattern, False)
+		hstr = _NewStrSet(sz, pattern)
 		sz = _GetStrSet(hstr)
 		_Test(sz, szTmp)
 
