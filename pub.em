@@ -218,136 +218,6 @@ macro ___tst_Log()
 }
 
 /*''*************************************************
-## MISC
-
-**************************************************''*/
-
-/*''*************************************************
-### _GetLocalTime()
-Cut off the blank chars at the both sides of the string
-
-PARAMETERS: N/A
-
-RETURN VALUE:
-
-* Record Structure:
-	* `szTime`: the time of day in string format
-	* `szDate`: the day of week, day, month, and year as a string
-	* `szYear`: current year
-	* `szMonth`: current month number. January is 1
-	* `szDayOfWeek`: day of week number. Sunday is 0, Monday is 1, etc
-	* `szDay`: day of month
-	* `szHour`: current hour
-	* `szMinute`: current minute
-	* `szSecond`: current second
-	* `szMilliseconds`: current milliseconds
-
-**************************************************''*/
-macro _GetLocalTime()
-{
-    var recTimeAligned
-    var recTimeOrig
-    var chrAlign
-
-	chrAlign = "0"
-    recTimeOrig = GetSysTime(True)
-
-    recTimeAligned.szDate = recTimeOrig.date
-    recTimeAligned.szTime = recTimeOrig.time
-    recTimeAligned.szYear = recTimeOrig.Year
-    recTimeAligned.szDayOfWeek = recTimeOrig.DayOfWeek
-    recTimeAligned.szMonth        = _AlignStr(recTimeOrig.Month, 2, chrAlign, False)
-    recTimeAligned.szDay          = _AlignStr(recTimeOrig.Day,   2, chrAlign, False)
-    recTimeAligned.szHour         = _AlignStr(recTimeOrig.Hour,  2, chrAlign, False)
-    recTimeAligned.szMinute       = _AlignStr(recTimeOrig.Minute, 2, chrAlign, False)
-    recTimeAligned.szSecond       = _AlignStr(recTimeOrig.Second, 2, chrAlign, False)
-    recTimeAligned.szMilliseconds = _AlignStr(recTimeOrig.Milliseconds, 3, chrAlign, False)
-
-	return recTimeAligned
-}
-
-macro ___tst_GetLocalTime()
-{
-    var rec
-	rec = _GetLocalTime()
-
-	_Assert(rec.szYear > 1970)
-	_Assert(rec.szMonth <= 12 && rec.szMonth > 0)
-	_Assert(rec.szDay <= 31 && rec.szDay > 0)
-	_Assert(rec.szHour <= 24 && rec.szHour >= 0)
-	_Assert(rec.szMinute <= 60 && rec.szMinute >= 0)
-
-	return Nil
-}
-
-/*''*************************************************
-### _UniNum()
-Generate rondom number like: "201005062239000"
-
-PARAMETERS: N/A
-
-RETURN VALUE:
-
-* String
-
-**************************************************''*/
-macro _UniNum()
-{
-	var recTime
-	var szCount
-	var sz
-
-	// Version 3.50.0044 - Jan 26, 2006
-	global g_count
-
-	recTime = _GetLocalTime()
-
-	//count
-	if (g_count == Nil)
-		g_count = 0
-	else
-		g_count++
-
-	if (g_count >= 100)
-		g_count = 0
-
-	szCount = _AlignStr(g_count, 2, "0", False)
-
-	sz = recTime.szYear # recTime.szMonth # recTime.szDay # recTime.szHour
-		# recTime.szMinute # recTime.szSecond # recTime.szMilliseconds # szCount
-	return sz
-}
-
-macro ___tst_UniNum()
-{
-	//------------------------------
-	// to ensure the uninum string is unique
-	//------------------------------
-	//*
-	var outLoopCnt
-	var sz
-	var szz
-
-	outLoopCnt = 1000
-	while (outLoopCnt)
-	{
-		sz = _UniNum()
-		szz = _UniNum()
-
-		if (sz == szz)
-		{
-			Msg "Need more interval!"
-			_Assert(False)
-		}
-
-		outLoopCnt = outLoopCnt - 1
-	}
-
-	_Log(_UniNum())
-	return Nil
-}
-
-/*''*************************************************
 ## CHARS & STRING
 
 **************************************************''*/
@@ -1041,9 +911,7 @@ PARAMETERS:
 
 * `hDArray`: handle of the dynamic array buffer
 
-RETURN VALUE:
-
-* `Nil`
+RETURN VALUE: `Nil`
 
 **************************************************''*/
 macro _FreeDArray(hDArray)
@@ -1063,9 +931,7 @@ PARAMETERS:
 * `hDArray`: handle of the dynamic array buffer
 * `sz`: content of the new item
 
-RETURN VALUE:
-
-* `Nil`
+RETURN VALUE: `Nil`
 
 **************************************************''*/
 macro _PushDArray(hDArray, sz)
@@ -1157,9 +1023,7 @@ PARAMETERS:
 * `hDArray`: handle of the dynamic array buffer
 * `sz`: content of the new item
 
-RETURN VALUE:
-
-* `Nil`
+RETURN VALUE: `Nil`
 
 **************************************************''*/
 macro _InsDArray(hDArray, sz)
@@ -1213,9 +1077,7 @@ PARAMETERS:
 * `index`: index number of required item
 * `sz`: content of the new item
 
-RETURN VALUE:
-
-* `Nil`
+RETURN VALUE: `Nil`
 
 **************************************************''*/
 macro _SetDArray(hDArray, index, sz)
@@ -1471,6 +1333,147 @@ macro ___tst_StrSet()
 	return Nil
 }
 
+/*''*************************************************
+## MISC
+
+**************************************************''*/
+
+/*''*************************************************
+### _GetLocalTime()
+Cut off the blank chars at the both sides of the string
+
+PARAMETERS: N/A
+
+RETURN VALUE:
+
+* Record Structure:
+	* `szTime`: the time of day in string format
+	* `szDate`: the day of week, day, month, and year as a string
+	* `szYear`: current year
+	* `szMonth`: current month number. January is 1
+	* `szDayOfWeek`: day of week number. Sunday is 0, Monday is 1, etc
+	* `szDay`: day of month
+	* `szHour`: current hour
+	* `szMinute`: current minute
+	* `szSecond`: current second
+	* `szMilliseconds`: current milliseconds
+
+**************************************************''*/
+macro _GetLocalTime()
+{
+    var recTimeAligned
+    var recTimeOrig
+    var chrAlign
+
+	chrAlign = "0"
+    recTimeOrig = GetSysTime(True)
+
+    recTimeAligned.szDate = recTimeOrig.date
+    recTimeAligned.szTime = recTimeOrig.time
+    recTimeAligned.szYear = recTimeOrig.Year
+    recTimeAligned.szDayOfWeek = recTimeOrig.DayOfWeek
+    recTimeAligned.szMonth        = _AlignStr(recTimeOrig.Month, 2, chrAlign, False)
+    recTimeAligned.szDay          = _AlignStr(recTimeOrig.Day,   2, chrAlign, False)
+    recTimeAligned.szHour         = _AlignStr(recTimeOrig.Hour,  2, chrAlign, False)
+    recTimeAligned.szMinute       = _AlignStr(recTimeOrig.Minute, 2, chrAlign, False)
+    recTimeAligned.szSecond       = _AlignStr(recTimeOrig.Second, 2, chrAlign, False)
+    recTimeAligned.szMilliseconds = _AlignStr(recTimeOrig.Milliseconds, 3, chrAlign, False)
+
+	return recTimeAligned
+}
+
+macro ___tst_GetLocalTime()
+{
+    var rec
+	rec = _GetLocalTime()
+
+	_Assert(rec.szYear > 1970)
+	_Assert(rec.szMonth <= 12 && rec.szMonth > 0)
+	_Assert(rec.szDay <= 31 && rec.szDay > 0)
+	_Assert(rec.szHour <= 24 && rec.szHour >= 0)
+	_Assert(rec.szMinute <= 60 && rec.szMinute >= 0)
+
+	return Nil
+}
+
+/*''*************************************************
+### _UniNum()
+Generate rondom number like: "201005062239000"
+
+PARAMETERS: N/A
+
+RETURN VALUE:
+
+* String
+
+**************************************************''*/
+macro _UniNum()
+{
+	var recTime
+	var szCount
+	var sz
+
+	// Version 3.50.0044 - Jan 26, 2006
+	global g_count
+
+	recTime = _GetLocalTime()
+
+	//count
+	if (g_count == Nil)
+		g_count = 0
+	else
+		g_count++
+
+	if (g_count >= 100)
+		g_count = 0
+
+	szCount = _AlignStr(g_count, 2, "0", False)
+
+	sz = recTime.szYear # recTime.szMonth # recTime.szDay # recTime.szHour
+		# recTime.szMinute # recTime.szSecond # recTime.szMilliseconds # szCount
+	return sz
+}
+
+macro ___tst_UniNum()
+{
+	//------------------------------
+	// to ensure the uninum string is unique
+	//------------------------------
+	//*
+	var outLoopCnt
+	var sz
+	var szz
+
+	outLoopCnt = 1000
+	while (outLoopCnt)
+	{
+		sz = _UniNum()
+		szz = _UniNum()
+
+		if (sz == szz)
+		{
+			Msg "Need more interval!"
+			_Assert(False)
+		}
+
+		outLoopCnt = outLoopCnt - 1
+	}
+
+	_Log(_UniNum())
+	return Nil
+}
+
+/*''*************************************************
+### _MIN(a, b)
+Get the minimal number
+
+PARAMETERS:
+
+RETURN VALUE:
+
+* Integer
+
+**************************************************''*/
 macro _MIN(a, b)
 {
 	if (a > b)
@@ -1479,6 +1482,17 @@ macro _MIN(a, b)
 		return a
 }
 
+/*''*************************************************
+### _MAX(a, b)
+Get the maximal number
+
+PARAMETERS:
+
+RETURN VALUE:
+
+* Integer
+
+**************************************************''*/
 macro _MAX(a, b)
 {
 	if (a > b)
@@ -1487,13 +1501,23 @@ macro _MAX(a, b)
 		return b
 }
 
+/*''*************************************************
+### _GetSIVer()
+Get the source insight version number
+
+PARAMETERS: N/A
+
+RETURN VALUE:
+
+* String
+
+**************************************************''*/
 macro _GetSIVer()
 {
 	var pinfo
 	var verMjr
 	var verMnr
 	var verBld
-	var szVer
 
 	pinfo = GetProgramInfo()
 	if (pinfo == Nil)
@@ -1506,19 +1530,10 @@ macro _GetSIVer()
 	verMnr = pinfo.versionMinor
 	verBld = pinfo.versionBuild
 
-	if (verMnr < 10)
-		verMnr = "0"#verMnr
+	verMnr = _AlignStr(verMnr, 2, "0", False)
+	verBld = _AlignStr(verBld, 4, "0", False)
 
-	if (verBld < 10)
-		verBld = "000"#verBld
-	else if (verBld < 100)
-		verBld = "00"#verBld
-	else if (verBld < 1000)
-		verBld = "0"#verBld
-
-	szVer = "@verMjr@.@verMnr@.@verBld@"
-
-	return szVer
+	return "@verMjr@.@verMnr@.@verBld@"
 }
 
 macro ___tst_GetSIVer()
@@ -1548,9 +1563,19 @@ macro ___tst_GetSIVer()
 	return Nil
 }
 
-//------------------------------------------------------------
-//Get current selection info and type
-//------------------------------------------------------------
+/*''*************************************************
+### _GetCurSelEx()
+Get current selection info and type
+
+PARAMETERS: N/A
+
+RETURN VALUE:
+
+* Record Structure:
+	`sel`: record structure, contains some selection infomation
+	`type`: string, indicate the selection type
+
+**************************************************''*/
 macro _GetCurSelEx()
 {
 	var hwnd
@@ -1672,6 +1697,17 @@ macro ___tst_GetCurSelEx()
 	return Nil
 }
 
+/*''*************************************************
+### _GetSIBaseDir()
+Get the directory of source insight project named "Base"
+
+PARAMETERS: N/A
+
+RETURN VALUE:
+
+* String
+
+**************************************************''*/
 macro _GetSIBaseDir()
 {
 	var recProgEnvInfo
@@ -1710,7 +1746,21 @@ macro ___tst_GetSIBaseDir()
 	return Nil
 }
 
-// NOTE: This func cannot effect on source insight project file
+/*''*************************************************
+### _IsFileExist()
+Get the directory of source insight project named "Base"
+
+PARAMETERS: N/A
+
+RETURN VALUE:
+
+* String
+
+NOTE:
+
+*This function has no effect for source insight project file*
+
+**************************************************''*/
 macro _IsFileExist(fileFullName)
 {
 	var hbuf
@@ -1734,6 +1784,18 @@ macro ___tst_IsFileExist()
 	return Nil
 }
 
+/*''*************************************************
+### _CopyBuf(hSrc, hDst)
+Copy buffer content from one to another
+
+PARAMETERS:
+
+* `hSrc`: handle of source buffer
+* `hDst`: handle of destination buffer
+
+RETURN VALUE: `Nil`
+
+**************************************************''*/
 macro _CopyBuf(hSrc, hDst)
 {
 	var iCnt
