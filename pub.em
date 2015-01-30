@@ -99,7 +99,7 @@ macro _GenStackInfo(iLevel)
 	var sz
 	var rec
 
-	hBuf = NewBuf(_UniNum())
+	hBuf = NewBuf("STACK" # _UniNum())
 	if (hBuf == hNil)
 	    return Nil
 
@@ -167,7 +167,7 @@ macro _Log(sz)
 
     if (hFileLog == hNil)
     {
-	    szLogFileName = _UniNum()
+	    szLogFileName = "LOG" # _UniNum()
 	    hFileLog = newbuf(szLogFileName)
 	    if (hFileLog == hNil)
 	    {
@@ -565,7 +565,7 @@ macro _SearchInStr (sz, pattern, fMatchCase, fRegExp, fWholeWordsOnly)
 
 	recSearchResult = Nil    // init a record to store the return string and it's offset
 
-	hbuf = NewBuf(_UniNum())  // create output buffer
+	hbuf = NewBuf("SRCH-STR" # _UniNum())  // create output buffer
 	if (hbuf == 0)
 	{
 		Msg "Create DirtyBuffer Error!"
@@ -634,7 +634,7 @@ macro _ReplaceInStr (sz, oldPattern, newPattern, fMatchCase, fRegExp, fWholeWord
 
 	recReplaceResult = Nil    // init a record to store the return string and it's status
 
-	hbuf = NewBuf(_UniNum())        // create output buffer
+	hbuf = NewBuf("REPL-STR" # _UniNum())        // create output buffer
 	if (hbuf == 0)
 	{
 		Msg "Create DirtyBuffer Error!"
@@ -888,7 +888,7 @@ macro _NewDArray()
 	var hDArray
 	var rec
 
-	hDArray = NewBuf(_UniNum())
+	hDArray = NewBuf("DA" # _UniNum())
 	if (hDArray == hNil)
 	{
 		Msg "Create dynamic array failed"
