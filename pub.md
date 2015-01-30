@@ -1,15 +1,58 @@
-# pub.em
-Some useful functions
 
-## TEST TOOLS
+* [TEST](#TEST)
+  * [_Assert](_Assert)
+  * [_Test](_Test)
+* [LOGGING](#LOGGING)
+  * [_Log](_Log)
+  * [_SetLogLevel](_SetLogLevel)
+  * [_LogShow](_LogShow)
+  * [_GenStackInfo](_GenStackInfo)
+* [CHARS & STRING](#CHARS & STRING)
+  * [_IsSpace](_IsSpace)
+  * [_AlignStr](_AlignStr)
+  * [_StrStrEx](_StrStrEx)
+  * [_StrStr](_StrStr)
+  * [_StrCmp](_StrCmp)
+  * [_StrCls](_StrCls)
+  * [_SearchInStr](_SearchInStr)
+  * [_ReplaceInStr](_ReplaceInStr)
+  * [_GetFileNameExtension](_GetFileNameExtension)
+  * [_GetStrByIndex](_GetStrByIndex)
+  * [_GetStrCount](_GetStrCount)
+* [DYNAMIC ARRAY](#DYNAMIC ARRAY)
+  * [_NewDArray](_NewDArray)
+  * [_FreeDArray](_FreeDArray)
+  * [_PushDArray](_PushDArray)
+  * [_PopDArray](_PopDArray)
+  * [_PullDArray](_PullDArray)
+  * [_InsDArray](_InsDArray)
+  * [_GetDArray](_GetDArray)
+  * [_SetDArray](_SetDArray)
+  * [_CountDArray](_CountDArray)
+* [STRING SET](#STRING SET)
+  * [_NewStrSet](_NewStrSet)
+* [MISC](#MISC)
+  * [_GetLocalTime](_GetLocalTime)
+  * [_UniNum](_UniNum)
+  * [_MIN](_MIN)
+  * [_MAX](_MAX)
+  * [_GetSIVer](_GetSIVer)
+  * [_GetCurSelEx](_GetCurSelEx)
+  * [_GetSIBaseDir](_GetSIBaseDir)
+  * [_IsFileExist](_IsFileExist)
+  * [_CopyBuf](_CopyBuf)
 
-### _Assert(exp)
+<h1 id="TEST">TEST</h1>
+
+<h2 id="_Assert">_Assert</h2>
 Assert and stop the macro when enconters unrepairable errors
 
-### _Test(exp, result)
+<h2 id="_Test">_Test</h2>
 For test case
 
-## LOGGING TOOL
+<h1 id="LOGGING">LOGGING</h1>
+
+<h2 id="_Log">_Log</h2>
 
 Log tag and priority is:
 
@@ -21,9 +64,9 @@ Log tag and priority is:
 	`F`    Fatal
 	`S`    Silent (supress all output)
 
-Use **_Log{tag}(sz)** like `_LogV`, `_LogD`, `_LogI`, ...etc to output messages respectively
+Use `_LogV`, `_LogD`, `_LogI`, ...etc to output messages respectively
 
-### _SetLogLevel(szLevel)
+<h2 id="_SetLogLevel">_SetLogLevel</h2>
 Set log level
 
 PARAMETERS:
@@ -32,14 +75,14 @@ PARAMETERS:
 
 RETURN VALUE: `Nil`
 
-### _LogShow()
+<h2 id="_LogShow">_LogShow</h2>
 Show logging messages in temperary buffer
 
 PARAMETERS: N/A
 
 RETURN VALUE: `Nil`
 
-### _GenStackInfo(iLevel)
+<h2 id="_GenStackInfo">_GenStackInfo</h2>
 Get function call stack info
 
 PARAMETERS:
@@ -53,9 +96,9 @@ RETURN VALUE:
 	* `iLine`: line number
 	* `szTime`: timestamp
 
-## CHARS & STRING
+<h1 id="CHARS & STRING">CHARS & STRING</h1>
 
-### _IsSpace(ch)
+<h2 id="_IsSpace">_IsSpace</h2>
 Generate rondom number like: "201005062239000"
 
 PARAMETERS:
@@ -66,7 +109,7 @@ RETURN VALUE:
 
 * Boolean
 
-### _AlignStr(sz, length, chr, fAppend)
+<h2 id="_AlignStr">_AlignStr</h2>
 Expand string length with specific character
 
 PARAMETERS:
@@ -80,7 +123,7 @@ RETURN VALUE:
 
 * String
 
-### _StrStrEx(s, substr, ich, fMatchCase, fReverse)
+<h2 id="_StrStrEx">_StrStrEx</h2>
 Find a sub-string in string s, start from ich (ich>=0)
 
 PARAMETERS:
@@ -96,7 +139,7 @@ RETURN VALUE:
 * `invalid`: no matching substr has been found
 * Integer: location of matching substr
 
-### _StrStr(s, substr)
+<h2 id="_StrStr">_StrStr</h2>
 Find a sub-string in string s
 
 PARAMETERS:
@@ -109,7 +152,7 @@ RETURN VALUE:
 * `invalid`: no matching substr has been found
 * Integer: location of matching substr
 
-### _StrCmp(sz1, sz2)
+<h2 id="_StrCmp">_StrCmp</h2>
 String comparation
 
 PARAMETERS:
@@ -123,7 +166,7 @@ RETURN VALUE:
 * `1`: sz1 > sz2
 * `-1`: sz1 < sz2
 
-### _StrCls(sz)
+<h2 id="_StrCls">_StrCls</h2>
 Cut off the blank chars at the both sides of the string
 
 PARAMETERS:
@@ -134,7 +177,7 @@ RETURN VALUE:
 
 * String: trimmed string
 
-### _SearchInStr (sz, pattern, fMatchCase, fRegExp, fWholeWordsOnly)
+<h2 id="_SearchInStr">_SearchInStr</h2>
 Searches for pattern in the string
 
 PARAMETERS:
@@ -153,7 +196,7 @@ RETURN VALUE:
 	* `ichLim`: the limit index (one past the last) of the last character of  matching text
 	* `szData`: the matching text
 
-### _ReplaceInStr (sz, oldPattern, newPattern, fMatchCase, fRegExp, fWholeWordsOnly, fConfirm)
+<h2 id="_ReplaceInStr">_ReplaceInStr</h2>
 Replace for pattern in the string
 
 PARAMETERS:
@@ -172,7 +215,7 @@ RETURN VALUE:
 	* `szData`: new string after replacement
 	* `fSuccess`: if true, then szData returns new string. Otherwise, old string is returned
 
-### _GetFileNameExtension(path)
+<h2 id="_GetFileNameExtension">_GetFileNameExtension</h2>
 Get filename extension
 
 PARAMETERS:
@@ -185,7 +228,7 @@ RETURN VALUE:
 	* `Nil`: no extension
 	* String: extension text
 
-### _GetStrByIndex(sz, idx, pattern)
+<h2 id="_GetStrByIndex">_GetStrByIndex</h2>
 Given a string isolated by delims to some parts, each part is given a index number
 
 PARAMETERS:
@@ -202,7 +245,7 @@ RETURN VALUE:
 	* `ichLim`: the limit index (one past the last) of the last character of  matching text
 	* `szData`: the matching text
 
-### _GetStrCount(sz, pattern)
+<h2 id="_GetStrCount">_GetStrCount</h2>
 Calculate the number of parts of a string which is delimited by a regexp pattern
 
 PARAMETERS:
@@ -214,7 +257,7 @@ RETURN VALUE:
 
 * Integer
 
-## DYNAMIC ARRAY
+<h1 id="DYNAMIC ARRAY">DYNAMIC ARRAY</h1>
 
 The structure of dynamic array buffer:
 
@@ -224,7 +267,7 @@ The structure of dynamic array buffer:
 	...
 	lineX: the (X)th item, index of (X-1)
 
-### _NewDArray()
+<h2 id="_NewDArray">_NewDArray</h2>
 New a dynamic array buffer
 
 PARAMETERS: N/A
@@ -233,7 +276,7 @@ RETURN VALUE:
 
 * Handle
 
-### _FreeDArray(hDArray)
+<h2 id="_FreeDArray">_FreeDArray</h2>
 Free the dynamic array buffer by handle
 
 PARAMETERS:
@@ -242,7 +285,7 @@ PARAMETERS:
 
 RETURN VALUE: `Nil`
 
-### _PushDArray(hDArray, sz)
+<h2 id="_PushDArray">_PushDArray</h2>
 Append one new item
 
 PARAMETERS:
@@ -252,7 +295,7 @@ PARAMETERS:
 
 RETURN VALUE: `Nil`
 
-### _PopDArray(hDArray)
+<h2 id="_PopDArray">_PopDArray</h2>
 Pop out the last item
 
 PARAMETERS:
@@ -263,7 +306,7 @@ RETURN VALUE:
 
 * String: content of the item
 
-### _PullDArray(hDArray)
+<h2 id="_PullDArray">_PullDArray</h2>
 Pull out the first item
 
 PARAMETERS:
@@ -274,7 +317,7 @@ RETURN VALUE:
 
 * String: content of the item
 
-### _InsDArray(hDArray, sz)
+<h2 id="_InsDArray">_InsDArray</h2>
 Insert a new item as the first item
 
 PARAMETERS:
@@ -284,7 +327,7 @@ PARAMETERS:
 
 RETURN VALUE: `Nil`
 
-### _GetDArray(hDArray, index)
+<h2 id="_GetDArray">_GetDArray</h2>
 Read out the content of required item
 
 PARAMETERS:
@@ -296,7 +339,7 @@ RETURN VALUE:
 
 * String: content of the item
 
-### _SetDArray(hDArray, index, sz)
+<h2 id="_SetDArray">_SetDArray</h2>
 Replace the content of required item with new string
 
 PARAMETERS:
@@ -307,7 +350,7 @@ PARAMETERS:
 
 RETURN VALUE: `Nil`
 
-### _CountDArray(hDArray)
+<h2 id="_CountDArray">_CountDArray</h2>
 Replace the content of required item with new string
 
 PARAMETERS:
@@ -318,9 +361,9 @@ RETURN VALUE:
 
 * Integer: array size
 
-## STRING SET
+<h1 id="STRING SET">STRING SET</h1>
 
-### _NewStrSet(sz, pattern)
+<h2 id="_NewStrSet">_NewStrSet</h2>
 Split string by delims identified by regular expression pattern
 
 PARAMETERS:
@@ -334,9 +377,9 @@ RETURN VALUE:
 	* `hDataArray`: dynamic array handle of split text
 	* `hPatternArray`: dynamic array handle of matching text by pattern
 
-## MISC
+<h1 id="MISC">MISC</h1>
 
-### _GetLocalTime()
+<h2 id="_GetLocalTime">_GetLocalTime</h2>
 Cut off the blank chars at the both sides of the string
 
 PARAMETERS: N/A
@@ -355,7 +398,7 @@ RETURN VALUE:
 	* `szSecond`: current second
 	* `szMilliseconds`: current milliseconds
 
-### _UniNum()
+<h2 id="_UniNum">_UniNum</h2>
 Generate rondom number like: "201005062239000"
 
 PARAMETERS: N/A
@@ -364,7 +407,7 @@ RETURN VALUE:
 
 * String
 
-### _MIN(a, b)
+<h2 id="_MIN">_MIN</h2>
 Get the minimal number
 
 PARAMETERS:
@@ -373,7 +416,7 @@ RETURN VALUE:
 
 * Integer
 
-### _MAX(a, b)
+<h2 id="_MAX">_MAX</h2>
 Get the maximal number
 
 PARAMETERS:
@@ -382,7 +425,7 @@ RETURN VALUE:
 
 * Integer
 
-### _GetSIVer()
+<h2 id="_GetSIVer">_GetSIVer</h2>
 Get the source insight version number
 
 PARAMETERS: N/A
@@ -391,7 +434,7 @@ RETURN VALUE:
 
 * String
 
-### _GetCurSelEx()
+<h2 id="_GetCurSelEx">_GetCurSelEx</h2>
 Get current selection info and type
 
 PARAMETERS: N/A
@@ -402,7 +445,7 @@ RETURN VALUE:
 	`sel`: record structure, contains some selection infomation
 	`type`: string, indicate the selection type
 
-### _GetSIBaseDir()
+<h2 id="_GetSIBaseDir">_GetSIBaseDir</h2>
 Get the directory of source insight project named "Base"
 
 PARAMETERS: N/A
@@ -411,7 +454,7 @@ RETURN VALUE:
 
 * String
 
-### _IsFileExist()
+<h2 id="_IsFileExist">_IsFileExist</h2>
 Get the directory of source insight project named "Base"
 
 PARAMETERS: N/A
@@ -424,7 +467,7 @@ NOTE:
 
 *This function has no effect for source insight project file*
 
-### _CopyBuf(hSrc, hDst)
+<h2 id="_CopyBuf">_CopyBuf</h2>
 Copy buffer content from one to another
 
 PARAMETERS:

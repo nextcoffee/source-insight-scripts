@@ -9,19 +9,19 @@
 // or
 // sed -n "/^\/\*'/,/'\*\/$/{/^\/\*'/n; /'\*\/$/b; p}" pub.em
 
+// reserved for anchor area
 /*''*************************************************
-# pub.em
-Some useful functions
+
 
 **************************************************''*/
 
 /*''*************************************************
-## TEST TOOLS
+# TEST
 
 **************************************************''*/
 
 /*''*************************************************
-### _Assert(exp)
+## _Assert(exp)
 Assert and stop the macro when enconters unrepairable errors
 
 **************************************************''*/
@@ -50,7 +50,7 @@ macro _Assert(exp)
 }
 
 /*''*************************************************
-### _Test(exp, result)
+## _Test(exp, result)
 For test case
 
 **************************************************''*/
@@ -63,24 +63,10 @@ macro _Test(exp, result)
 }
 
 /*''*************************************************
-## LOGGING TOOL
+# LOGGING
 
 **************************************************''*/
 
-/*''*************************************************
-Log tag and priority is:
-
-	`V`    Verbose
-	`D`    Debug
-	`I`    Info
-	`W`    Warn
-	`E`    Error
-	`F`    Fatal
-	`S`    Silent (supress all output)
-
-Use **_Log{tag}(sz)** like `_LogV`, `_LogD`, `_LogI`, ...etc to output messages respectively
-
-**************************************************''*/
 macro __LogInit()
 {
 	global g_LogInited
@@ -144,6 +130,22 @@ macro __Log(szLevel, sz)
 	return Nil
 }
 
+/*''*************************************************
+## _Log{tag}(sz)
+
+Log tag and priority is:
+
+	`V`    Verbose
+	`D`    Debug
+	`I`    Info
+	`W`    Warn
+	`E`    Error
+	`F`    Fatal
+	`S`    Silent (supress all output)
+
+Use `_LogV`, `_LogD`, `_LogI`, ...etc to output messages respectively
+
+**************************************************''*/
 macro _LogV(sz)
 {
 	__Log("V", sz)
@@ -181,7 +183,7 @@ macro _LogF(sz)
 }
 
 /*''*************************************************
-### _SetLogLevel(szLevel)
+## _SetLogLevel(szLevel)
 Set log level
 
 PARAMETERS:
@@ -208,7 +210,7 @@ macro _SetLogLevel(szLevel)
 }
 
 /*''*************************************************
-### _LogShow()
+## _LogShow()
 Show logging messages in temperary buffer
 
 PARAMETERS: N/A
@@ -292,7 +294,7 @@ macro ___tst_Log()
 }
 
 /*''*************************************************
-### _GenStackInfo(iLevel)
+## _GenStackInfo(iLevel)
 Get function call stack info
 
 PARAMETERS:
@@ -359,12 +361,12 @@ macro ___tst_GenStackInfo()
 }
 
 /*''*************************************************
-## CHARS & STRING
+# CHARS & STRING
 
 **************************************************''*/
 
 /*''*************************************************
-### _IsSpace(ch)
+## _IsSpace(ch)
 Generate rondom number like: "201005062239000"
 
 PARAMETERS:
@@ -393,7 +395,7 @@ macro ___tst_IsSpace()
 }
 
 /*''*************************************************
-### _AlignStr(sz, length, chr, fAppend)
+## _AlignStr(sz, length, chr, fAppend)
 Expand string length with specific character
 
 PARAMETERS:
@@ -443,7 +445,7 @@ macro ___tst_AlignStr()
 }
 
 /*''*************************************************
-### _StrStrEx(s, substr, ich, fMatchCase, fReverse)
+## _StrStrEx(s, substr, ich, fMatchCase, fReverse)
 Find a sub-string in string s, start from ich (ich>=0)
 
 PARAMETERS:
@@ -524,7 +526,7 @@ macro ___tst_StrStrEx()
 }
 
 /*''*************************************************
-### _StrStr(s, substr)
+## _StrStr(s, substr)
 Find a sub-string in string s
 
 PARAMETERS:
@@ -552,7 +554,7 @@ macro ___tst_StrStr()
 }
 
 /*''*************************************************
-### _StrCmp(sz1, sz2)
+## _StrCmp(sz1, sz2)
 String comparation
 
 PARAMETERS:
@@ -615,7 +617,7 @@ macro ___tst_StrCmp()
 }
 
 /*''*************************************************
-### _StrCls(sz)
+## _StrCls(sz)
 Cut off the blank chars at the both sides of the string
 
 PARAMETERS:
@@ -676,7 +678,7 @@ macro ___tst_StrCls()
 }
 
 /*''*************************************************
-### _SearchInStr (sz, pattern, fMatchCase, fRegExp, fWholeWordsOnly)
+## _SearchInStr (sz, pattern, fMatchCase, fRegExp, fWholeWordsOnly)
 Searches for pattern in the string
 
 PARAMETERS:
@@ -745,7 +747,7 @@ macro ___tst_SearchInStr()
 }
 
 /*''*************************************************
-### _ReplaceInStr (sz, oldPattern, newPattern, fMatchCase, fRegExp, fWholeWordsOnly, fConfirm)
+## _ReplaceInStr (sz, oldPattern, newPattern, fMatchCase, fRegExp, fWholeWordsOnly, fConfirm)
 Replace for pattern in the string
 
 PARAMETERS:
@@ -811,7 +813,7 @@ macro ___tst_ReplaceInStr()
 }
 
 /*''*************************************************
-### _GetFileNameExtension(path)
+## _GetFileNameExtension(path)
 Get filename extension
 
 PARAMETERS:
@@ -849,7 +851,7 @@ macro ___tst_GetFileNameExtension()
 }
 
 /*''*************************************************
-### _GetStrByIndex(sz, idx, pattern)
+## _GetStrByIndex(sz, idx, pattern)
 Given a string isolated by delims to some parts, each part is given a index number
 
 PARAMETERS:
@@ -940,7 +942,7 @@ macro ___tst_GetStrByIndex()
 }
 
 /*''*************************************************
-### _GetStrCount(sz, pattern)
+## _GetStrCount(sz, pattern)
 Calculate the number of parts of a string which is delimited by a regexp pattern
 
 PARAMETERS:
@@ -997,7 +999,7 @@ macro ___tst_GetStrCount()
 }
 
 /*''*************************************************
-## DYNAMIC ARRAY
+# DYNAMIC ARRAY
 
 **************************************************''*/
 
@@ -1013,7 +1015,7 @@ The structure of dynamic array buffer:
 **************************************************''*/
 
 /*''*************************************************
-### _NewDArray()
+## _NewDArray()
 New a dynamic array buffer
 
 PARAMETERS: N/A
@@ -1044,7 +1046,7 @@ macro _NewDArray()
 }
 
 /*''*************************************************
-### _FreeDArray(hDArray)
+## _FreeDArray(hDArray)
 Free the dynamic array buffer by handle
 
 PARAMETERS:
@@ -1063,7 +1065,7 @@ macro _FreeDArray(hDArray)
 }
 
 /*''*************************************************
-### _PushDArray(hDArray, sz)
+## _PushDArray(hDArray, sz)
 Append one new item
 
 PARAMETERS:
@@ -1087,7 +1089,7 @@ macro _PushDArray(hDArray, sz)
 }
 
 /*''*************************************************
-### _PopDArray(hDArray)
+## _PopDArray(hDArray)
 Pop out the last item
 
 PARAMETERS:
@@ -1121,7 +1123,7 @@ macro _PopDArray(hDArray)
 }
 
 /*''*************************************************
-### _PullDArray(hDArray)
+## _PullDArray(hDArray)
 Pull out the first item
 
 PARAMETERS:
@@ -1155,7 +1157,7 @@ macro _PullDArray(hDArray)
 }
 
 /*''*************************************************
-### _InsDArray(hDArray, sz)
+## _InsDArray(hDArray, sz)
 Insert a new item as the first item
 
 PARAMETERS:
@@ -1179,7 +1181,7 @@ macro _InsDArray(hDArray, sz)
 }
 
 /*''*************************************************
-### _GetDArray(hDArray, index)
+## _GetDArray(hDArray, index)
 Read out the content of required item
 
 PARAMETERS:
@@ -1208,7 +1210,7 @@ macro _GetDArray(hDArray, index)
 }
 
 /*''*************************************************
-### _SetDArray(hDArray, index, sz)
+## _SetDArray(hDArray, index, sz)
 Replace the content of required item with new string
 
 PARAMETERS:
@@ -1237,7 +1239,7 @@ macro _SetDArray(hDArray, index, sz)
 }
 
 /*''*************************************************
-### _CountDArray(hDArray)
+## _CountDArray(hDArray)
 Replace the content of required item with new string
 
 PARAMETERS:
@@ -1287,12 +1289,12 @@ macro ___tst_DArray()
 }
 
 /*''*************************************************
-## STRING SET
+# STRING SET
 
 **************************************************''*/
 
 /*''*************************************************
-### _NewStrSet(sz, pattern)
+## _NewStrSet(sz, pattern)
 Split string by delims identified by regular expression pattern
 
 PARAMETERS:
@@ -1474,12 +1476,12 @@ macro ___tst_StrSet()
 }
 
 /*''*************************************************
-## MISC
+# MISC
 
 **************************************************''*/
 
 /*''*************************************************
-### _GetLocalTime()
+## _GetLocalTime()
 Cut off the blank chars at the both sides of the string
 
 PARAMETERS: N/A
@@ -1537,7 +1539,7 @@ macro ___tst_GetLocalTime()
 }
 
 /*''*************************************************
-### _UniNum()
+## _UniNum()
 Generate rondom number like: "201005062239000"
 
 PARAMETERS: N/A
@@ -1604,7 +1606,7 @@ macro ___tst_UniNum()
 }
 
 /*''*************************************************
-### _MIN(a, b)
+## _MIN(a, b)
 Get the minimal number
 
 PARAMETERS:
@@ -1623,7 +1625,7 @@ macro _MIN(a, b)
 }
 
 /*''*************************************************
-### _MAX(a, b)
+## _MAX(a, b)
 Get the maximal number
 
 PARAMETERS:
@@ -1642,7 +1644,7 @@ macro _MAX(a, b)
 }
 
 /*''*************************************************
-### _GetSIVer()
+## _GetSIVer()
 Get the source insight version number
 
 PARAMETERS: N/A
@@ -1704,7 +1706,7 @@ macro ___tst_GetSIVer()
 }
 
 /*''*************************************************
-### _GetCurSelEx()
+## _GetCurSelEx()
 Get current selection info and type
 
 PARAMETERS: N/A
@@ -1838,7 +1840,7 @@ macro ___tst_GetCurSelEx()
 }
 
 /*''*************************************************
-### _GetSIBaseDir()
+## _GetSIBaseDir()
 Get the directory of source insight project named "Base"
 
 PARAMETERS: N/A
@@ -1887,7 +1889,7 @@ macro ___tst_GetSIBaseDir()
 }
 
 /*''*************************************************
-### _IsFileExist()
+## _IsFileExist()
 Get the directory of source insight project named "Base"
 
 PARAMETERS: N/A
@@ -1925,7 +1927,7 @@ macro ___tst_IsFileExist()
 }
 
 /*''*************************************************
-### _CopyBuf(hSrc, hDst)
+## _CopyBuf(hSrc, hDst)
 Copy buffer content from one to another
 
 PARAMETERS:
