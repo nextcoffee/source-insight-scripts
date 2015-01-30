@@ -68,73 +68,6 @@ macro _Test(exp, result)
 **************************************************''*/
 
 /*''*************************************************
-### _GenStackInfo(iLevel)
-Get function call stack info
-
-PARAMETERS:
-
-* `iLevel`: call stack depth
-
-RETURN VALUE:
-
-* Record Structure
-	* `szFunc`: function name
-	* `iLine`: line number
-	* `szTime`: timestamp
-
-**************************************************''*/
-macro _GenStackInfo(iLevel)
-{
-	var hBuf
-	var recSel
-	var szFunc
-	var iLine
-	var recTime
-	var szTime
-	var sz
-	var rec
-
-	hBuf = NewBuf("STACK" # _UniNum())
-	if (hBuf == hNil)
-	    return Nil
-
-	DumpMacroState (hBuf)
-	recSel = SearchInBuf(hBuf, "^@iLevel@: [^\\t\\s]+$", 0, 0, True, True, True)
-	if (recSel != Nil)
-	{
-		sz = GetBufLine(hBuf, recSel.lnFirst)
-		szFunc = StrMid(sz, recSel.ichFirst + StrLen("@iLevel@: "), recSel.ichLim)
-
-		sz = GetBufLine(hBuf, recSel.lnFirst + 2)
-    	recSel = _SearchInStr(sz, "\\([0-9]+\\)", False, True, False)
-    	if (recSel != Nil)
-    	    iLine = recSel.szData
-	}
-    SetBufDirty(hBuf, False)
-    CloseBuf(hBuf)
-
-	recTime = _GetLocalTime()
-    szTime = recTime.szTime # "." # recTime.szMilliseconds
-
-    rec.szFunc = szFunc
-    rec.iLine = iLine
-    rec.szTime = szTime
-    return rec
-}
-
-macro ___tst_GenStackInfo()
-{
-    var rec
-
-	rec = _GenStackInfo(1)
-	_ASSERT(rec.szFunc == "_GenStackInfo")
-	rec = _GenStackInfo(2)
-	_ASSERT(rec.szFunc == "___tst_GenStackInfo")
-
-	return Nil
-}
-
-/*''*************************************************
 Log tag and priority is:
 
 	`V`    Verbose
@@ -355,6 +288,73 @@ macro ___tst_Log()
 	_LogV("SEE ME")
 
 	_LogShow()
+	return Nil
+}
+
+/*''*************************************************
+### _GenStackInfo(iLevel)
+Get function call stack info
+
+PARAMETERS:
+
+* `iLevel`: call stack depth
+
+RETURN VALUE:
+
+* Record Structure
+	* `szFunc`: function name
+	* `iLine`: line number
+	* `szTime`: timestamp
+
+**************************************************''*/
+macro _GenStackInfo(iLevel)
+{
+	var hBuf
+	var recSel
+	var szFunc
+	var iLine
+	var recTime
+	var szTime
+	var sz
+	var rec
+
+	hBuf = NewBuf("STACK" # _UniNum())
+	if (hBuf == hNil)
+	    return Nil
+
+	DumpMacroState (hBuf)
+	recSel = SearchInBuf(hBuf, "^@iLevel@: [^\\t\\s]+$", 0, 0, True, True, True)
+	if (recSel != Nil)
+	{
+		sz = GetBufLine(hBuf, recSel.lnFirst)
+		szFunc = StrMid(sz, recSel.ichFirst + StrLen("@iLevel@: "), recSel.ichLim)
+
+		sz = GetBufLine(hBuf, recSel.lnFirst + 2)
+		recSel = _SearchInStr(sz, "\\([0-9]+\\)", False, True, False)
+		if (recSel != Nil)
+			iLine = recSel.szData
+	}
+    SetBufDirty(hBuf, False)
+    CloseBuf(hBuf)
+
+	recTime = _GetLocalTime()
+    szTime = recTime.szTime # "." # recTime.szMilliseconds
+
+    rec.szFunc = szFunc
+    rec.iLine = iLine
+    rec.szTime = szTime
+    return rec
+}
+
+macro ___tst_GenStackInfo()
+{
+    var rec
+
+	rec = _GenStackInfo(1)
+	_ASSERT(rec.szFunc == "_GenStackInfo")
+	rec = _GenStackInfo(2)
+	_ASSERT(rec.szFunc == "___tst_GenStackInfo")
+
 	return Nil
 }
 

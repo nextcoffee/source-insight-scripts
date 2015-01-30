@@ -11,20 +11,6 @@ For test case
 
 ## LOGGING TOOL
 
-### _GenStackInfo(iLevel)
-Get function call stack info
-
-PARAMETERS:
-
-* `iLevel`: call stack depth
-
-RETURN VALUE:
-
-* Record Structure
-	* `szFunc`: function name
-	* `iLine`: line number
-	* `szTime`: timestamp
-
 Log tag and priority is:
 
 	`V`    Verbose
@@ -52,6 +38,20 @@ Show logging messages in temperary buffer
 PARAMETERS: N/A
 
 RETURN VALUE: `Nil`
+
+### _GenStackInfo(iLevel)
+Get function call stack info
+
+PARAMETERS:
+
+* `iLevel`: call stack depth
+
+RETURN VALUE:
+
+* Record Structure
+	* `szFunc`: function name
+	* `iLine`: line number
+	* `szTime`: timestamp
 
 ## CHARS & STRING
 
