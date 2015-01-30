@@ -1403,7 +1403,148 @@ macro GenATHash(sz)
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+// Parse c struct elements, make it convinient for freemind typing
+macro GenStructElementList()
+{
+	var hbuf
+	var symbolname
+	var iSymNameLen
+	var symbol
+	var symChild
+	var daLines
+	var hSymChild
+	var iSymListCount
+	var index
+	var lnFirst
+	var lnLim
+	var lnCount
+	var lnIndex
 
+	hbuf = GetCurrentBuf()
 
+	symbolname = GetCurSymbol()
+	iSymNameLen = StrLen(symbolname)
+	_Log("symbolname=" # symbolname)
 
+	symbol = GetSymbolLocation(symbolname)
+	_Log(symbol)
+
+	if (symbol.Type != "Structure" || GetBufName(hbuf) != symbol.File)
+	{
+		Msg("Not support, only effective in struct declaration")
+		stop
+	}
+
+	daLines = _NewDArray()
+
+	lnFirst = symbol.lnFirst
+	lnLim = symbol.lnLim
+
+	lnCount = lnLim - lnFirst
+	lnIndex = 0
+	while (lnIndex++ < lnCount)
+		_PushDArray(daLines, Nil)
+
+	// parse struct subsymbol list
+	hSymChild = SymbolChildren(symbol)
+	iSymListCount = SymListCount(hSymChild)
+	index = 0
+	while (index < iSymListCount)
+	{
+		var sz
+		var lnSz
+		var lnName
+		var ichName
+		var szName
+		var iNameLen
+		var rec
+		var ich
+
+		symChild = SymListItem(hSymChild, index)
+		_Log(symChild)
+
+		lnCount = symChild.lnLim - symChild.lnFirst
+		lnIndex = symChild.lnFirst
+		lnName = symChild.lnName
+		ichName = symChild.ichName
+		szName = StrMid(symChild.Symbol, iSymNameLen+1, StrLen(symChild.Symbol))
+		iNameLen = StrLen(szName)
+		_Log("szName=" # szName)
+
+		while (lnCount--)
+		{
+			lnSz = GetBufLine(hbuf, lnIndex)
+
+			// cut off symbol name
+			if (lnIndex == lnName)
+			{
+				var szPre
+				var szPost
+				szPre = StrTrunc(lnSz, ichName)
+				szPost = StrMid(lnSz, ichName+iNameLen, StrLen(lnSz))
+				lnSz = szPre # szPost
+			}
+
+			// cut off '//' style comments
+			ich = _StrStr(lnSz, "//")
+			if (ich != invalid)
+				lnSz = StrTrunc(lnSz, ich)
+
+			sz = sz # lnSz
+
+			lnIndex++
+		}
+
+		// cut off all word after ';'
+		ich = _StrStr(lnSz, ";")
+		if (ich != invalid)
+			sz = StrTrunc(sz, ich)
+
+		// cut off '/**/' style comments
+		rec = _ReplaceInStr(sz, "\\(/\\*.*\\*/\\)", Nil, False, True, False, False)
+		sz = rec.szData
+
+		// Replace redundant blank space
+		rec = _ReplaceInStr(sz, "\\w\\w+", " ", False, True, False, False)
+		sz = rec.szData
+
+		// Chomp
+		sz = _StrCls(sz)
+
+		rec = Nil //clear
+		rec.szType = sz
+		rec.szName = szName
+
+		_Log(rec)
+		_SetDArray(daLines, lnName-lnFirst, rec)
+
+		index++
+	}
+	SymListFree(hSymChild)
+
+	// Format output style
+	{
+		var daSize
+
+		InsBufLine(hbuf, lnFirst, Nil)
+
+		daSize = _CountDArray(daLines)
+		while (daSize--)
+		{
+			var daRec
+			daRec = _PopDArray(daLines)
+			if (daRec == Nil)
+				continue
+
+			InsBufLine(hbuf, lnFirst, daRec.szType # "    " # daRec.szName)
+		}
+
+		InsBufLine(hbuf, lnFirst, Nil)
+	}
+
+	_FreeDArray(daLines)
+
+	//_LogShow()
+	return Nil
+}
 
