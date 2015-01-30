@@ -40,7 +40,7 @@ macro __BlockIndent()
 		ClearBuf (fbuf)
 	}
 
-	_Log(sel)
+	_LogI(sel)
 	i = sel.lnFirst
 	while (i <= sel.lnLast)
 	{
@@ -53,7 +53,7 @@ macro __BlockIndent()
 
 	//run cmd to indent statements
 	cmd = "cmd /C \"@tool@\" @tool_para@ \"@fname@\""
-	_Log(cmd)
+	_LogI(cmd)
 	if (0 != _Run(cmd))
 		stop
 

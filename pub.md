@@ -25,12 +25,24 @@ RETURN VALUE:
 	* `iLine`: line number
 	* `szTime`: timestamp
 
-### _Log(sz)
-Logging messages to temperary buffer
+Log tag and priority is:
+
+	`V`    Verbose
+	`D`    Debug
+	`I`    Info
+	`W`    Warn
+	`E`    Error
+	`F`    Fatal
+	`S`    Silent (supress all output)
+
+Use **_Log{tag}(sz)** like `_LogV`, `_LogD`, `_LogI`, ...etc to output messages respectively
+
+### _SetLogLevel(level)
+Set log level
 
 PARAMETERS:
 
-* `sz`: message string
+* `szLevel`: character like 'V', 'D', ..., 'S', represent log level, its case sensitive
 
 RETURN VALUE: `Nil`
 

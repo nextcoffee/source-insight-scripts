@@ -198,7 +198,7 @@ macro GetFuncElements(loc)
 	lnLim = GetBufLineCount (hDirtyBuf)
 	sz = MultiLineToOneLine(hDirtyBuf, 0, lnLim)
 	sz = _StrCls(sz)
-	_Log(sz)
+	_LogI(sz)
 	//refresh the file with one-line string
 	ClearBuf(hDirtyBuf)
 	AppendBufLine(hDirtyBuf, sz)
@@ -236,7 +236,7 @@ macro GetFuncElements(loc)
 
 	//chomp
 	szRetType = _StrCls(szRetType)
-	_Log(szRetType)
+	_LogI(szRetType)
 
 	//----------------------------------------
 	//get parameter list
@@ -250,7 +250,7 @@ macro GetFuncElements(loc)
 
 	//trans the one-line string into multi-line with "," as the delims
 	sz = GetBufLine(hDirtyBuf, 0)
-	_Log(sz)
+	_LogI(sz)
 	while(True)
 	{
 		//no "," so no need to trans to multi-line
@@ -261,14 +261,14 @@ macro GetFuncElements(loc)
 			szTmp = ParseFuncPara(sz)
 			if (Nil != szTmp)
 				AppendBufLine(hDirtyBuf, szTmp)
-			_Log(szTmp)
+			_LogV(szTmp)
 			break
 		}
 
 		szTmp = ParseFuncPara(strtrunc(sz, ich))
 		if (Nil != szTmp)
 			AppendBufLine(hDirtyBuf, szTmp)
-		_Log(szTmp)
+		_LogV(szTmp)
 		sz = StrMid(sz, ich+1, StrLen(sz))
 	}
 	DelBufLine (hDirtyBuf, 0)
@@ -683,7 +683,7 @@ macro Git_GetRootDir()
 
 	sz = GetBufLine(recRet.hbuf, 0)
 	sz = StrMid(sz, StrLen("    PathToMsys	REG_SZ	"), StrLen(sz))
-	_Log(sz)
+	_LogI(sz)
 
 	CloseBuf(recRet.hbuf)
 	return sz
@@ -707,7 +707,7 @@ macro Git_Shell()
 	}
 
 	szShBin = Cat(szRootDir, "\\bin\\sh.exe")
-	_Log(szShBin)
+	_LogI(szShBin)
 
 	ShellExecute("", "cmd", "/k \"\"@szShBin@\" --login -i\" ", szProjDir, 3)
 	return Nil
@@ -1424,10 +1424,10 @@ macro GenStructElementList()
 
 	symbolname = GetCurSymbol()
 	iSymNameLen = StrLen(symbolname)
-	_Log("symbolname=" # symbolname)
+	_LogI("symbolname=" # symbolname)
 
 	symbol = GetSymbolLocation(symbolname)
-	_Log(symbol)
+	_LogI(symbol)
 
 	if (symbol.Type != "Structure" || GetBufName(hbuf) != symbol.File)
 	{
@@ -1461,7 +1461,7 @@ macro GenStructElementList()
 		var ich
 
 		symChild = SymListItem(hSymChild, index)
-		_Log(symChild)
+		_LogV(symChild)
 
 		lnCount = symChild.lnLim - symChild.lnFirst
 		lnIndex = symChild.lnFirst
@@ -1469,7 +1469,7 @@ macro GenStructElementList()
 		ichName = symChild.ichName
 		szName = StrMid(symChild.Symbol, iSymNameLen+1, StrLen(symChild.Symbol))
 		iNameLen = StrLen(szName)
-		_Log("szName=" # szName)
+		_LogV("szName=" # szName)
 
 		while (lnCount--)
 		{
@@ -1515,7 +1515,7 @@ macro GenStructElementList()
 		rec.szType = sz
 		rec.szName = szName
 
-		_Log(rec)
+		_LogV(rec)
 		_SetDArray(daLines, lnName-lnFirst, rec)
 
 		index++
@@ -1544,7 +1544,6 @@ macro GenStructElementList()
 
 	_FreeDArray(daLines)
 
-	//_LogShow()
 	return Nil
 }
 

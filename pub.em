@@ -56,14 +56,9 @@ For test case
 **************************************************''*/
 macro _Test(exp, result)
 {
-	//_Log(exp)
-	//_Log(result)
 	if (exp != result)
-	{
 		_Assert(False)
-	}
 
-	//_Log("exp={@exp@}, result={@result@}, OK")
 	return Nil
 }
 
@@ -140,29 +135,59 @@ macro ___tst_GenStackInfo()
 }
 
 /*''*************************************************
-### _Log(sz)
-Logging messages to temperary buffer
+Log tag and priority is:
 
-PARAMETERS:
+	`V`    Verbose
+	`D`    Debug
+	`I`    Info
+	`W`    Warn
+	`E`    Error
+	`F`    Fatal
+	`S`    Silent (supress all output)
 
-* `sz`: message string
-
-RETURN VALUE: `Nil`
+Use **_Log{tag}(sz)** like `_LogV`, `_LogD`, `_LogI`, ...etc to output messages respectively
 
 **************************************************''*/
-macro _Log(sz)
+macro __LogInit()
+{
+	global g_LogInited
+	global g_LogLevel
+	global g_LogTags
+
+	if (g_LogInited != Nil)
+		return Nil
+
+	g_LogTags = "SFEWIDV"
+	g_LogLevel = 2
+	g_LogInited = True
+
+	return Nil
+
+}
+
+macro __Log(szLevel, sz)
 {
 	global szLogFileName
 	var hFileLog
 	var rec
+	var level
 
-	//if (1) return Nil
+	__LogInit()
 
-    //use szLogFileName instead of hFileLog in case that the program exit unexpectedly:
-    //Global variables are useful for adding counters,
-    //and other persistent state.
-    //They **cannot hold any kind of handle**,
-    //because all handles are destroyed when a macro finishes
+	// parameter check
+	_ASSERT(StrLen(szLevel) == 1)
+
+	level = _StrStr(g_LogTags, szLevel)
+	_ASSERT (level != invalid)
+
+	if (level > g_LogLevel)
+		return Nil
+
+    // use szLogFileName instead of hFileLog in case that the program exit unexpectedly:
+    // Global variables are useful for adding counters,
+    // and other persistent state.
+    // They **cannot hold any kind of handle**,
+    // because all handles are destroyed when a macro finishes
     hFileLog = GetBufHandle(szLogFileName)
 
     if (hFileLog == hNil)
@@ -176,12 +201,75 @@ macro _Log(sz)
 	    }
 	}
 
-	rec = _GenStackInfo(3)
+	rec = _GenStackInfo(4)
 	if (rec != Nil)
-	    sz = "[" # rec.szTime # "] " # rec.szFunc # ", " # rec.iLine # ": " # sz
+	    sz = szLevel # ", [" # rec.szTime # "] " # rec.szFunc # ", " # rec.iLine # ": " # sz
 
 	AppendBufLine (hFileLog, sz)
 	SetBufDirty(hFileLog, False)
+
+	return Nil
+}
+
+macro _LogV(sz)
+{
+	__Log("V", sz)
+	return Nil
+}
+
+macro _LogD(sz)
+{
+	__Log("D", sz)
+	return Nil
+}
+
+macro _LogI(sz)
+{
+	__Log("I", sz)
+	return Nil
+}
+
+macro _LogW(sz)
+{
+	__Log("W", sz)
+	return Nil
+}
+
+macro _LogE(sz)
+{
+	__Log("E", sz)
+	return Nil
+}
+
+macro _LogF(sz)
+{
+	__Log("F", sz)
+	return Nil
+}
+
+/*''*************************************************
+### _SetLogLevel(level)
+Set log level
+
+PARAMETERS:
+
+* `szLevel`: character like 'V', 'D', ..., 'S', represent log level, its case sensitive
+
+RETURN VALUE: `Nil`
+
+**************************************************''*/
+macro _SetLogLevel(szLevel)
+{
+	var ich
+
+	_ASSERT(StrLen(szLevel) == 1)
+
+	__LogInit()
+
+	ich = _StrStr(g_LogTags, szLevel)
+	_ASSERT (ich != invalid)
+
+	g_LogLevel = ich
 
 	return Nil
 }
@@ -210,10 +298,63 @@ macro _LogShow()
 
 macro ___tst_Log()
 {
-	_Log("hello, ")
-	_Log("world!")
-	_LogShow()
+	_SetLogLevel("S")
+	_LogF("CANT SEE ME")
+	_LogE("CANT SEE ME")
+	_LogW("CANT SEE ME")
+	_LogI("CANT SEE ME")
+	_LogD("CANT SEE ME")
+	_LogV("CANT SEE ME")
 
+	_SetLogLevel("F")
+	_LogF("SEE ME")
+	_LogE("CANT SEE ME")
+	_LogW("CANT SEE ME")
+	_LogI("CANT SEE ME")
+	_LogD("CANT SEE ME")
+	_LogV("CANT SEE ME")
+
+	_SetLogLevel("E")
+	_LogF("SEE ME")
+	_LogE("SEE ME")
+	_LogW("CANT SEE ME")
+	_LogI("CANT SEE ME")
+	_LogD("CANT SEE ME")
+	_LogV("CANT SEE ME")
+
+	_SetLogLevel("W")
+	_LogF("SEE ME")
+	_LogE("SEE ME")
+	_LogW("SEE ME")
+	_LogI("CANT SEE ME")
+	_LogD("CANT SEE ME")
+	_LogV("CANT SEE ME")
+
+	_SetLogLevel("I")
+	_LogF("SEE ME")
+	_LogE("SEE ME")
+	_LogW("SEE ME")
+	_LogI("SEE ME")
+	_LogD("CANT SEE ME")
+	_LogV("CANT SEE ME")
+
+	_SetLogLevel("D")
+	_LogF("SEE ME")
+	_LogE("SEE ME")
+	_LogW("SEE ME")
+	_LogI("SEE ME")
+	_LogD("SEE ME")
+	_LogV("CANT SEE ME")
+
+	_SetLogLevel("V")
+	_LogF("SEE ME")
+	_LogE("SEE ME")
+	_LogW("SEE ME")
+	_LogI("SEE ME")
+	_LogD("SEE ME")
+	_LogV("SEE ME")
+
+	_LogShow()
 	return Nil
 }
 
@@ -433,9 +574,8 @@ macro _StrCmp(sz1, sz2)
 	var szLenMin
 	var cnt
 
-	// ==
-	//_Log(sz1)
-	//_Log(sz2)
+	_LogI(sz1)
+	_LogI(sz2)
 	if (sz1 == sz2)
 		return 0
 
@@ -743,11 +883,11 @@ macro _GetStrByIndex(sz, idx, pattern)
 	cnt = idx
 	while (cnt--)
 	{
-		_Log("sz=@sz@, pattern=@pattern@")
+		_LogV("sz=@sz@, pattern=@pattern@")
 		ret = _SearchInStr(sz, pattern, TRUE, TRUE, FALSE)
 		if (ret == Nil)
 		{
-			_Log("out of range")
+			_LogE("out of range")
 			return Nil
 		}
 
@@ -759,7 +899,7 @@ macro _GetStrByIndex(sz, idx, pattern)
 		{
 			if (idx > 1)
 			{
-				_Log("out of range")
+				_LogE("out of range")
 				return Nil
 			}
 
@@ -771,7 +911,7 @@ macro _GetStrByIndex(sz, idx, pattern)
 	}
 
 	// find the end delims...
-	_Log("sz=@sz@, pattern=@pattern@")
+	_LogI("sz=@sz@, pattern=@pattern@")
 	ret = _SearchInStr(sz, pattern, TRUE, TRUE, FALSE)
 	if (ret == Nil)
 	{
@@ -1181,7 +1321,7 @@ macro _NewStrSet(sz, pattern)
 	len = 0
 	while(True)
 	{
-		_Log("sz=@sz@, pattern=@pattern@")
+		_LogV("sz=@sz@, pattern=@pattern@")
 		recRet = _SearchInStr(sz, pattern, TRUE, TRUE, FALSE)
 		if (recRet == Nil)
 		{
@@ -1459,7 +1599,7 @@ macro ___tst_UniNum()
 		outLoopCnt = outLoopCnt - 1
 	}
 
-	_Log(_UniNum())
+	_LogI(_UniNum())
 	return Nil
 }
 
@@ -1693,7 +1833,7 @@ macro _GetCurSelEx()
 macro ___tst_GetCurSelEx()
 {
 	// TODO:
-	_Log(_GetCurSelEx())
+	_LogI(_GetCurSelEx())
 	return Nil
 }
 
@@ -1765,7 +1905,7 @@ macro _IsFileExist(fileFullName)
 {
 	var hbuf
 
-	_Log(fileFullName)
+	_LogI(fileFullName)
 	hbuf = OpenBuf(fileFullName)
 	if (hNil == hbuf)
 		return False
@@ -1847,7 +1987,7 @@ macro _SINewTmpFile()
 
 	szDir = GetEnv("TEMP")
 	szFile = szDir # "\\" # _UniNum()
-	_Log(szFile)
+	_LogI(szFile)
 
 	ret = _RunVBS("CreateTmpFile @szFile@")
 	if(ret != 0)
@@ -1863,7 +2003,7 @@ macro _SIDelTmpFile(szFile)
 {
 	var ret
 
-	_Log(szFile)
+	_LogI(szFile)
 
 	ret = _RunVBS("DeleteTmpFile @szFile@")
 	if(ret != 0)
@@ -1940,7 +2080,7 @@ macro ___tst_RumCmdWithReturn()
 
 macro _RunVBS(sz)
 {
-	_Log(sz)
+	_LogI(sz)
 	return RunCmdLine("wscript.exe //B VBS_Run.vbs @sz@", _GetSIBaseDir(), True)
 }
 
@@ -1952,7 +2092,7 @@ macro ___tst_RunVBS()
 
 macro _Run(sz)
 {
-	_Log(sz)
+	_LogI(sz)
 	return _RunVBS("RunCMD @sz@")
 }
 
@@ -1973,7 +2113,7 @@ macro _TestCaseCollection()
 	szName = GetBufName(hbuf)
 
 	cmd = "for /f \"tokens=1,2*\" %i in ('findstr /B /R /C:\"macro ___\" \"@szName@\"') do @@if not \"%j\" equ \"\" echo %j"
-	_Log(cmd)
+	_LogI(cmd)
 	RunCmdLine("cmd /k \"@cmd@\"", ".", False);
 
 	return Nil
@@ -1981,6 +2121,8 @@ macro _TestCaseCollection()
 
 macro ___tst_all()
 {
+	_SetLogLevel("V")
+
 	___tst_GenStackInfo()
 	___tst_IsSpace()
 	___tst_AlignStr()
