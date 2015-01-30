@@ -181,7 +181,7 @@ macro _LogF(sz)
 }
 
 /*''*************************************************
-### _SetLogLevel(level)
+### _SetLogLevel(szLevel)
 Set log level
 
 PARAMETERS:

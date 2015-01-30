@@ -23,7 +23,7 @@ Log tag and priority is:
 
 Use **_Log{tag}(sz)** like `_LogV`, `_LogD`, `_LogI`, ...etc to output messages respectively
 
-### _SetLogLevel(level)
+### _SetLogLevel(szLevel)
 Set log level
 
 PARAMETERS:
