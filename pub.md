@@ -1,58 +1,58 @@
 
 * [TEST](#TEST)
-  * [_Assert](_Assert)
-  * [_Test](_Test)
+  * [_Assert(exp)](#_Assertexp)
+  * [_Test(exp, result)](#_Testexpresult)
 * [LOGGING](#LOGGING)
-  * [_Log](_Log)
-  * [_SetLogLevel](_SetLogLevel)
-  * [_LogShow](_LogShow)
-  * [_GenStackInfo](_GenStackInfo)
-* [CHARS & STRING](#CHARS & STRING)
-  * [_IsSpace](_IsSpace)
-  * [_AlignStr](_AlignStr)
-  * [_StrStrEx](_StrStrEx)
-  * [_StrStr](_StrStr)
-  * [_StrCmp](_StrCmp)
-  * [_StrCls](_StrCls)
-  * [_SearchInStr](_SearchInStr)
-  * [_ReplaceInStr](_ReplaceInStr)
-  * [_GetFileNameExtension](_GetFileNameExtension)
-  * [_GetStrByIndex](_GetStrByIndex)
-  * [_GetStrCount](_GetStrCount)
-* [DYNAMIC ARRAY](#DYNAMIC ARRAY)
-  * [_NewDArray](_NewDArray)
-  * [_FreeDArray](_FreeDArray)
-  * [_PushDArray](_PushDArray)
-  * [_PopDArray](_PopDArray)
-  * [_PullDArray](_PullDArray)
-  * [_InsDArray](_InsDArray)
-  * [_GetDArray](_GetDArray)
-  * [_SetDArray](_SetDArray)
-  * [_CountDArray](_CountDArray)
-* [STRING SET](#STRING SET)
-  * [_NewStrSet](_NewStrSet)
+  * [_Log{tag}(sz)](#_Logtagsz)
+  * [_SetLogLevel(szLevel)](#_SetLogLevelszLevel)
+  * [_LogShow()](#_LogShow)
+  * [_GenStackInfo(iLevel)](#_GenStackInfoiLevel)
+* [CHARS & STRING](#CHARSSTRING)
+  * [_IsSpace(ch)](#_IsSpacech)
+  * [_AlignStr(sz, length, chr, fAppend)](#_AlignStrszlengthchrfAppend)
+  * [_StrStrEx(s, substr, ich, fMatchCase, fReverse)](#_StrStrExssubstrichfMatchCasefReverse)
+  * [_StrStr(s, substr)](#_StrStrssubstr)
+  * [_StrCmp(sz1, sz2)](#_StrCmpsz1sz2)
+  * [_StrCls(sz)](#_StrClssz)
+  * [_SearchInStr (sz, pattern, fMatchCase, fRegExp, fWholeWordsOnly)](#_SearchInStrszpatternfMatchCasefRegExpfWholeWordsOnly)
+  * [_ReplaceInStr (sz, oldPattern, newPattern, fMatchCase, fRegExp, fWholeWordsOnly, fConfirm)](#_ReplaceInStrszoldPatternnewPatternfMatchCasefRegExpfWholeWordsOnlyfConfirm)
+  * [_GetFileNameExtension(path)](#_GetFileNameExtensionpath)
+  * [_GetStrByIndex(sz, idx, pattern)](#_GetStrByIndexszidxpattern)
+  * [_GetStrCount(sz, pattern)](#_GetStrCountszpattern)
+* [DYNAMIC ARRAY](#DYNAMICARRAY)
+  * [_NewDArray()](#_NewDArray)
+  * [_FreeDArray(hDArray)](#_FreeDArrayhDArray)
+  * [_PushDArray(hDArray, sz)](#_PushDArrayhDArraysz)
+  * [_PopDArray(hDArray)](#_PopDArrayhDArray)
+  * [_PullDArray(hDArray)](#_PullDArrayhDArray)
+  * [_InsDArray(hDArray, sz)](#_InsDArrayhDArraysz)
+  * [_GetDArray(hDArray, index)](#_GetDArrayhDArrayindex)
+  * [_SetDArray(hDArray, index, sz)](#_SetDArrayhDArrayindexsz)
+  * [_CountDArray(hDArray)](#_CountDArrayhDArray)
+* [STRING SET](#STRINGSET)
+  * [_NewStrSet(sz, pattern)](#_NewStrSetszpattern)
 * [MISC](#MISC)
-  * [_GetLocalTime](_GetLocalTime)
-  * [_UniNum](_UniNum)
-  * [_MIN](_MIN)
-  * [_MAX](_MAX)
-  * [_GetSIVer](_GetSIVer)
-  * [_GetCurSelEx](_GetCurSelEx)
-  * [_GetSIBaseDir](_GetSIBaseDir)
-  * [_IsFileExist](_IsFileExist)
-  * [_CopyBuf](_CopyBuf)
+  * [_GetLocalTime()](#_GetLocalTime)
+  * [_UniNum()](#_UniNum)
+  * [_MIN(a, b)](#_MINab)
+  * [_MAX(a, b)](#_MAXab)
+  * [_GetSIVer()](#_GetSIVer)
+  * [_GetCurSelEx()](#_GetCurSelEx)
+  * [_GetSIBaseDir()](#_GetSIBaseDir)
+  * [_IsFileExist()](#_IsFileExist)
+  * [_CopyBuf(hSrc, hDst)](#_CopyBufhSrchDst)
 
-<h1 id="TEST">TEST</h1>
+<h1 id="TEST">TEST</h1 >
 
-<h2 id="_Assert">_Assert</h2>
+<h2 id="_Assertexp">_Assert(exp)</h2 >
 Assert and stop the macro when enconters unrepairable errors
 
-<h2 id="_Test">_Test</h2>
+<h2 id="_Testexpresult">_Test(exp, result)</h2 >
 For test case
 
-<h1 id="LOGGING">LOGGING</h1>
+<h1 id="LOGGING">LOGGING</h1 >
 
-<h2 id="_Log">_Log</h2>
+<h2 id="_Logtagsz">_Log{tag}(sz)</h2 >
 
 Log tag and priority is:
 
@@ -66,7 +66,7 @@ Log tag and priority is:
 
 Use `_LogV`, `_LogD`, `_LogI`, ...etc to output messages respectively
 
-<h2 id="_SetLogLevel">_SetLogLevel</h2>
+<h2 id="_SetLogLevelszLevel">_SetLogLevel(szLevel)</h2 >
 Set log level
 
 PARAMETERS:
@@ -75,14 +75,14 @@ PARAMETERS:
 
 RETURN VALUE: `Nil`
 
-<h2 id="_LogShow">_LogShow</h2>
+<h2 id="_LogShow">_LogShow()</h2 >
 Show logging messages in temperary buffer
 
 PARAMETERS: N/A
 
 RETURN VALUE: `Nil`
 
-<h2 id="_GenStackInfo">_GenStackInfo</h2>
+<h2 id="_GenStackInfoiLevel">_GenStackInfo(iLevel)</h2 >
 Get function call stack info
 
 PARAMETERS:
@@ -96,9 +96,9 @@ RETURN VALUE:
 	* `iLine`: line number
 	* `szTime`: timestamp
 
-<h1 id="CHARS & STRING">CHARS & STRING</h1>
+<h1 id="CHARSSTRING">CHARS & STRING</h1 >
 
-<h2 id="_IsSpace">_IsSpace</h2>
+<h2 id="_IsSpacech">_IsSpace(ch)</h2 >
 Generate rondom number like: "201005062239000"
 
 PARAMETERS:
@@ -109,7 +109,7 @@ RETURN VALUE:
 
 * Boolean
 
-<h2 id="_AlignStr">_AlignStr</h2>
+<h2 id="_AlignStrszlengthchrfAppend">_AlignStr(sz, length, chr, fAppend)</h2 >
 Expand string length with specific character
 
 PARAMETERS:
@@ -123,7 +123,7 @@ RETURN VALUE:
 
 * String
 
-<h2 id="_StrStrEx">_StrStrEx</h2>
+<h2 id="_StrStrExssubstrichfMatchCasefReverse">_StrStrEx(s, substr, ich, fMatchCase, fReverse)</h2 >
 Find a sub-string in string s, start from ich (ich>=0)
 
 PARAMETERS:
@@ -139,7 +139,7 @@ RETURN VALUE:
 * `invalid`: no matching substr has been found
 * Integer: location of matching substr
 
-<h2 id="_StrStr">_StrStr</h2>
+<h2 id="_StrStrssubstr">_StrStr(s, substr)</h2 >
 Find a sub-string in string s
 
 PARAMETERS:
@@ -152,7 +152,7 @@ RETURN VALUE:
 * `invalid`: no matching substr has been found
 * Integer: location of matching substr
 
-<h2 id="_StrCmp">_StrCmp</h2>
+<h2 id="_StrCmpsz1sz2">_StrCmp(sz1, sz2)</h2 >
 String comparation
 
 PARAMETERS:
@@ -166,7 +166,7 @@ RETURN VALUE:
 * `1`: sz1 > sz2
 * `-1`: sz1 < sz2
 
-<h2 id="_StrCls">_StrCls</h2>
+<h2 id="_StrClssz">_StrCls(sz)</h2 >
 Cut off the blank chars at the both sides of the string
 
 PARAMETERS:
@@ -177,7 +177,7 @@ RETURN VALUE:
 
 * String: trimmed string
 
-<h2 id="_SearchInStr">_SearchInStr</h2>
+<h2 id="_SearchInStrszpatternfMatchCasefRegExpfWholeWordsOnly">_SearchInStr (sz, pattern, fMatchCase, fRegExp, fWholeWordsOnly)</h2 >
 Searches for pattern in the string
 
 PARAMETERS:
@@ -196,7 +196,7 @@ RETURN VALUE:
 	* `ichLim`: the limit index (one past the last) of the last character of  matching text
 	* `szData`: the matching text
 
-<h2 id="_ReplaceInStr">_ReplaceInStr</h2>
+<h2 id="_ReplaceInStrszoldPatternnewPatternfMatchCasefRegExpfWholeWordsOnlyfConfirm">_ReplaceInStr (sz, oldPattern, newPattern, fMatchCase, fRegExp, fWholeWordsOnly, fConfirm)</h2 >
 Replace for pattern in the string
 
 PARAMETERS:
@@ -215,7 +215,7 @@ RETURN VALUE:
 	* `szData`: new string after replacement
 	* `fSuccess`: if true, then szData returns new string. Otherwise, old string is returned
 
-<h2 id="_GetFileNameExtension">_GetFileNameExtension</h2>
+<h2 id="_GetFileNameExtensionpath">_GetFileNameExtension(path)</h2 >
 Get filename extension
 
 PARAMETERS:
@@ -228,7 +228,7 @@ RETURN VALUE:
 	* `Nil`: no extension
 	* String: extension text
 
-<h2 id="_GetStrByIndex">_GetStrByIndex</h2>
+<h2 id="_GetStrByIndexszidxpattern">_GetStrByIndex(sz, idx, pattern)</h2 >
 Given a string isolated by delims to some parts, each part is given a index number
 
 PARAMETERS:
@@ -245,7 +245,7 @@ RETURN VALUE:
 	* `ichLim`: the limit index (one past the last) of the last character of  matching text
 	* `szData`: the matching text
 
-<h2 id="_GetStrCount">_GetStrCount</h2>
+<h2 id="_GetStrCountszpattern">_GetStrCount(sz, pattern)</h2 >
 Calculate the number of parts of a string which is delimited by a regexp pattern
 
 PARAMETERS:
@@ -257,7 +257,7 @@ RETURN VALUE:
 
 * Integer
 
-<h1 id="DYNAMIC ARRAY">DYNAMIC ARRAY</h1>
+<h1 id="DYNAMICARRAY">DYNAMIC ARRAY</h1 >
 
 The structure of dynamic array buffer:
 
@@ -267,7 +267,7 @@ The structure of dynamic array buffer:
 	...
 	lineX: the (X)th item, index of (X-1)
 
-<h2 id="_NewDArray">_NewDArray</h2>
+<h2 id="_NewDArray">_NewDArray()</h2 >
 New a dynamic array buffer
 
 PARAMETERS: N/A
@@ -276,7 +276,7 @@ RETURN VALUE:
 
 * Handle
 
-<h2 id="_FreeDArray">_FreeDArray</h2>
+<h2 id="_FreeDArrayhDArray">_FreeDArray(hDArray)</h2 >
 Free the dynamic array buffer by handle
 
 PARAMETERS:
@@ -285,7 +285,7 @@ PARAMETERS:
 
 RETURN VALUE: `Nil`
 
-<h2 id="_PushDArray">_PushDArray</h2>
+<h2 id="_PushDArrayhDArraysz">_PushDArray(hDArray, sz)</h2 >
 Append one new item
 
 PARAMETERS:
@@ -295,7 +295,7 @@ PARAMETERS:
 
 RETURN VALUE: `Nil`
 
-<h2 id="_PopDArray">_PopDArray</h2>
+<h2 id="_PopDArrayhDArray">_PopDArray(hDArray)</h2 >
 Pop out the last item
 
 PARAMETERS:
@@ -306,7 +306,7 @@ RETURN VALUE:
 
 * String: content of the item
 
-<h2 id="_PullDArray">_PullDArray</h2>
+<h2 id="_PullDArrayhDArray">_PullDArray(hDArray)</h2 >
 Pull out the first item
 
 PARAMETERS:
@@ -317,7 +317,7 @@ RETURN VALUE:
 
 * String: content of the item
 
-<h2 id="_InsDArray">_InsDArray</h2>
+<h2 id="_InsDArrayhDArraysz">_InsDArray(hDArray, sz)</h2 >
 Insert a new item as the first item
 
 PARAMETERS:
@@ -327,7 +327,7 @@ PARAMETERS:
 
 RETURN VALUE: `Nil`
 
-<h2 id="_GetDArray">_GetDArray</h2>
+<h2 id="_GetDArrayhDArrayindex">_GetDArray(hDArray, index)</h2 >
 Read out the content of required item
 
 PARAMETERS:
@@ -339,7 +339,7 @@ RETURN VALUE:
 
 * String: content of the item
 
-<h2 id="_SetDArray">_SetDArray</h2>
+<h2 id="_SetDArrayhDArrayindexsz">_SetDArray(hDArray, index, sz)</h2 >
 Replace the content of required item with new string
 
 PARAMETERS:
@@ -350,7 +350,7 @@ PARAMETERS:
 
 RETURN VALUE: `Nil`
 
-<h2 id="_CountDArray">_CountDArray</h2>
+<h2 id="_CountDArrayhDArray">_CountDArray(hDArray)</h2 >
 Replace the content of required item with new string
 
 PARAMETERS:
@@ -361,9 +361,9 @@ RETURN VALUE:
 
 * Integer: array size
 
-<h1 id="STRING SET">STRING SET</h1>
+<h1 id="STRINGSET">STRING SET</h1 >
 
-<h2 id="_NewStrSet">_NewStrSet</h2>
+<h2 id="_NewStrSetszpattern">_NewStrSet(sz, pattern)</h2 >
 Split string by delims identified by regular expression pattern
 
 PARAMETERS:
@@ -377,9 +377,9 @@ RETURN VALUE:
 	* `hDataArray`: dynamic array handle of split text
 	* `hPatternArray`: dynamic array handle of matching text by pattern
 
-<h1 id="MISC">MISC</h1>
+<h1 id="MISC">MISC</h1 >
 
-<h2 id="_GetLocalTime">_GetLocalTime</h2>
+<h2 id="_GetLocalTime">_GetLocalTime()</h2 >
 Cut off the blank chars at the both sides of the string
 
 PARAMETERS: N/A
@@ -398,7 +398,7 @@ RETURN VALUE:
 	* `szSecond`: current second
 	* `szMilliseconds`: current milliseconds
 
-<h2 id="_UniNum">_UniNum</h2>
+<h2 id="_UniNum">_UniNum()</h2 >
 Generate rondom number like: "201005062239000"
 
 PARAMETERS: N/A
@@ -407,7 +407,7 @@ RETURN VALUE:
 
 * String
 
-<h2 id="_MIN">_MIN</h2>
+<h2 id="_MINab">_MIN(a, b)</h2 >
 Get the minimal number
 
 PARAMETERS:
@@ -416,7 +416,7 @@ RETURN VALUE:
 
 * Integer
 
-<h2 id="_MAX">_MAX</h2>
+<h2 id="_MAXab">_MAX(a, b)</h2 >
 Get the maximal number
 
 PARAMETERS:
@@ -425,7 +425,7 @@ RETURN VALUE:
 
 * Integer
 
-<h2 id="_GetSIVer">_GetSIVer</h2>
+<h2 id="_GetSIVer">_GetSIVer()</h2 >
 Get the source insight version number
 
 PARAMETERS: N/A
@@ -434,7 +434,7 @@ RETURN VALUE:
 
 * String
 
-<h2 id="_GetCurSelEx">_GetCurSelEx</h2>
+<h2 id="_GetCurSelEx">_GetCurSelEx()</h2 >
 Get current selection info and type
 
 PARAMETERS: N/A
@@ -445,7 +445,7 @@ RETURN VALUE:
 	`sel`: record structure, contains some selection infomation
 	`type`: string, indicate the selection type
 
-<h2 id="_GetSIBaseDir">_GetSIBaseDir</h2>
+<h2 id="_GetSIBaseDir">_GetSIBaseDir()</h2 >
 Get the directory of source insight project named "Base"
 
 PARAMETERS: N/A
@@ -454,7 +454,7 @@ RETURN VALUE:
 
 * String
 
-<h2 id="_IsFileExist">_IsFileExist</h2>
+<h2 id="_IsFileExist">_IsFileExist()</h2 >
 Get the directory of source insight project named "Base"
 
 PARAMETERS: N/A
@@ -467,7 +467,7 @@ NOTE:
 
 *This function has no effect for source insight project file*
 
-<h2 id="_CopyBuf">_CopyBuf</h2>
+<h2 id="_CopyBufhSrchDst">_CopyBuf(hSrc, hDst)</h2 >
 Copy buffer content from one to another
 
 PARAMETERS:
