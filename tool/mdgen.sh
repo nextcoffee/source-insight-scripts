@@ -1,3 +1,4 @@
+# check arguments
 if [ ! -f "$1" ]; then
 	echo "invalid input file"
 	exit 1
@@ -13,7 +14,7 @@ OUTPUT_FILE="$2"
 TMP_OUT_FILE="$2.tmp"
 ANCHOR_FILE="$2.anchor"
 
-# pick out markdown comments
+# pick out markdown comments, and save to temporary file
 sed -n "/^\/\*'/,/'\*\/$/{/^\/\*'/n; /'\*\/$/b; p}" $INPUT_FILE > $TMP_OUT_FILE
 
 # gen anchor list
@@ -65,8 +66,9 @@ awk '
 	print "<h" x " id=\"" anchor "\">" y "</h" x " >"
 }' < $TMP_OUT_FILE > $OUTPUT_FILE
 
-# copy anchor list to output
+# insert anchor list at the beginning of final output file
 sed -i "1 r $ANCHOR_FILE" $OUTPUT_FILE
 
+# clear up temporary files
 rm -rf $TMP_OUT_FILE
 rm -rf $ANCHOR_FILE
