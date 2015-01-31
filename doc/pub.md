@@ -39,6 +39,7 @@
   * [_GetSIVer()](#_GetSIVer)
   * [_GetCurSelEx()](#_GetCurSelEx)
   * [_GetSIBaseDir()](#_GetSIBaseDir)
+  * [_GetExternalBase()](#_GetExternalBase)
   * [_IsFileExist()](#_IsFileExist)
   * [_CopyBuf(hSrc, hDst)](#_CopyBufhSrchDst)
 
@@ -447,6 +448,15 @@ RETURN VALUE:
 
 <h2 id="_GetSIBaseDir">_GetSIBaseDir()</h2 >
 Get the directory of source insight project named "Base"
+
+PARAMETERS: N/A
+
+RETURN VALUE:
+
+* String
+
+<h2 id="_GetExternalBase">_GetExternalBase()</h2 >
+Get the base directory of external source insight macro scripts
 
 PARAMETERS: N/A
 

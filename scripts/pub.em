@@ -1880,7 +1880,53 @@ macro ___tst_GetSIBaseDir()
 	var filePubEm
 
 	projBaseDir = _GetSIBaseDir()
-	filePubEm = Cat(projBaseDir, "pub.em")
+	filePubEm = Cat(projBaseDir, "utils.em")
+
+	// open test
+	_Assert(_IsFileExist(filePubEm))
+
+	return Nil
+}
+
+/*''*************************************************
+## _GetExternalBase()
+Get the base directory of external source insight macro scripts
+
+PARAMETERS: N/A
+
+RETURN VALUE:
+
+* String
+
+**************************************************''*/
+macro _GetExternalBase()
+{
+	var hbuf
+	var szFullPath
+	var ich
+	var sz
+
+	hbuf = OpenBuf("pub.em")
+	szFullPath = GetBufName(hbuf)
+	_LogI(szFullPath)
+	CloseBuf(hbuf)
+
+	ich = _StrStrEx(szFullPath, "scripts\\pub.em", StrLen(szFullPath), True, True)
+	_ASSERT(ich != invalid)
+
+	sz = StrTrunc(szFullPath, ich)
+	_LogI(sz)
+
+	return sz
+}
+
+macro ___tst__GetExternalBase()
+{
+	var projBaseDir
+	var filePubEm
+
+	projBaseDir = _GetExternalBase()
+	filePubEm = Cat(projBaseDir, "scripts\\pub.em")
 
 	// open test
 	_Assert(_IsFileExist(filePubEm))
@@ -2083,7 +2129,7 @@ macro ___tst_RumCmdWithReturn()
 macro _RunVBS(sz)
 {
 	_LogI(sz)
-	return RunCmdLine("wscript.exe //B VBS_Run.vbs @sz@", _GetSIBaseDir(), True)
+	return RunCmdLine("wscript.exe //B VBS_Run.vbs @sz@", _GetExternalBase() # "tool\\", True)
 }
 
 macro ___tst_RunVBS()
@@ -2144,6 +2190,7 @@ macro ___tst_all()
 	___tst_GetSIVer()
 	___tst_GetCurSelEx()
 	___tst_GetSIBaseDir()
+	___tst__GetExternalBase()
 	___tst_IsFileExist()
 	___tst_CopyBuf()
 	___tst_SITempFile()

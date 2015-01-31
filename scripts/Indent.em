@@ -22,7 +22,7 @@ macro __BlockIndent()
 	hbuf = GetWndBuf (hwnd)
 
 	//astyle tool & parameter
-	tool = Cat(_GetSIBaseDir(), "AStyle.exe")
+	tool = Cat(_GetExternalBase(), "tool\\AStyle.exe")
 
 	//-A1SwYpdyjk3nZX
 	tool_para = "--style=ansi --suffix=none --mode=c"
