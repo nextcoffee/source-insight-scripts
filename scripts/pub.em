@@ -4,16 +4,11 @@
 // PUBLIC API'S HERE!!!
 
 // Markdown comments are contained between [/*''] and [''*/]
+//
 // Use below CMD to gen markdown comments
-// awk '/^\/\*'\'\''/,/'\'\''\*\/$/{if($0 !~ /^\/\*'\'\''/ && $0 !~ /'\'\''\*\/$/) print}' pub.em
-// or
-// sed -n "/^\/\*'/,/'\*\/$/{/^\/\*'/n; /'\*\/$/b; p}" pub.em
-
-// reserved for anchor area
-/*''*************************************************
-
-
-**************************************************''*/
+//     ./tool/mdgen.sh scripts/pub.em doc/pub.md
+// Use below CMD to insert anchor for markdown document
+//     ./tool/mdanchor.sh doc/pub.md
 
 /*''*************************************************
 # TEST
