@@ -1800,6 +1800,7 @@ PARAMETERS: N/A
 RETURN VALUE:
 
 * Record Structure:
+
 	`sel`: record structure, contains some selection infomation
 	`type`: string, indicate the selection type
 
