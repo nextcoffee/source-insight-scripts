@@ -31,6 +31,13 @@
   * [_CountDArray(hDArray)](#_CountDArrayhDArray)
 * [STRING SET](#STRINGSET)
   * [_NewStrSet(sz, pattern)](#_NewStrSetszpattern)
+  * [_GetStrSet(hStr)](#_GetStrSethStr)
+  * [_FreeStrSet(hStr)](#_FreeStrSethStr)
+  * [_GetStr(hStr, index)](#_GetStrhStrindex)
+  * [_SetStr(hStr, index, sz)](#_SetStrhStrindexsz)
+  * [_GetPStr(hStr, index)](#_GetPStrhStrindex)
+  * [_SetPStr(hStr, index, sz)](#_SetPStrhStrindexsz)
+  * [_CountStr(hStr)](#_CountStrhStr)
 * [MISC](#MISC)
   * [_GetLocalTime()](#_GetLocalTime)
   * [_UniNum()](#_UniNum)
@@ -377,6 +384,83 @@ RETURN VALUE:
 * Record Structure:
 	* `hDataArray`: dynamic array handle of split text
 	* `hPatternArray`: dynamic array handle of matching text by pattern
+
+<h2 id="_GetStrSethStr">_GetStrSet(hStr)</h2 >
+Combines all the element back to one single string
+
+PARAMETERS:
+
+* `hStr`: handle of string set
+
+RETURN VALUE:
+
+* String
+
+<h2 id="_FreeStrSethStr">_FreeStrSet(hStr)</h2 >
+Free string set
+
+PARAMETERS:
+
+* `hStr`: handle of string set
+
+RETURN VALUE: `Nil`
+
+<h2 id="_GetStrhStrindex">_GetStr(hStr, index)</h2 >
+Get string by index
+
+PARAMETERS:
+
+* `hStr`: handle of string set
+* `index`: index number
+
+RETURN VALUE:
+
+* String
+
+<h2 id="_SetStrhStrindexsz">_SetStr(hStr, index, sz)</h2 >
+Set string by index
+
+PARAMETERS:
+
+* `hStr`: handle of string set
+* `index`: index number
+* `sz`: text
+
+RETURN VALUE: `Nil`
+
+<h2 id="_GetPStrhStrindex">_GetPStr(hStr, index)</h2 >
+Get pattern match string by index
+
+PARAMETERS:
+
+* `hStr`: handle of string set
+* `index`: index number
+
+RETURN VALUE:
+
+* String
+
+<h2 id="_SetPStrhStrindexsz">_SetPStr(hStr, index, sz)</h2 >
+Set pattern match string by index
+
+PARAMETERS:
+
+* `hStr`: handle of string set
+* `index`: index number
+* `sz`: text
+
+RETURN VALUE: `Nil`
+
+<h2 id="_CountStrhStr">_CountStr(hStr)</h2 >
+Get the number of elements
+
+PARAMETERS:
+
+* `hStr`: handle of string set
+
+RETURN VALUE:
+
+* Integer
 
 <h1 id="MISC">MISC</h1 >
 
