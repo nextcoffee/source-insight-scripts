@@ -527,9 +527,8 @@ PARAMETERS: N/A
 RETURN VALUE:
 
 * Record Structure:
-
-	`sel`: record structure, contains some selection infomation
-	`type`: string, indicate the selection type
+	* `sel`: record structure, contains some selection infomation
+	* `type`: string, indicate the selection type
 
 <h2 id="_GetSIBaseDir">_GetSIBaseDir()</h2 >
 Get the directory of source insight project named "Base"
