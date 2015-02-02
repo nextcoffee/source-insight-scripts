@@ -1348,6 +1348,19 @@ macro _NewStrSet(sz, pattern)
 	stop
 }
 
+/*''*************************************************
+## _GetStrSet(hStr)
+Combines all the element back to one single string
+
+PARAMETERS:
+
+* `hStr`: handle of string set
+
+RETURN VALUE:
+
+* String
+
+**************************************************''*/
 macro _GetStrSet(hStr)
 {
 	var index
@@ -1374,6 +1387,17 @@ macro _GetStrSet(hStr)
 	return sz
 }
 
+/*''*************************************************
+## _FreeStrSet(hStr)
+Free string set
+
+PARAMETERS:
+
+* `hStr`: handle of string set
+
+RETURN VALUE: `Nil`
+
+**************************************************''*/
 macro _FreeStrSet(hStr)
 {
 	_FreeDArray(hStr.hPatternArray)
@@ -1382,26 +1406,93 @@ macro _FreeStrSet(hStr)
 	return Nil
 }
 
+/*''*************************************************
+## _GetStr(hStr, index)
+Get string by index
+
+PARAMETERS:
+
+* `hStr`: handle of string set
+* `index`: index number
+
+RETURN VALUE:
+
+* String
+
+**************************************************''*/
 macro _GetStr(hStr, index)
 {
 	return _GetDArray(hStr.hDataArray, index)
 }
 
+/*''*************************************************
+## _SetStr(hStr, index, sz)
+Set string by index
+
+PARAMETERS:
+
+* `hStr`: handle of string set
+* `index`: index number
+* `sz`: text
+
+RETURN VALUE: `Nil`
+
+**************************************************''*/
 macro _SetStr(hStr, index, sz)
 {
 	return _SetDArray(hStr.hDataArray, index, sz)
 }
 
+/*''*************************************************
+## _GetPStr(hStr, index)
+Get pattern match string by index
+
+PARAMETERS:
+
+* `hStr`: handle of string set
+* `index`: index number
+
+RETURN VALUE:
+
+* String
+
+**************************************************''*/
 macro _GetPStr(hStr, index)
 {
 	return _GetDArray(hStr.hPatternArray, index)
 }
 
+/*''*************************************************
+## _SetPStr(hStr, index, sz)
+Set pattern match string by index
+
+PARAMETERS:
+
+* `hStr`: handle of string set
+* `index`: index number
+* `sz`: text
+
+RETURN VALUE: `Nil`
+
+**************************************************''*/
 macro _SetPStr(hStr, index, sz)
 {
 	return _SetDArray(hStr.hPatternArray, index, sz)
 }
 
+/*''*************************************************
+## _CountStr(hStr)
+Get the number of elements
+
+PARAMETERS:
+
+* `hStr`: handle of string set
+
+RETURN VALUE:
+
+* Integer
+
+**************************************************''*/
 macro _CountStr(hStr)
 {
 	return _CountDArray(hStr.hDataArray)
