@@ -1,0 +1,13 @@
+--style=linux
+#--break-blocks
+--pad-oper
+--pad-header
+#--delete-empty-lines
+--align-pointer=name
+--align-reference=name
+--remove-brackets
+--max-code-length=80
+--mode=c
+--suffix=none
+--errors-to-stdout
+--lineend=linux

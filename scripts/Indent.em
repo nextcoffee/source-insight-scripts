@@ -24,8 +24,7 @@ macro __BlockIndent()
 	//astyle tool & parameter
 	tool = Cat(_GetExternalBase(), "tool\\AStyle.exe")
 
-	//-A1SwYpdyjk3nZX
-	tool_para = "--style=ansi --suffix=none --mode=c"
+	tool_para = "--options=astylerc"
 
 	//new a file the store the content selected temperorily
 	fname = _SINewTmpFile()

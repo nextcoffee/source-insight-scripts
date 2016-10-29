@@ -52,7 +52,7 @@ macro __GenCommentElement()
 	recTime = _GetLocalTime()
 	szDate = recTime.szYear # recTime.szMonth # recTime.szDay
 
-	szFirm = "JDM"
+	szFirm = "INNODZN"
 
     rec.szUser = szUser
     rec.szCmtPara = szCmtPara
