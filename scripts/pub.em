@@ -2251,6 +2251,8 @@ macro _RunCmdLine(sCmdLine, sWorkingDirectory, fWait, windowstate)
 macro ___tst_RunCmdLine()
 {
 	_Test(_RunCmdLine("timeout 1", Nil, True, 0), 0)
+	_Test(_RunCmdLine("timeout 1", Nil, True, 1), 0)
+	_Test(_RunCmdLine("timeout 1", Nil, False, 1), 0)
 
 	return Nil
 }
