@@ -2205,8 +2205,6 @@ macro ___tst_RumCmdWithReturn()
 {
 	var recRet
 
-	_SetLogLevel("V")
-
 	recRet = _RumCmdWithReturn("echo yang", Nil, True)
 	_Assert(recRet.hbuf != hNil)
 	_Test(GetBufLine(recRet.hbuf, 0), "yang")
