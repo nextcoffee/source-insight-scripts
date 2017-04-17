@@ -2237,6 +2237,36 @@ macro ___tst_Run()
 	return Nil
 }
 
+macro _RunCmdLine(sCmdLine, sWorkingDirectory, fWait, windowstate)
+{
+	var rc
+	var sCmdRC
+
+	if (fWait) {
+		SetReg("shellexec_rc", Nil)
+		sCmdRC = "& reg add \"HKCU\\Software\\Source Dynamics\\Source Insight\\3.0\" /f /v shellexec_rc /t REG_SZ /d !ERRORLEVEL!"
+	}
+
+	rc = ShellExecute(Nil, "cmd.exe", "/v:on /c \"( @sCmdLine@ ) @sCmdRC@\"", sWorkingDirectory, windowstate)
+	if (!rc)
+		return rc
+
+	while (fWait) {
+		rc = GetReg("shellexec_rc")
+		if (rc != Nil)
+			return rc
+	}
+
+	return rc
+}
+
+macro ___tst_RunCmdLine()
+{
+	_Test(_RunCmdLine("timeout 1", Nil, True, 0), 0)
+
+	return Nil
+}
+
 macro _TestCaseCollection()
 {
 	var hbuf
