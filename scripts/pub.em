@@ -2313,6 +2313,7 @@ macro ___tst_all()
 	___tst_RumCmdWithReturn()
 	___tst_RunVBS()
 	___tst_Run()
+	___tst_RunCmdLine()
 
 	//keep this at the last line
 	___tst_Log()
