@@ -2123,10 +2123,10 @@ macro _SINewTmpFile()
 	szFile = szDir # "\\" # _UniNum()
 	_LogI(szFile)
 
-	ret = _RunVBS("CreateTmpFile @szFile@")
+	ret = _RunCmdLine("copy nul @szFile@", Nil, True, 0)
 	if(ret != 0)
 	{
-		Msg "[ERR][_RunVBS] CreateTmpFile @szFile@"
+		Msg "[ERR][_SINewTmpFile] Creating @szFile@"
 		stop
 	}
 
@@ -2139,10 +2139,10 @@ macro _SIDelTmpFile(szFile)
 
 	_LogI(szFile)
 
-	ret = _RunVBS("DeleteTmpFile @szFile@")
+	ret = _RunCmdLine("del /f @szFile@", Nil, True, 0)
 	if(ret != 0)
 	{
-		Msg "[ERR][_RunVBS] DeleteTmpFile @szFile@"
+		Msg "[ERR][_SIDelTmpFile] Deleting @szFile@"
 		stop
 	}
 
@@ -2179,8 +2179,8 @@ macro _RumCmdWithReturn(sCmdLine, sWorkingDirectory, fWait)
 
 	flname = _SINewTmpFile()
 
-	szCmd = "cmd /c (@sCmdLine@>\"@flname@\")"
-	fRet = _Run(szCmd)
+	szCmd = "@sCmdLine@>\"@flname@\""
+	fRet = _RunCmdLine(szCmd, Nil, True, 0)
 
 	hTmp = OpenBuf(flname)
 	_Assert(hTmp != hNil)
@@ -2205,6 +2205,8 @@ macro ___tst_RumCmdWithReturn()
 {
 	var recRet
 
+	_SetLogLevel("V")
+
 	recRet = _RumCmdWithReturn("echo yang", Nil, True)
 	_Assert(recRet.hbuf != hNil)
 	_Test(GetBufLine(recRet.hbuf, 0), "yang")
@@ -2212,47 +2214,35 @@ macro ___tst_RumCmdWithReturn()
 	return Nil
 }
 
-macro _RunVBS(sz)
-{
-	_LogI(sz)
-	return RunCmdLine("wscript.exe //B VBS_Run.vbs @sz@", _GetExternalBase() # "tool\\", True)
-}
-
-macro ___tst_RunVBS()
-{
-	_Test(_RunVBS("Test"), 0)
-	return Nil
-}
-
-macro _Run(sz)
-{
-	_LogI(sz)
-	return _RunVBS("RunCMD @sz@")
-}
-
-macro ___tst_Run()
-{
-	_Test(_Run("cmd /c \"D:\\Program Files\\Notepad++\\notepad++.exe\""), 0)
-
-	return Nil
-}
-
 macro _RunCmdLine(sCmdLine, sWorkingDirectory, fWait, windowstate)
 {
 	var rc
 	var sCmdRC
+	var sExec
+	var sPara
+	var sShellRC
 
+	_LogI(sCmdLine)
+	_LogI(sWorkingDirectory)
+	_LogI(fWait)
+	_LogI(windowstate)
+
+	sShellRC = "shellexec_rc"
 	if (fWait) {
-		SetReg("shellexec_rc", Nil)
-		sCmdRC = "& reg add \"HKCU\\Software\\Source Dynamics\\Source Insight\\3.0\" /f /v shellexec_rc /t REG_SZ /d !ERRORLEVEL!"
+		SetReg(sShellRC, Nil)
+		sCmdRC = "& reg add \"HKCU\\Software\\Source Dynamics\\Source Insight\\3.0\" /f /v @sShellRC@ /t REG_SZ /d !ERRORLEVEL!"
 	}
 
-	rc = ShellExecute(Nil, "cmd.exe", "/v:on /c \"( @sCmdLine@ ) @sCmdRC@\"", sWorkingDirectory, windowstate)
+	sExec = "cmd.exe"
+	sPara = "/v:on /c \"(@sCmdLine@) @sCmdRC@\""
+	_LogI(sPara)
+
+	rc = ShellExecute(Nil, sExec, sPara, sWorkingDirectory, windowstate)
 	if (!rc)
 		return rc
 
 	while (fWait) {
-		rc = GetReg("shellexec_rc")
+		rc = GetReg(sShellRC)
 		if (rc != Nil)
 			return rc
 	}
@@ -2311,8 +2301,6 @@ macro ___tst_all()
 	___tst_CopyBuf()
 	___tst_SITempFile()
 	___tst_RumCmdWithReturn()
-	___tst_RunVBS()
-	___tst_Run()
 	___tst_RunCmdLine()
 
 	//keep this at the last line

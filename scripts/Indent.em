@@ -8,8 +8,6 @@ macro __BlockIndent()
 	var hwnd
 	var sel
 	var hbuf
-	var tool
-	var tool_para
 	var fname
 	var fbuf
 	var i
@@ -20,11 +18,6 @@ macro __BlockIndent()
     hwnd = GetCurrentWnd()
 	sel = GetWndSel (hwnd)
 	hbuf = GetWndBuf (hwnd)
-
-	//astyle tool & parameter
-	tool = Cat(_GetExternalBase(), "tool\\AStyle.exe")
-
-	tool_para = "--options=astylerc"
 
 	//new a file the store the content selected temperorily
 	fname = _SINewTmpFile()
@@ -51,9 +44,9 @@ macro __BlockIndent()
 	CloseBuf (fbuf)
 
 	//run cmd to indent statements
-	cmd = "cmd /C \"@tool@\" @tool_para@ \"@fname@\""
+	cmd = "AStyle.exe --options=astylerc \"@fname@\""
 	_LogI(cmd)
-	if (0 != _Run(cmd))
+	if (0 != _RunCmdLine(cmd, _GetExternalBase() # "tool\\", True, 0))
 		stop
 
 	//handle the indented statements
