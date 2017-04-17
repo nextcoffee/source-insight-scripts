@@ -2235,8 +2235,8 @@ macro _RunCmdLine(sCmdLine, sWorkingDirectory, fWait, windowstate)
 	sPara = "/v:on /c \"(@sCmdLine@) @sCmdRC@\""
 	_LogI(sPara)
 
-	rc = ShellExecute(Nil, sExec, sPara, sWorkingDirectory, windowstate)
-	if (!rc)
+	rc = !ShellExecute(Nil, sExec, sPara, sWorkingDirectory, windowstate)
+	if (rc)
 		return rc
 
 	while (fWait) {
