@@ -1,6 +1,7 @@
 --style=linux
 --indent=force-tab
 --indent-col1-comments
+--max-continuation-indent=80
 #--break-blocks
 --pad-oper
 --pad-header
