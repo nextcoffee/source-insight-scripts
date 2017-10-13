@@ -15,7 +15,7 @@ This project collects all my [source insight](http://www.sourceinsight.com/) scr
 
   - After the project loaded, choose menu **"Project"** -> **"Add and Remove Project Files..."**, click **"Base"** directory on the left side of dialog, then click **"Add Tree"** button on the right side of dialog, see below:
 
-    ![si_add-and-remove-project-files](https://gitcafe.com/nextcoffee/source-insight-macro-script/raw/master/doc/images/si_add-and-remove-project-files.png)
+    ![si_add-and-remove-project-files](doc/images/si_add-and-remove-project-files.png)
 
 ## INTRODUCTION
 
