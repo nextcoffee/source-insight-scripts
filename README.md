@@ -7,7 +7,7 @@ This project collects all my [source insight](http://www.sourceinsight.com/) scr
 
 - Find source insight Base project, which is typically in *Documents\Source Insight\Projects\Base*, `cd` to this directory at first, and then:
 
-        git clone https://gitcafe.com/nextcoffee/source-insight-macro-script.git external
+        git clone https://github.com/nextcoffee/source-insight-scripts.git external
 
 - Add those external scripts to **Base** project.
 
