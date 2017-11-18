@@ -2006,7 +2006,7 @@ function _GetExternalBase()
 	return sz
 }
 
-function ___tst__GetExternalBase()
+function ___tst_GetExternalBase()
 {
 	var projBaseDir
 	var filePubEm
@@ -2273,7 +2273,7 @@ function _TestCaseCollection()
 	hbuf = GetCurrentBuf()
 	szName = GetBufName(hbuf)
 
-	cmd = "for /f \"tokens=1,2*\" %i in ('findstr /B /R /C:\"macro ___\" \"@szName@\"') do @@if not \"%j\" equ \"\" echo %j"
+	cmd = "for /f \"tokens=1,2*\" %i in ('findstr /B /R /C:\"function ___\" \"@szName@\"') do @@if not \"%j\" equ \"\" echo %j"
 	_LogI(cmd)
 	RunCmdLine("cmd /k \"@cmd@\"", ".", False);
 
@@ -2303,7 +2303,7 @@ function ___tst_all()
 	___tst_GetSIVer()
 	___tst_GetCurSelEx()
 	___tst_GetSIBaseDir()
-	___tst__GetExternalBase()
+	___tst_GetExternalBase()
 	___tst_IsFileExist()
 	___tst_CopyBuf()
 	___tst_SITempFile()
