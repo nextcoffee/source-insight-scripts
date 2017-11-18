@@ -2219,16 +2219,25 @@ macro _RunCmdLine(sCmdLine, sWorkingDirectory, fWait, windowstate)
 	var sExec
 	var sPara
 	var sShellRC
+	var pinfo
+	var verMjr
+	var verMnr
 
 	_LogI(sCmdLine)
 	_LogI(sWorkingDirectory)
 	_LogI(fWait)
 	_LogI(windowstate)
 
+	pinfo = GetProgramInfo()
+	_Assert(pinfo != Nil)
+
+	verMjr = pinfo.versionMajor
+	verMnr = pinfo.versionMinor
+
 	sShellRC = "shellexec_rc"
 	if (fWait) {
 		SetReg(sShellRC, Nil)
-		sCmdRC = "& reg add \"HKCU\\Software\\Source Dynamics\\Source Insight\\3.0\" /f /v @sShellRC@ /t REG_SZ /d !ERRORLEVEL!"
+		sCmdRC = "& reg add \"HKCU\\Software\\Source Dynamics\\Source Insight\\@verMjr@.@verMnr@\" /f /v @sShellRC@ /t REG_SZ /d !ERRORLEVEL!"
 	}
 
 	sExec = "cmd.exe"
