@@ -20,7 +20,7 @@
 Assert and stop the macro when enconters unrepairable errors
 
 **************************************************''*/
-macro _Assert(exp)
+function _Assert(exp)
 {
 	var hBuf
 
@@ -49,7 +49,7 @@ macro _Assert(exp)
 For test case
 
 **************************************************''*/
-macro _Test(exp, result)
+function _Test(exp, result)
 {
 	if (exp != result)
 		_Assert(False)
@@ -62,7 +62,7 @@ macro _Test(exp, result)
 
 **************************************************''*/
 
-macro __LogInit()
+function __LogInit()
 {
 	global g_LogInited
 	global g_LogLevel
@@ -79,7 +79,7 @@ macro __LogInit()
 
 }
 
-macro __Log(szLevel, sz)
+function __Log(szLevel, sz)
 {
 	global szLogFileName
 	var hFileLog
@@ -89,10 +89,10 @@ macro __Log(szLevel, sz)
 	__LogInit()
 
 	// parameter check
-	_ASSERT(StrLen(szLevel) == 1)
+	_Assert(StrLen(szLevel) == 1)
 
 	level = _StrStr(g_LogTags, szLevel)
-	_ASSERT (level != invalid)
+	_Assert (level != invalid)
 
 	if (level > g_LogLevel)
 		return Nil
@@ -141,37 +141,37 @@ Log tag and priority is:
 Use `_LogV`, `_LogD`, `_LogI`, ...etc to output messages respectively
 
 **************************************************''*/
-macro _LogV(sz)
+function _LogV(sz)
 {
 	__Log("V", sz)
 	return Nil
 }
 
-macro _LogD(sz)
+function _LogD(sz)
 {
 	__Log("D", sz)
 	return Nil
 }
 
-macro _LogI(sz)
+function _LogI(sz)
 {
 	__Log("I", sz)
 	return Nil
 }
 
-macro _LogW(sz)
+function _LogW(sz)
 {
 	__Log("W", sz)
 	return Nil
 }
 
-macro _LogE(sz)
+function _LogE(sz)
 {
 	__Log("E", sz)
 	return Nil
 }
 
-macro _LogF(sz)
+function _LogF(sz)
 {
 	__Log("F", sz)
 	return Nil
@@ -188,16 +188,16 @@ PARAMETERS:
 RETURN VALUE: `Nil`
 
 **************************************************''*/
-macro _SetLogLevel(szLevel)
+function _SetLogLevel(szLevel)
 {
 	var ich
 
-	_ASSERT(StrLen(szLevel) == 1)
+	_Assert(StrLen(szLevel) == 1)
 
 	__LogInit()
 
 	ich = _StrStr(g_LogTags, szLevel)
-	_ASSERT (ich != invalid)
+	_Assert (ich != invalid)
 
 	g_LogLevel = ich
 
@@ -213,7 +213,7 @@ PARAMETERS: N/A
 RETURN VALUE: `Nil`
 
 **************************************************''*/
-macro _LogShow()
+function _LogShow()
 {
 	var hFileLog
 
@@ -226,7 +226,7 @@ macro _LogShow()
 	return Nil
 }
 
-macro ___tst_Log()
+function ___tst_Log()
 {
 	_SetLogLevel("S")
 	_LogF("CANT SEE ME")
@@ -304,7 +304,7 @@ RETURN VALUE:
 	* `szTime`: timestamp
 
 **************************************************''*/
-macro _GenStackInfo(iLevel)
+function _GenStackInfo(iLevel)
 {
 	var hBuf
 	var recSel
@@ -343,14 +343,14 @@ macro _GenStackInfo(iLevel)
     return rec
 }
 
-macro ___tst_GenStackInfo()
+function ___tst_GenStackInfo()
 {
     var rec
 
 	rec = _GenStackInfo(1)
-	_ASSERT(rec.szFunc == "_GenStackInfo")
+	_Assert(rec.szFunc == "_GenStackInfo")
 	rec = _GenStackInfo(2)
-	_ASSERT(rec.szFunc == "___tst_GenStackInfo")
+	_Assert(rec.szFunc == "___tst_GenStackInfo")
 
 	return Nil
 }
@@ -373,7 +373,7 @@ RETURN VALUE:
 * Boolean
 
 **************************************************''*/
-macro _IsSpace(ch)
+function _IsSpace(ch)
 {
 	var code
 
@@ -381,7 +381,7 @@ macro _IsSpace(ch)
 	return (code == 32 || code == 9)
 }
 
-macro ___tst_IsSpace()
+function ___tst_IsSpace()
 {
 	_Test(_IsSpace(" "), True)
 	_Test(_IsSpace("	"), True)
@@ -405,11 +405,11 @@ RETURN VALUE:
 * String
 
 **************************************************''*/
-macro _AlignStr(sz, length, chr, fAppend)
+function _AlignStr(sz, length, chr, fAppend)
 {
     var count
 
-	_ASSERT(StrLen(chr) == 1)
+	_Assert(StrLen(chr) == 1)
 
     count = length - StrLen(sz)
     if (count < 0)
@@ -432,7 +432,7 @@ macro _AlignStr(sz, length, chr, fAppend)
     return sz
 }
 
-macro ___tst_AlignStr()
+function ___tst_AlignStr()
 {
 	_Test(_AlignStr("1", 3, "0", False), "001")
 	_Test(_AlignStr("1", 3, "0", True), "100")
@@ -457,7 +457,7 @@ RETURN VALUE:
 * Integer: location of matching substr
 
 **************************************************''*/
-macro _StrStrEx(s, substr, ich, fMatchCase, fReverse)
+function _StrStrEx(s, substr, ich, fMatchCase, fReverse)
 {
 	var sLen
 	var substrLen
@@ -504,7 +504,7 @@ macro _StrStrEx(s, substr, ich, fMatchCase, fReverse)
 	return invalid
 }
 
-macro ___tst_StrStrEx()
+function ___tst_StrStrEx()
 {
 	_Test(_StrStrEx("yangming", "ng", 0, False, False), 2)
 	_Test(_StrStrEx("yangming", "mg", 0, False, False), invalid)
@@ -535,12 +535,12 @@ RETURN VALUE:
 * Integer: location of matching substr
 
 **************************************************''*/
-macro _StrStr(s, substr)
+function _StrStr(s, substr)
 {
 	return _StrStrEx(s, substr, 0, False, False)
 }
 
-macro ___tst_StrStr()
+function ___tst_StrStr()
 {
 	_Test(_StrStr("yangming", "ng"), 2)
 	_Test(_StrStr("yangming", "mg"), invalid)
@@ -564,7 +564,7 @@ RETURN VALUE:
 * `-1`: sz1 < sz2
 
 **************************************************''*/
-macro _StrCmp(sz1, sz2)
+function _StrCmp(sz1, sz2)
 {
 	var szLen1
 	var szLen2
@@ -602,7 +602,7 @@ macro _StrCmp(sz1, sz2)
 	return Nil
 }
 
-macro ___tst_StrCmp()
+function ___tst_StrCmp()
 {
 	_Test(_StrCmp("yang", "yin"), (-1))
 	_Test(_StrCmp("yang", "yang"), 0)
@@ -624,7 +624,7 @@ RETURN VALUE:
 * String: trimmed string
 
 **************************************************''*/
-macro _StrCls(sz)
+function _StrCls(sz)
 {
 	//var recRet
 	//recRet = _ReplaceInStr(sz, "^\\w*\\(.*\\)\\w*$", "\\1", False, True, False, False)
@@ -666,7 +666,7 @@ macro _StrCls(sz)
 	return StrMid(sz, iFirst, iLimit)
 }
 
-macro ___tst_StrCls()
+function ___tst_StrCls()
 {
 	_Test(_StrCls(" void    "), "void")
 	return Nil
@@ -693,7 +693,7 @@ RETURN VALUE:
 	* `szData`: the matching text
 
 **************************************************''*/
-macro _SearchInStr (sz, pattern, fMatchCase, fRegExp, fWholeWordsOnly)
+function _SearchInStr (sz, pattern, fMatchCase, fRegExp, fWholeWordsOnly)
 {
 	var recSearchResult
 	var hbuf
@@ -729,7 +729,7 @@ macro _SearchInStr (sz, pattern, fMatchCase, fRegExp, fWholeWordsOnly)
 	return recSearchResult
 }
 
-macro ___tst_SearchInStr()
+function ___tst_SearchInStr()
 {
 	// TODO: need more...
 	_Test(_SearchInStr("hello, world", "\\w+.+$", False, True, False), "ichFirst=\"6\";ichLim=\"12\";szData=\" world\"")
@@ -762,7 +762,7 @@ RETURN VALUE:
 	* `fSuccess`: if true, then szData returns new string. Otherwise, old string is returned
 
 **************************************************''*/
-macro _ReplaceInStr (sz, oldPattern, newPattern, fMatchCase, fRegExp, fWholeWordsOnly, fConfirm)
+function _ReplaceInStr (sz, oldPattern, newPattern, fMatchCase, fRegExp, fWholeWordsOnly, fConfirm)
 {
 	var recReplaceResult
 	var hbuf
@@ -799,7 +799,7 @@ macro _ReplaceInStr (sz, oldPattern, newPattern, fMatchCase, fRegExp, fWholeWord
 	return recReplaceResult
 }
 
-macro ___tst_ReplaceInStr()
+function ___tst_ReplaceInStr()
 {
 	// TODO: need more...
 	_Test(_ReplaceInStr("hello, world", "\\(\\w+.+$\\)", " WORLD", False, True, False, False), "szData=\"hello, WORLD\";fSuccess=\"1\"")
@@ -822,7 +822,7 @@ RETURN VALUE:
 	* String: extension text
 
 **************************************************''*/
-macro _GetFileNameExtension(path)
+function _GetFileNameExtension(path)
 {
 	var ich
 	var len
@@ -836,7 +836,7 @@ macro _GetFileNameExtension(path)
 	return strmid(path, ich + 1, len)
 }
 
-macro ___tst_GetFileNameExtension()
+function ___tst_GetFileNameExtension()
 {
 	_Test(_GetFileNameExtension("file.ext"), "ext")
 	_Test(_GetFileNameExtension("file."), Nil)
@@ -864,7 +864,7 @@ RETURN VALUE:
 	* `szData`: the matching text
 
 **************************************************''*/
-macro _GetStrByIndex(sz, idx, pattern)
+function _GetStrByIndex(sz, idx, pattern)
 {
 	var recRet
 	var ret
@@ -924,7 +924,7 @@ macro _GetStrByIndex(sz, idx, pattern)
 	return recRet
 }
 
-macro ___tst_GetStrByIndex()
+function ___tst_GetStrByIndex()
 {
 	_Test(_GetStrByIndex("file ext", 0, " "), "ichFirst=\"0\";ichLim=\"4\";szData=\"file\"")
 	_Test(_GetStrByIndex("file ext", 0, "\\w+"), "ichFirst=\"0\";ichLim=\"4\";szData=\"file\"")
@@ -950,7 +950,7 @@ RETURN VALUE:
 * Integer
 
 **************************************************''*/
-macro _GetStrCount(sz, pattern)
+function _GetStrCount(sz, pattern)
 {
 	var cch
 	var cnt
@@ -982,7 +982,7 @@ macro _GetStrCount(sz, pattern)
 	return (cnt + 1)    // strCount = delimsCount + 1
 }
 
-macro ___tst_GetStrCount()
+function ___tst_GetStrCount()
 {
 	_Test(_GetStrCount("file ext", " "), 2)
 	_Test(_GetStrCount("file ext", "\\w+"), 2)
@@ -1020,7 +1020,7 @@ RETURN VALUE:
 * Handle
 
 **************************************************''*/
-macro _NewDArray()
+function _NewDArray()
 {
 	var hDArray
 	var rec
@@ -1051,7 +1051,7 @@ PARAMETERS:
 RETURN VALUE: `Nil`
 
 **************************************************''*/
-macro _FreeDArray(hDArray)
+function _FreeDArray(hDArray)
 {
 	SetBufDirty(hDArray, FALSE)
 	CloseBuf(hDArray)
@@ -1071,7 +1071,7 @@ PARAMETERS:
 RETURN VALUE: `Nil`
 
 **************************************************''*/
-macro _PushDArray(hDArray, sz)
+function _PushDArray(hDArray, sz)
 {
 	var recRet
 
@@ -1096,7 +1096,7 @@ RETURN VALUE:
 * String: content of the item
 
 **************************************************''*/
-macro _PopDArray(hDArray)
+function _PopDArray(hDArray)
 {
 	var sz
 	var recRet
@@ -1130,7 +1130,7 @@ RETURN VALUE:
 * String: content of the item
 
 **************************************************''*/
-macro _PullDArray(hDArray)
+function _PullDArray(hDArray)
 {
 	var sz
 	var recRet
@@ -1163,7 +1163,7 @@ PARAMETERS:
 RETURN VALUE: `Nil`
 
 **************************************************''*/
-macro _InsDArray(hDArray, sz)
+function _InsDArray(hDArray, sz)
 {
 	var recRet
 
@@ -1189,7 +1189,7 @@ RETURN VALUE:
 * String: content of the item
 
 **************************************************''*/
-macro _GetDArray(hDArray, index)
+function _GetDArray(hDArray, index)
 {
 	var recRet
 
@@ -1217,7 +1217,7 @@ PARAMETERS:
 RETURN VALUE: `Nil`
 
 **************************************************''*/
-macro _SetDArray(hDArray, index, sz)
+function _SetDArray(hDArray, index, sz)
 {
 	var recRet
 
@@ -1246,7 +1246,7 @@ RETURN VALUE:
 * Integer: array size
 
 **************************************************''*/
-macro _CountDArray(hDArray)
+function _CountDArray(hDArray)
 {
 	var recRet
 
@@ -1254,7 +1254,7 @@ macro _CountDArray(hDArray)
 	return recRet.iSize
 }
 
-macro ___tst_DArray()
+function ___tst_DArray()
 {
 	var hDArray
 
@@ -1304,7 +1304,7 @@ RETURN VALUE:
 	* `hPatternArray`: dynamic array handle of matching text by pattern
 
 **************************************************''*/
-macro _NewStrSet(sz, pattern)
+function _NewStrSet(sz, pattern)
 {
 	var hStr
 	var recRet
@@ -1344,7 +1344,7 @@ macro _NewStrSet(sz, pattern)
 	_FreeDArray(hStr.hPatternArray)
 	_FreeDArray(hStr.hDataArray)
 
-	_ASSERT(0)
+	_Assert(0)
 	stop
 }
 
@@ -1361,7 +1361,7 @@ RETURN VALUE:
 * String
 
 **************************************************''*/
-macro _GetStrSet(hStr)
+function _GetStrSet(hStr)
 {
 	var index
 	var iPatternArraySize
@@ -1398,7 +1398,7 @@ PARAMETERS:
 RETURN VALUE: `Nil`
 
 **************************************************''*/
-macro _FreeStrSet(hStr)
+function _FreeStrSet(hStr)
 {
 	_FreeDArray(hStr.hPatternArray)
 	_FreeDArray(hStr.hDataArray)
@@ -1420,7 +1420,7 @@ RETURN VALUE:
 * String
 
 **************************************************''*/
-macro _GetStr(hStr, index)
+function _GetStr(hStr, index)
 {
 	return _GetDArray(hStr.hDataArray, index)
 }
@@ -1438,7 +1438,7 @@ PARAMETERS:
 RETURN VALUE: `Nil`
 
 **************************************************''*/
-macro _SetStr(hStr, index, sz)
+function _SetStr(hStr, index, sz)
 {
 	return _SetDArray(hStr.hDataArray, index, sz)
 }
@@ -1457,7 +1457,7 @@ RETURN VALUE:
 * String
 
 **************************************************''*/
-macro _GetPStr(hStr, index)
+function _GetPStr(hStr, index)
 {
 	return _GetDArray(hStr.hPatternArray, index)
 }
@@ -1475,7 +1475,7 @@ PARAMETERS:
 RETURN VALUE: `Nil`
 
 **************************************************''*/
-macro _SetPStr(hStr, index, sz)
+function _SetPStr(hStr, index, sz)
 {
 	return _SetDArray(hStr.hPatternArray, index, sz)
 }
@@ -1493,12 +1493,12 @@ RETURN VALUE:
 * Integer
 
 **************************************************''*/
-macro _CountStr(hStr)
+function _CountStr(hStr)
 {
 	return _CountDArray(hStr.hDataArray)
 }
 
-macro ___tst_StrSet()
+function ___tst_StrSet()
 {
 	var sz
 	var szTmp
@@ -1587,7 +1587,7 @@ RETURN VALUE:
 	* `szMilliseconds`: current milliseconds
 
 **************************************************''*/
-macro _GetLocalTime()
+function _GetLocalTime()
 {
     var recTimeAligned
     var recTimeOrig
@@ -1610,7 +1610,7 @@ macro _GetLocalTime()
 	return recTimeAligned
 }
 
-macro ___tst_GetLocalTime()
+function ___tst_GetLocalTime()
 {
     var rec
 	rec = _GetLocalTime()
@@ -1635,7 +1635,7 @@ RETURN VALUE:
 * String
 
 **************************************************''*/
-macro _UniNum()
+function _UniNum()
 {
 	var recTime
 	var szCount
@@ -1662,7 +1662,7 @@ macro _UniNum()
 	return sz
 }
 
-macro ___tst_UniNum()
+function ___tst_UniNum()
 {
 	//------------------------------
 	// to ensure the uninum string is unique
@@ -1702,7 +1702,7 @@ RETURN VALUE:
 * Integer
 
 **************************************************''*/
-macro _MIN(a, b)
+function _MIN(a, b)
 {
 	if (a > b)
 		return b
@@ -1721,7 +1721,7 @@ RETURN VALUE:
 * Integer
 
 **************************************************''*/
-macro _MAX(a, b)
+function _MAX(a, b)
 {
 	if (a > b)
 		return a
@@ -1740,7 +1740,7 @@ RETURN VALUE:
 * String
 
 **************************************************''*/
-macro _GetSIVer()
+function _GetSIVer()
 {
 	var pinfo
 	var verMjr
@@ -1764,7 +1764,7 @@ macro _GetSIVer()
 	return "@verMjr@.@verMnr@.@verBld@"
 }
 
-macro ___tst_GetSIVer()
+function ___tst_GetSIVer()
 {
 	var szVer
 	var szLen
@@ -1804,7 +1804,7 @@ RETURN VALUE:
 	* `type`: string, indicate the selection type
 
 **************************************************''*/
-macro _GetCurSelEx()
+function _GetCurSelEx()
 {
 	var hwnd
 	var hbuf
@@ -1918,7 +1918,7 @@ macro _GetCurSelEx()
 	return Nil
 }
 
-macro ___tst_GetCurSelEx()
+function ___tst_GetCurSelEx()
 {
 	// TODO:
 	_LogI(_GetCurSelEx())
@@ -1936,7 +1936,7 @@ RETURN VALUE:
 * String
 
 **************************************************''*/
-macro _GetSIBaseDir()
+function _GetSIBaseDir()
 {
 	var recProgEnvInfo
 	var projDirFile
@@ -1960,7 +1960,7 @@ macro _GetSIBaseDir()
 	return projBaseDir
 }
 
-macro ___tst_GetSIBaseDir()
+function ___tst_GetSIBaseDir()
 {
 	var projBaseDir
 	var filePubEm
@@ -1985,7 +1985,7 @@ RETURN VALUE:
 * String
 
 **************************************************''*/
-macro _GetExternalBase()
+function _GetExternalBase()
 {
 	var hbuf
 	var szFullPath
@@ -1998,7 +1998,7 @@ macro _GetExternalBase()
 	CloseBuf(hbuf)
 
 	ich = _StrStrEx(szFullPath, "scripts\\pub.em", StrLen(szFullPath), True, True)
-	_ASSERT(ich != invalid)
+	_Assert(ich != invalid)
 
 	sz = StrTrunc(szFullPath, ich)
 	_LogI(sz)
@@ -2006,7 +2006,7 @@ macro _GetExternalBase()
 	return sz
 }
 
-macro ___tst__GetExternalBase()
+function ___tst__GetExternalBase()
 {
 	var projBaseDir
 	var filePubEm
@@ -2035,7 +2035,7 @@ NOTE:
 *This function has no effect for source insight project file*
 
 **************************************************''*/
-macro _IsFileExist(fileFullName)
+function _IsFileExist(fileFullName)
 {
 	var hbuf
 
@@ -2047,7 +2047,7 @@ macro _IsFileExist(fileFullName)
 	return True
 }
 
-macro ___tst_IsFileExist()
+function ___tst_IsFileExist()
 {
 	var hbuf
 	hbuf = GetCurrentBuf()
@@ -2070,7 +2070,7 @@ PARAMETERS:
 RETURN VALUE: `Nil`
 
 **************************************************''*/
-macro _CopyBuf(hSrc, hDst)
+function _CopyBuf(hSrc, hDst)
 {
 	var iCnt
 	var sz
@@ -2090,7 +2090,7 @@ macro _CopyBuf(hSrc, hDst)
 	return Nil
 }
 
-macro ___tst_CopyBuf()
+function ___tst_CopyBuf()
 {
 	var hSrc
 	var hDst
@@ -2113,7 +2113,7 @@ macro ___tst_CopyBuf()
 	return Nil
 }
 
-macro _SINewTmpFile()
+function _SINewTmpFile()
 {
 	var szDir
 	var szFile
@@ -2133,7 +2133,7 @@ macro _SINewTmpFile()
 	return szFile
 }
 
-macro _SIDelTmpFile(szFile)
+function _SIDelTmpFile(szFile)
 {
 	var ret
 
@@ -2149,7 +2149,7 @@ macro _SIDelTmpFile(szFile)
 	return Nil
 }
 
-macro ___tst_SITempFile()
+function ___tst_SITempFile()
 {
 	var flname
 
@@ -2161,7 +2161,7 @@ macro ___tst_SITempFile()
 	return Nil
 }
 
-macro _RumCmdWithReturn(sCmdLine, sWorkingDirectory, fWait)
+function _RumCmdWithReturn(sCmdLine, sWorkingDirectory, fWait)
 {
 	var recRet
 	var flname
@@ -2201,7 +2201,7 @@ macro _RumCmdWithReturn(sCmdLine, sWorkingDirectory, fWait)
 	return recRet
 }
 
-macro ___tst_RumCmdWithReturn()
+function ___tst_RumCmdWithReturn()
 {
 	var recRet
 
@@ -2212,7 +2212,7 @@ macro ___tst_RumCmdWithReturn()
 	return Nil
 }
 
-macro _RunCmdLine(sCmdLine, sWorkingDirectory, fWait, windowstate)
+function _RunCmdLine(sCmdLine, sWorkingDirectory, fWait, windowstate)
 {
 	var rc
 	var sCmdRC
@@ -2221,7 +2221,6 @@ macro _RunCmdLine(sCmdLine, sWorkingDirectory, fWait, windowstate)
 	var sShellRC
 	var pinfo
 	var verMjr
-	var verMnr
 
 	_LogI(sCmdLine)
 	_LogI(sWorkingDirectory)
@@ -2232,12 +2231,11 @@ macro _RunCmdLine(sCmdLine, sWorkingDirectory, fWait, windowstate)
 	_Assert(pinfo != Nil)
 
 	verMjr = pinfo.versionMajor
-	verMnr = pinfo.versionMinor
 
 	sShellRC = "shellexec_rc"
 	if (fWait) {
 		SetReg(sShellRC, Nil)
-		sCmdRC = "& reg add \"HKCU\\Software\\Source Dynamics\\Source Insight\\@verMjr@.@verMnr@\" /f /v @sShellRC@ /t REG_SZ /d !ERRORLEVEL!"
+		sCmdRC = "& reg add \"HKCU\\Software\\Source Dynamics\\Source Insight\\@verMjr@.0\" /f /v @sShellRC@ /t REG_SZ /d !ERRORLEVEL!"
 	}
 
 	sExec = "cmd.exe"
@@ -2257,7 +2255,7 @@ macro _RunCmdLine(sCmdLine, sWorkingDirectory, fWait, windowstate)
 	return rc
 }
 
-macro ___tst_RunCmdLine()
+function ___tst_RunCmdLine()
 {
 	_Test(_RunCmdLine("timeout 1", Nil, True, 0), 0)
 	_Test(_RunCmdLine("timeout 1", Nil, True, 1), 0)
@@ -2266,7 +2264,7 @@ macro ___tst_RunCmdLine()
 	return Nil
 }
 
-macro _TestCaseCollection()
+function _TestCaseCollection()
 {
 	var hbuf
 	var szName
@@ -2282,7 +2280,7 @@ macro _TestCaseCollection()
 	return Nil
 }
 
-macro ___tst_all()
+function ___tst_all()
 {
 	_SetLogLevel("V")
 
@@ -2317,8 +2315,14 @@ macro ___tst_all()
 	return Nil
 }
 
+// easy to use with application command "Run Macro" which is binding with key 'ctrl+alt+r'
+function __SetLogLevelVerbose()
+{
+       _SetLogLevel("V")
+       return Nil
+}
 
-macro _CheckIfPubEmExistsAndSWVersionRequirement()
+function _CheckIfPubEmExistsAndSWVersionRequirement()
 {
 	var szCurVersion
 	var szVersionRequire
@@ -2336,7 +2340,7 @@ macro _CheckIfPubEmExistsAndSWVersionRequirement()
 }
 
 // TODO: After the execution of RunCmd(), the key ctrl-z will not response
-macro _InvokeMacro(szMacro)
+function _InvokeMacro(szMacro)
 {
     _CheckIfPubEmExistsAndSWVersionRequirement()
 
