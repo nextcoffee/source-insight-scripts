@@ -29,17 +29,17 @@ function _Assert(exp)
 
 	Msg "[_Assert]: Show assert info?"
 
-	hBuf = NewBuf("AssertInfo")    // create output buffer
-    if (hBuf == 0)
-    {
+	hBuf = NewBuf("AssertInfo")  // create output buffer
+	if (hBuf == 0)
+	{
 		Msg "_Debug(): NewBuf error!"
-        stop
-    }
+		stop
+	}
 
 	DumpMacroState (hBuf)
-    SetCurrentBuf(hBuf)            // put buffer to appears in the front-most window
-    SetBufDirty(hBuf, False)       // suppress save prompt
-    //CloseBuf(hBuf)
+	SetCurrentBuf(hBuf)  // put buffer to appears in the front-most window
+	SetBufDirty(hBuf, False)  // suppress save prompt
+	//CloseBuf(hBuf)
 
 	stop
 }
@@ -97,27 +97,27 @@ function __Log(szLevel, sz)
 	if (level > g_LogLevel)
 		return Nil
 
-    // use szLogFileName instead of hFileLog in case that the program exit unexpectedly:
-    // Global variables are useful for adding counters,
-    // and other persistent state.
-    // They **cannot hold any kind of handle**,
-    // because all handles are destroyed when a macro finishes
-    hFileLog = GetBufHandle(szLogFileName)
+	// use szLogFileName instead of hFileLog in case that the program exit unexpectedly:
+	// Global variables are useful for adding counters,
+	// and other persistent state.
+	// They **cannot hold any kind of handle**,
+	// because all handles are destroyed when a macro finishes
+	hFileLog = GetBufHandle(szLogFileName)
 
-    if (hFileLog == hNil)
-    {
-	    szLogFileName = "LOG" # _UniNum()
-	    hFileLog = newbuf(szLogFileName)
-	    if (hFileLog == hNil)
-	    {
+	if (hFileLog == hNil)
+	{
+		szLogFileName = "LOG" # _UniNum()
+		hFileLog = newbuf(szLogFileName)
+		if (hFileLog == hNil)
+		{
 			Msg "Dbg_start(): NewBuf error!"
-	        return Nil
-	    }
+			return Nil
+		}
 	}
 
 	rec = _GenStackInfo(4)
 	if (rec != Nil)
-	    sz = szLevel # ", [" # rec.szTime # "] " # rec.szFunc # ", " # rec.iLine # ": " # sz
+		sz = szLevel # ", [" # rec.szTime # "] " # rec.szFunc # ", " # rec.iLine # ": " # sz
 
 	AppendBufLine (hFileLog, sz)
 	SetBufDirty(hFileLog, False)
@@ -217,7 +217,7 @@ function _LogShow()
 {
 	var hFileLog
 
-    hFileLog = GetBufHandle(szLogFileName)
+	hFileLog = GetBufHandle(szLogFileName)
 	if (hFileLog == hNil)
 		return Nil
 
@@ -317,7 +317,7 @@ function _GenStackInfo(iLevel)
 
 	hBuf = NewBuf("STACK" # _UniNum())
 	if (hBuf == hNil)
-	    return Nil
+		return Nil
 
 	DumpMacroState (hBuf)
 	recSel = SearchInBuf(hBuf, "^@iLevel@: [^\\t\\s]+$", 0, 0, True, True, True)
@@ -331,21 +331,21 @@ function _GenStackInfo(iLevel)
 		if (recSel != Nil)
 			iLine = recSel.szData
 	}
-    SetBufDirty(hBuf, False)
-    CloseBuf(hBuf)
+	SetBufDirty(hBuf, False)
+	CloseBuf(hBuf)
 
 	recTime = _GetLocalTime()
-    szTime = recTime.szTime # "." # recTime.szMilliseconds
+	szTime = recTime.szTime # "." # recTime.szMilliseconds
 
-    rec.szFunc = szFunc
-    rec.iLine = iLine
-    rec.szTime = szTime
-    return rec
+	rec.szFunc = szFunc
+	rec.iLine = iLine
+	rec.szTime = szTime
+	return rec
 }
 
 function ___tst_GenStackInfo()
 {
-    var rec
+	var rec
 
 	rec = _GenStackInfo(1)
 	_Assert(rec.szFunc == "_GenStackInfo")
@@ -407,29 +407,29 @@ RETURN VALUE:
 **************************************************''*/
 function _AlignStr(sz, length, chr, fAppend)
 {
-    var count
+	var count
 
 	_Assert(StrLen(chr) == 1)
 
-    count = length - StrLen(sz)
-    if (count < 0)
-    {
+	count = length - StrLen(sz)
+	if (count < 0)
+	{
 		Msg "[_AlignStr]: count=" # count
 		return sz
-    }
+	}
 
-    if (fAppend)
-    {
-	    while (count--)
-	        sz = sz # chr
+	if (fAppend)
+	{
+		while (count--)
+			sz = sz # chr
 	}
 	else
 	{
-	    while (count--)
-	        sz = chr # sz
+		while (count--)
+			sz = chr # sz
 	}
 
-    return sz
+	return sz
 }
 
 function ___tst_AlignStr()
@@ -700,13 +700,13 @@ function _SearchInStr (sz, pattern, fMatchCase, fRegExp, fWholeWordsOnly)
 	var recSel
 	var szRet
 
-	recSearchResult = Nil    // init a record to store the return string and it's offset
+	recSearchResult = Nil  // init a record to store the return string and it's offset
 
 	hbuf = NewBuf("SRCH-STR" # _UniNum())  // create output buffer
 	if (hbuf == 0)
 	{
 		Msg "Create DirtyBuffer Error!"
-	    stop
+		stop
 	}
 
 	AppendBufLine(hbuf, sz)
@@ -720,7 +720,7 @@ function _SearchInStr (sz, pattern, fMatchCase, fRegExp, fWholeWordsOnly)
 	}
 
 	szRet = StrMid(sz, recSel.ichFirst, recSel.ichLim)
-	SetBufDirty(hbuf, FALSE)      // don't bother asking to save
+	SetBufDirty(hbuf, FALSE)  // don't bother asking to save
 	CloseBuf(hbuf)
 
 	recSearchResult.ichFirst = recSel.ichFirst
@@ -769,20 +769,20 @@ function _ReplaceInStr (sz, oldPattern, newPattern, fMatchCase, fRegExp, fWholeW
 	var ret
 	var szRet
 
-	recReplaceResult = Nil    // init a record to store the return string and it's status
+	recReplaceResult = Nil  // init a record to store the return string and it's status
 
-	hbuf = NewBuf("REPL-STR" # _UniNum())        // create output buffer
+	hbuf = NewBuf("REPL-STR" # _UniNum())  // create output buffer
 	if (hbuf == 0)
 	{
 		Msg "Create DirtyBuffer Error!"
-	    stop
+		stop
 	}
 
 	AppendBufLine(hbuf, sz)
 	ret = ReplaceInBuf(hbuf, oldPattern, newPattern, 0, 1, fMatchCase, fRegExp, fWholeWordsOnly, fConfirm)
 	if (ret == False)
 	{
-		SetBufDirty(hbuf, False)   // don't bother asking to save
+		SetBufDirty(hbuf, False)  // don't bother asking to save
 		CloseBuf(hbuf)
 		recReplaceResult.szData = sz
 		recReplaceResult.fSuccess = False  // replace failed...
@@ -790,7 +790,7 @@ function _ReplaceInStr (sz, oldPattern, newPattern, fMatchCase, fRegExp, fWholeW
 	}
 
 	szRet = GetBufLine(hbuf, 0)
-	SetBufDirty(hbuf, False)      // don't bother asking to save
+	SetBufDirty(hbuf, False)  // don't bother asking to save
 	CloseBuf(hbuf)
 	recReplaceResult.szData = szRet
 	recReplaceResult.fSuccess = True  // replace success
@@ -956,8 +956,8 @@ function _GetStrCount(sz, pattern)
 	var cnt
 	var ret
 
-	cch = StrLen(sz)    // string length.
-	cnt = 0             // delims count.
+	cch = StrLen(sz)  // string length.
+	cnt = 0  // delims count.
 
 	if (pattern[0] == "^")
 	{
@@ -979,7 +979,7 @@ function _GetStrCount(sz, pattern)
 		sz = StrMid(sz, ret.ichLim, StrLen(sz))
 	}
 
-	return (cnt + 1)    // strCount = delimsCount + 1
+	return (cnt + 1)  // strCount = delimsCount + 1
 }
 
 function ___tst_GetStrCount()
@@ -1589,30 +1589,30 @@ RETURN VALUE:
 **************************************************''*/
 function _GetLocalTime()
 {
-    var recTimeAligned
-    var recTimeOrig
-    var chrAlign
+	var recTimeAligned
+	var recTimeOrig
+	var chrAlign
 
 	chrAlign = "0"
-    recTimeOrig = GetSysTime(True)
+	recTimeOrig = GetSysTime(True)
 
-    recTimeAligned.szDate = recTimeOrig.date
-    recTimeAligned.szTime = recTimeOrig.time
-    recTimeAligned.szYear = recTimeOrig.Year
-    recTimeAligned.szDayOfWeek = recTimeOrig.DayOfWeek
-    recTimeAligned.szMonth        = _AlignStr(recTimeOrig.Month, 2, chrAlign, False)
-    recTimeAligned.szDay          = _AlignStr(recTimeOrig.Day,   2, chrAlign, False)
-    recTimeAligned.szHour         = _AlignStr(recTimeOrig.Hour,  2, chrAlign, False)
-    recTimeAligned.szMinute       = _AlignStr(recTimeOrig.Minute, 2, chrAlign, False)
-    recTimeAligned.szSecond       = _AlignStr(recTimeOrig.Second, 2, chrAlign, False)
-    recTimeAligned.szMilliseconds = _AlignStr(recTimeOrig.Milliseconds, 3, chrAlign, False)
+	recTimeAligned.szDate = recTimeOrig.date
+	recTimeAligned.szTime = recTimeOrig.time
+	recTimeAligned.szYear = recTimeOrig.Year
+	recTimeAligned.szDayOfWeek = recTimeOrig.DayOfWeek
+	recTimeAligned.szMonth        = _AlignStr(recTimeOrig.Month, 2, chrAlign, False)
+	recTimeAligned.szDay          = _AlignStr(recTimeOrig.Day,   2, chrAlign, False)
+	recTimeAligned.szHour         = _AlignStr(recTimeOrig.Hour,  2, chrAlign, False)
+	recTimeAligned.szMinute       = _AlignStr(recTimeOrig.Minute, 2, chrAlign, False)
+	recTimeAligned.szSecond       = _AlignStr(recTimeOrig.Second, 2, chrAlign, False)
+	recTimeAligned.szMilliseconds = _AlignStr(recTimeOrig.Milliseconds, 3, chrAlign, False)
 
 	return recTimeAligned
 }
 
 function ___tst_GetLocalTime()
 {
-    var rec
+	var rec
 	rec = _GetLocalTime()
 
 	_Assert(rec.szYear > 1970)
@@ -1811,8 +1811,8 @@ function _GetCurSelEx()
 	var sel
 	var recSelInfo
 
-    hwnd = GetCurrentWnd()
-    hbuf = GetWndBuf (hwnd)
+	hwnd = GetCurrentWnd()
+	hbuf = GetWndBuf (hwnd)
 	sel = GetWndSel (hwnd)
 	recSelInfo.sel = sel
 
@@ -2318,8 +2318,8 @@ function ___tst_all()
 // easy to use with application command "Run Macro" which is binding with key 'ctrl+alt+r'
 function __SetLogLevelVerbose()
 {
-       _SetLogLevel("V")
-       return Nil
+	_SetLogLevel("V")
+	return Nil
 }
 
 function _CheckIfPubEmExistsAndSWVersionRequirement()
@@ -2342,13 +2342,13 @@ function _CheckIfPubEmExistsAndSWVersionRequirement()
 // TODO: After the execution of RunCmd(), the key ctrl-z will not response
 function _InvokeMacro(szMacro)
 {
-    _CheckIfPubEmExistsAndSWVersionRequirement()
+	_CheckIfPubEmExistsAndSWVersionRequirement()
 
-    if (szMacro != Nil && szMacro != "szMacro")
-        RunCmd(szMacro)
+	if (szMacro != Nil && szMacro != "szMacro")
+		RunCmd(szMacro)
 
-    _LogShow()
-    return Nil
+	_LogShow()
+	return Nil
 }
 
 //////////////////////////////////////////////////
