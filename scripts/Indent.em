@@ -44,7 +44,9 @@ macro __BlockIndent()
 	CloseBuf (fbuf)
 
 	//run cmd to indent statements
-	cmd = "AStyle.exe --options=astylerc \"@fname@\""
+	//cmd = "AStyle.exe --options=astylerc \"@fname@\""
+	// Linux Kernel style
+	cmd = "clang-format.exe -style=\"{BasedOnStyle: LLVM, IndentWidth: 8, UseTab: Always, BreakBeforeBraces: Linux, AllowShortIfStatementsOnASingleLine: false, IndentCaseLabels: false}\" -i \"@fname@\""
 	_LogI(cmd)
 	if (0 != _RunCmdLine(cmd, _GetExternalBase() # "tool\\", True, 0))
 		stop
