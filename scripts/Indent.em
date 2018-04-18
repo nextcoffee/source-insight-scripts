@@ -8,6 +8,8 @@ macro __BlockIndent()
 	var hwnd
 	var sel
 	var hbuf
+	var fSelFile
+	var szDir
 	var fname
 	var fbuf
 	var i
@@ -18,9 +20,12 @@ macro __BlockIndent()
     hwnd = GetCurrentWnd()
 	sel = GetWndSel (hwnd)
 	hbuf = GetWndBuf (hwnd)
+	fSelFile = GetBufName (hbuf)
+	szDir = _GetDir (fSelFile)
 
 	//new a file the store the content selected temperorily
-	fname = _SINewTmpFile(Nil)
+	_LogI(szDir)
+	fname = _SINewTmpFile(szDir)
 	fbuf = OpenBuf (fname)
 	if (hNil == fbuf)
 	{
@@ -46,7 +51,8 @@ macro __BlockIndent()
 	//run cmd to indent statements
 	//cmd = "AStyle.exe --options=astylerc \"@fname@\""
 	// Linux Kernel style
-	cmd = "clang-format.exe -style=\"{BasedOnStyle: LLVM, IndentWidth: 8, UseTab: Always, BreakBeforeBraces: Linux, AllowShortIfStatementsOnASingleLine: false, IndentCaseLabels: false}\" -i \"@fname@\""
+	//cmd = "clang-format.exe -style=\"{BasedOnStyle: LLVM, IndentWidth: 8, UseTab: Always, BreakBeforeBraces: Linux, AllowShortIfStatementsOnASingleLine: false, IndentCaseLabels: false}\" -i \"@fname@\""
+	cmd = "clang-format.exe -style=file -i \"@fname@\""
 	_LogI(cmd)
 	if (0 != _RunCmdLine(cmd, _GetExternalBase() # "tool\\", True, 0))
 		stop
