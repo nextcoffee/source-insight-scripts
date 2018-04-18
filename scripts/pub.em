@@ -2143,13 +2143,13 @@ macro ___tst_CopyBuf()
 	return Nil
 }
 
-macro _SINewTmpFile()
+macro _SINewTmpFile(szDir)
 {
-	var szDir
 	var szFile
 	var ret
 
-	szDir = GetEnv("TEMP")
+	if(szDir == Nil)
+		szDir = GetEnv("TEMP")
 	szFile = szDir # "\\" # _UniNum()
 	_LogI(szFile)
 
@@ -2183,7 +2183,7 @@ macro ___tst_SITempFile()
 {
 	var flname
 
-	flname = _SINewTmpFile()
+	flname = _SINewTmpFile(Nil)
 	_Test(_IsFileExist(flname), True)
 	_SIDelTmpFile(flname)
 	_Test(_IsFileExist(flname), False)
@@ -2207,7 +2207,7 @@ macro _RumCmdWithReturn(sCmdLine, sWorkingDirectory, fWait)
 	hbuf = NewBuf(_UniNum())
 	_Assert(hNil != hbuf)
 
-	flname = _SINewTmpFile()
+	flname = _SINewTmpFile(Nil)
 
 	szCmd = "@sCmdLine@>\"@flname@\""
 	fRet = _RunCmdLine(szCmd, Nil, True, 0)

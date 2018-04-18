@@ -20,7 +20,7 @@ macro __BlockIndent()
 	hbuf = GetWndBuf (hwnd)
 
 	//new a file the store the content selected temperorily
-	fname = _SINewTmpFile()
+	fname = _SINewTmpFile(Nil)
 	fbuf = OpenBuf (fname)
 	if (hNil == fbuf)
 	{

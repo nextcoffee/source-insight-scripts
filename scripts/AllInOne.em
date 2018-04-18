@@ -1155,7 +1155,7 @@ macro TreeCopy()
 
 
 	// save the result to a file
-	cplst = _SINewTmpFile()
+	cplst = _SINewTmpFile(Nil)
 	savebufAs(hbuf, cplst)
 	fbuf = GetBufHandle(cplst)
 	SaveBuf(fbuf)
