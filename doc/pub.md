@@ -45,6 +45,7 @@
   * [_MAX(a, b)](#_MAXab)
   * [_GetSIVer()](#_GetSIVer)
   * [_GetCurSelEx()](#_GetCurSelEx)
+  * [_GetDir()](#_GetDir)
   * [_GetSIBaseDir()](#_GetSIBaseDir)
   * [_GetExternalBase()](#_GetExternalBase)
   * [_IsFileExist()](#_IsFileExist)
@@ -529,6 +530,17 @@ RETURN VALUE:
 * Record Structure:
 	* `sel`: record structure, contains some selection infomation
 	* `type`: string, indicate the selection type
+
+<h2 id="_GetDir">_GetDir()</h2 >
+Get the directory of szFile
+
+PARAMETERS:
+
+* `szFile`: file path
+
+RETURN VALUE:
+
+* String
 
 <h2 id="_GetSIBaseDir">_GetSIBaseDir()</h2 >
 Get the directory of source insight project named "Base"

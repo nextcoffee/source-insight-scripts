@@ -1925,6 +1925,44 @@ macro ___tst_GetCurSelEx()
 	return Nil
 }
 
+
+/*''*************************************************
+## _GetDir()
+Get the directory of szFile
+
+PARAMETERS:
+
+* `szFile`: file path
+
+RETURN VALUE:
+
+* String
+
+**************************************************''*/
+macro _GetDir(szFile)
+{
+	var ich
+	var szDir
+
+	ich = _StrStrEx(szFile, "\\", StrLen(szFile)-1, False, True)
+	if (ich == invalid)
+	{
+		_Assert(False)
+		stop
+	}
+
+	szDir = StrTrunc(szFile, ich+1)
+
+	return szDir
+}
+
+macro ___tst_GetDir()
+{
+	_Test(_GetDir("scripts\\pub.em"), "scripts\\")
+
+	return Nil
+}
+
 /*''*************************************************
 ## _GetSIBaseDir()
 Get the directory of source insight project named "Base"
@@ -1940,21 +1978,13 @@ macro _GetSIBaseDir()
 {
 	var recProgEnvInfo
 	var projDirFile
-	var ich
 	var projDir
 	var projBaseDir
 
 	recProgEnvInfo = GetProgramEnvironmentInfo()
 	projDirFile = recProgEnvInfo.ProjectDirectoryFile
 
-	ich = _StrStrEx(projDirFile, "\\", StrLen(projDirFile)-1, False, True)
-	if (ich == invalid)
-	{
-		_Assert(False)
-		stop
-	}
-
-	projDir = StrTrunc(projDirFile, ich+1)
+	projDir = _GetDir(projDirFile)
 	projBaseDir = Cat(projDir, "Base\\")
 
 	return projBaseDir
@@ -2302,6 +2332,7 @@ macro ___tst_all()
 	___tst_UniNum()
 	___tst_GetSIVer()
 	___tst_GetCurSelEx()
+	___tst_GetDir()
 	___tst_GetSIBaseDir()
 	___tst_GetExternalBase()
 	___tst_IsFileExist()
