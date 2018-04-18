@@ -24,7 +24,7 @@ macro __ConstructCommentKey()
 {
     var sz
 
-	//sz = GetCurProjShrtName()
+	sz = __GetCurProjShrtName()
 	if (Nil == sz)
 	    return "comment"
 	else
