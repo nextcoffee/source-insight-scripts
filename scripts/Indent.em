@@ -21,7 +21,7 @@ macro __BlockIndent()
 	sel = GetWndSel (hwnd)
 	hbuf = GetWndBuf (hwnd)
 	fSelFile = GetBufName (hbuf)
-	szDir = _GetDir (fSelFile)
+	szDir = _GetDirName (fSelFile)
 
 	//new a file the store the content selected temperorily
 	_LogI(szDir)

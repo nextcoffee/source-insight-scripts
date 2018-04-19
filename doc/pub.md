@@ -45,7 +45,7 @@
   * [_MAX(a, b)](#_MAXab)
   * [_GetSIVer()](#_GetSIVer)
   * [_GetCurSelEx()](#_GetCurSelEx)
-  * [_GetDir()](#_GetDir)
+  * [_GetDirName()](#_GetDirName)
   * [_GetSIBaseDir()](#_GetSIBaseDir)
   * [_GetExternalBase()](#_GetExternalBase)
   * [_IsFileExist()](#_IsFileExist)
@@ -531,7 +531,7 @@ RETURN VALUE:
 	* `sel`: record structure, contains some selection infomation
 	* `type`: string, indicate the selection type
 
-<h2 id="_GetDir">_GetDir()</h2 >
+<h2 id="_GetDirName">_GetDirName()</h2 >
 Get the directory of szFile
 
 PARAMETERS:

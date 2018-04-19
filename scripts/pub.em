@@ -1927,7 +1927,7 @@ macro ___tst_GetCurSelEx()
 
 
 /*''*************************************************
-## _GetDir()
+## _GetDirName()
 Get the directory of szFile
 
 PARAMETERS:
@@ -1939,7 +1939,7 @@ RETURN VALUE:
 * String
 
 **************************************************''*/
-macro _GetDir(szFile)
+macro _GetDirName(szFile)
 {
 	var ich
 	var szDir
@@ -1956,9 +1956,9 @@ macro _GetDir(szFile)
 	return szDir
 }
 
-macro ___tst_GetDir()
+macro ___tst_GetDirName()
 {
-	_Test(_GetDir("scripts\\pub.em"), "scripts\\")
+	_Test(_GetDirName("scripts\\pub.em"), "scripts\\")
 
 	return Nil
 }
@@ -1984,7 +1984,7 @@ macro _GetSIBaseDir()
 	recProgEnvInfo = GetProgramEnvironmentInfo()
 	projDirFile = recProgEnvInfo.ProjectDirectoryFile
 
-	projDir = _GetDir(projDirFile)
+	projDir = _GetDirName(projDirFile)
 	projBaseDir = Cat(projDir, "Base\\")
 
 	return projBaseDir
@@ -2332,7 +2332,7 @@ macro ___tst_all()
 	___tst_UniNum()
 	___tst_GetSIVer()
 	___tst_GetCurSelEx()
-	___tst_GetDir()
+	___tst_GetDirName()
 	___tst_GetSIBaseDir()
 	___tst_GetExternalBase()
 	___tst_IsFileExist()
