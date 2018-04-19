@@ -46,6 +46,7 @@
   * [_GetSIVer()](#_GetSIVer)
   * [_GetCurSelEx()](#_GetCurSelEx)
   * [_GetDirName()](#_GetDirName)
+  * [_GetBaseName()](#_GetBaseName)
   * [_GetSIBaseDir()](#_GetSIBaseDir)
   * [_GetExternalBase()](#_GetExternalBase)
   * [_IsFileExist()](#_IsFileExist)
@@ -533,6 +534,17 @@ RETURN VALUE:
 
 <h2 id="_GetDirName">_GetDirName()</h2 >
 Get the directory of szFile
+
+PARAMETERS:
+
+* `szFile`: file path
+
+RETURN VALUE:
+
+* String
+
+<h2 id="_GetBaseName">_GetBaseName()</h2 >
+Get the basename of file
 
 PARAMETERS:
 

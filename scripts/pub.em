@@ -1964,6 +1964,43 @@ macro ___tst_GetDirName()
 }
 
 /*''*************************************************
+## _GetBaseName()
+Get the basename of file
+
+PARAMETERS:
+
+* `szFile`: file path
+
+RETURN VALUE:
+
+* String
+
+**************************************************''*/
+macro _GetBaseName(szFile)
+{
+	var ich
+	var szBaseName
+
+	ich = _StrStrEx(szFile, "\\", StrLen(szFile)-1, False, True)
+	if (ich == invalid)
+	{
+		return szFile
+	}
+
+	szBaseName = StrMid(szFile, ich+1, StrLen(szFile))
+
+	return szBaseName
+}
+
+macro ___tst_GetBaseName()
+{
+	_Test(_GetBaseName("scripts\\pub.em"), "pub.em")
+	_Test(_GetBaseName("pub.em"), "pub.em")
+
+	return Nil
+}
+
+/*''*************************************************
 ## _GetSIBaseDir()
 Get the directory of source insight project named "Base"
 
@@ -2333,6 +2370,7 @@ macro ___tst_all()
 	___tst_GetSIVer()
 	___tst_GetCurSelEx()
 	___tst_GetDirName()
+	___tst_GetBaseName()
 	___tst_GetSIBaseDir()
 	___tst_GetExternalBase()
 	___tst_IsFileExist()
