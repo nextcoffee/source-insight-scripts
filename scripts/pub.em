@@ -2351,6 +2351,9 @@ macro __SetLogLevelVerbose()
 {
 	_SetLogLevel("V")
 	return Nil
+
+	_SetLogLevel("E")
+	return Nil
 }
 
 macro _CheckIfPubEmExistsAndSWVersionRequirement()
